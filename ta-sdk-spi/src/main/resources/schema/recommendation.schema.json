@@ -1,0 +1,43 @@
+{
+  "$id": "recommendation.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [
+    "domain",
+    "assessmentType",
+    "assessmentName",
+    "version",
+    "complexityRules",
+    "assessmentUnits"
+  ],
+  "properties": {
+    "domain": {
+      "type": "string",
+      "minLength": 1
+    },
+    "assessmentType": {
+      "type": "string",
+      "minLength": 1
+    },
+    "assessmentName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "complexityRules": {
+      "$ref": "schema/complexity.schema.json"
+    },
+    "issueCategories": {
+      "type": "object"
+    },
+    "assessmentUnits": {
+      "type": "array",
+      "items": {
+        "$ref": "schema/recommendation-assess.schema.json"
+      }
+    }
+  }
+}

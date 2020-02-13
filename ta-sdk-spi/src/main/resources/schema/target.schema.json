@@ -1,0 +1,21 @@
+{
+  "$id": "target.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Target",
+  "description": "migration target used in the recommandation",
+  "type": "object",
+  "properties": {
+    "productName": {
+      "description": "Name of the target product",
+      "type": "string"
+    },
+    "productVersion": {
+      "description": "Version of the target product",
+      "type": "string"
+    }
+  },
+  "required": [
+    "productName",
+    "productVersion"
+  ]
+}

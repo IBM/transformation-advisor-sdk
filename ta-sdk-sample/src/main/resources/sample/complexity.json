@@ -1,0 +1,38 @@
+[
+  {
+    "id": "dns",
+    "name": "DNS Reconfiguration",
+    "description": "Issues that require DNS reconfiguration",
+    "complexityContribution": "SIMPLE",
+    "issues": [
+      "MQCL01"
+    ]
+  },
+  {
+    "id": "cluster",
+    "name": "Cluster Reconfiguration",
+    "description": "Issues that require cluster reconfiguration",
+    "complexityContribution": "MODERATE",
+    "issuesCategory": [
+      "cluster"
+    ]
+  },
+  {
+    "id": "exits",
+    "name": "Changing Custom Logic",
+    "description": "Issues that require changing custom logic",
+    "complexityContribution": "MODERATE",
+    "issuesCategory": [
+      "exits"
+    ]
+  },
+  {
+    "id": "security",
+    "name": "Client authentication reconfiguration",
+    "description": "Issues that require client authentication reconfiguration",
+    "complexityContribution": "COMPLEX",
+    "issues": [
+      "MQSEC01"
+    ]
+  }
+]

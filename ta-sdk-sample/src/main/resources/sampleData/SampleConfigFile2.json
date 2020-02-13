@@ -1,0 +1,9 @@
+{
+  "services": [
+    {
+      "name": "MYMQ.SERVICE",
+      "description": "Test Service 2",
+      "password": "Passw0rd"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "domain": "IIB",
+  "operatingSystem": "RedHat Enterprise 7",
+  "hostName": "iib1.rtp.raleigh.ibm.com",
+  "middlewareName": "IIB",
+  "middlewareVersion": "10.0",
+  "middlewareInstallPath": "/opt/iib",
+  "middlewareDataPath": "/opt/iibdata",
+  "middlewareMetadata": "{\"feature\": \"drilling\"}",
+  "assessmentName": "Installation1",
+  "assessmentType": "Installation",
+  "assessmentMetadata": "{\"test\": \"value\"}"
+}
