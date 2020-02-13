@@ -1,0 +1,149 @@
+{
+  "$id":"recommendation-assess.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Recommendation Assessment Units Schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "targets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Target"
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "name",
+    "targets"
+  ],
+  "definitions" : {
+    "Target": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "string",
+          "enum": ["Docker", "VM"]
+        },
+        "location": {
+          "type": "string",
+          "enum": ["Public", "Private"]
+        },
+        "valid": {
+          "type": "string",
+          "enum": ["true", "false"]
+        },
+        "runtime": {
+          "type": "string"
+        },
+        "issues": {
+          "$ref": "#/definitions/TargetIssues"
+        },
+        "summary": {
+          "$ref": "schema/recommendation-assess-summary.schema.json"
+        }
+      },
+      "required": [
+        "issues",
+        "platform",
+        "summary",
+        "valid",
+        "version",
+        "location",
+        "runtime"
+      ],
+      "title": "Target"
+    },
+    "TargetIssues": {
+      "type": "object",
+      "items": {
+        "type": "object",
+        "patternProperties": {
+          ".": {
+            "type":"array",
+            "items": {
+              "$ref": "#/definitions/TargetIssuesItem"
+            }
+          }
+        },
+        "propertyNames": {
+          "pattern": "^[a-z0-9]+([A-Z0-9]{1}[a-z0-9]*)*"
+        }
+      },
+      "minItems": 1,
+      "required": [
+        "security"
+      ],
+      "title": "TargetIssues"
+    },
+    "TargetIssuesItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "category" : {
+          "type": "string",
+          "minLength": 1
+        },
+        "cost": {
+          "type": "number",
+          "minimum": 0
+        },
+        "issueOverhead": {
+          "type": "number"
+        },
+        "occurrencesCost": {
+          "type": "number",
+          "minimum": 0
+        },
+        "solutionText": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["GREEN", "YERROW", "RED"]
+        },
+        "occurrencesFields": {
+          "type": "object"
+        },
+        "occurrencesCount": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "occurrences": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "cost",
+        "category",
+        "issueOverhead",
+        "occurrences",
+        "occurrencesCost",
+        "occurrencesCount",
+        "occurrencesFields",
+        "severity",
+        "solutionText",
+        "title"
+      ],
+      "title": "TargetIssuesItem"
+    }
+  }
+}

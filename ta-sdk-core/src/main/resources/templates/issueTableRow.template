@@ -1,0 +1,11 @@
+      <tr class="summary">
+        <td class="col1summarymodule"><span class="status">&#43;</span> {ISSUE_ID}</td>
+        <td class="col2thru12">{ISSUE_TITLE}</td>
+        <td class="col2thru12">{ISSUE_COST}</td>
+        <td class="col2thru12">{ISSUE_SEVERITY}</td>
+        <td class="col2thru12"> {TEMPLATE_ISSUES_SOLUTION_TEXT} </td>
+      </tr>
+      <tr class="hiddenRow" id="rowHiddenMod{HIDDEN_ROW_COUNT}-2">
+          <td class="col2thru12" colspan="1">Occurances count: {ISSUE_OCCURANCE_COUNT}</td>
+          <td class="col2thru12" colspan="4">{ISSUE_OCCURANCES}</td>
+      </tr>

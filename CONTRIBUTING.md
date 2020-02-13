@@ -58,7 +58,7 @@ Here is an example Signed-off-by line, which indicates that the
 submitter accepts the DCO:
 
 ```
-DCO 1.1 Signed-off-by: John Doe <john.doe@example.com>
+Signed-off-by: John Doe <john.doe@example.com>
 ```
 
 You can include this automatically when you commit a change to your
@@ -84,7 +84,7 @@ By default,  Maven plugin should already be installed.
 3.  Build this project
      + Click the Maven Projects tab on the right side to open Maven plugin
      + Click the Refresh button to Reimport All Maven Projects
-     + Expend Migration -> Lifecycle
+     + Expend ta-sdk -> Lifecycle
      + Select Clean,  click the green triangle button to run this task.
      + Select Install, click the green triangle button to build the project.
 

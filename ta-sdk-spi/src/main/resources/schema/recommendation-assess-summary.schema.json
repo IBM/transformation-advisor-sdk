@@ -1,0 +1,102 @@
+{
+  "$id":"recommendation-assess-summary.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Recommendation Assessment Units Summary Schema",
+  "description": "Created by Huang, Fuguo. Created date: 2019-June-21.",
+  "type": "object",
+  "properties": {
+    "complexity": {
+      "$ref": "#/definitions/Complexity"
+    },
+    "issues": {
+      "$ref": "#/definitions/SummaryIssues"
+    },
+    "effort": {
+      "$ref": "#/definitions/Effort"
+    }
+  },
+  "required": [
+    "complexity",
+    "effort",
+    "issues"
+  ],
+  "definitions" : {
+    "Complexity": {
+      "type": "object",
+      "properties": {
+        "COMPLEX": {
+          "$ref": "#/definitions/ComplexityContribution"
+        },
+        "SIMPLE": {
+          "$ref": "#/definitions/ComplexityContribution"
+        },
+        "MODERATE": {
+          "$ref": "#/definitions/ComplexityContribution"
+        },
+        "score": {
+          "type": "string",
+          "enum": ["SIMPLE", "MODERATE", "COMPLEX"]
+        }
+      },
+      "required": [
+        "score"
+      ],
+      "title": "Complexity"
+    },
+    "ComplexityContribution": {
+      "type": "object",
+      "title": "ComplexityContribution",
+      "patternProperties": {
+        ".": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "propertyNames": {
+        "pattern": "^[a-z0-9]+([A-Z0-9]{1}[a-z0-9]*)*"
+      }
+    },
+    "SummaryIssues": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "GREEN": {
+          "type": "integer"
+        },
+        "YELLOW": {
+          "type": "integer"
+        },
+        "RED": {
+          "type": "integer"
+        }
+      },
+      "propertyNames": {
+        "description": "Limited the property names used in the 'issues'",
+        "pattern": "^GREEN|YELLOW|RED$"
+      },
+      "title": "SummaryIssues"
+    },
+    "Effort": {
+      "title": "Effort",
+      "description": "'effort' object must have 'total' property, and additional properties must be in camelCase.",
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "number"
+        }
+      },
+      "patternProperties": {
+        ".": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "propertyNames": {
+        "pattern": "^[a-z0-9]+([A-Z0-9]{1}[a-z0-9]*)*"
+      },
+      "required": [
+        "total"
+      ]
+    }
+  }
+}

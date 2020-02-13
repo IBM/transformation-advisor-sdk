@@ -1,0 +1,3 @@
+com.ibm.ta.sdk.core.detector.json.JsonIssueRuleTypeProvider
+com.ibm.ta.sdk.core.detector.xml.XmlIssueRuleTypeProvider
+

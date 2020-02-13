@@ -1,0 +1,115 @@
+{
+  "$id": "xmlProvider.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "IUssue match criteria used for xml file",
+  "type": "object",
+  "properties": {
+    "ruleType": {
+      "const": "xml"
+    },
+    "criteria": {
+        "anyOf":
+          [{"$ref": "#/definitions/detectDTDDef"},
+            {"$ref": "#/definitions/detectAttributeDef"},
+            {"$ref": "#/definitions/detectElementDef"}]
+    },
+    "occurrenceAttr": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "ruleType",
+    "criteria",
+    "occurrenceAttr"
+  ],
+  "definitions": {
+    "detectDTDDef": {
+      "type": "object",
+      "properties": {
+        "detectDTD":{
+          "type": "object",
+          "properties": {
+            "dtdName": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "xmlFile": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "dtdName",
+            "xmlFile"
+          ]
+        }
+      },
+      "required":["detectDTD"]
+    },
+    "detectAttributeDef": {
+      "type": "object",
+      "properties": {
+        "detectAttribute":{
+          "type": "object",
+          "properties": {
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "attributeName": {
+              "type": "string"
+            },
+            "attributeValue": {
+              "type": "string"
+            },
+            "xmlFile": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "tags",
+            "xmlFile",
+            "attributeName"
+          ]
+        }
+      },
+      "required": ["detectAttribute"]
+    },
+    "detectElementDef": {
+      "type": "object",
+      "properties": {
+        "detectElement":{
+          "type":"object",
+          "properties": {
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "xmlFile": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "tags",
+            "xmlFile"
+          ]
+        }
+      },
+      "required": ["detectElement"]
+    }
+  }
+}
