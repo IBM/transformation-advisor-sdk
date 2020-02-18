@@ -24,8 +24,8 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Environment (please complete the following information):**
- - OS: [e.g. iOS]
- - Java version [e.g. 1.8, 1.9]
+ - OS: [e.g. Linux-RedHat]
+ - Java version: [e.g. IBM JDK 1.8, OpenJDK 1.9]
  - TA-SDK Version [e.g. 0.5.2]
 
 **Additional context**
