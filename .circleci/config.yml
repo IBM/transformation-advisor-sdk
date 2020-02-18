@@ -1,9 +1,14 @@
 version: 2.1
-
-orbs:
-  maven: circleci/maven@0.0.12
-
-workflows:
-  maven_test:
-    jobs:
-      - maven/test # checkout, build, test, and upload test results
+jobs:
+  build: 
+    working_directory: ~/transformation-advisor-sdk 
+    docker: 
+      - image: circleci/openjdk:8-jdk-stretch 
+    steps: 
+      - checkout 
+      - run: mvn clean install 
+      - store_test_results:  
+          path: target/surefire-reports
+      - store_artifacts: 
+          path: target/ta-sdk-sample-0.5.2.jar
+      
