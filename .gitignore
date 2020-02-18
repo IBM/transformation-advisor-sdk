@@ -3,6 +3,7 @@
 
 # Log file
 *.log
+output/
 
 # IntelliJ files
 .idea/
