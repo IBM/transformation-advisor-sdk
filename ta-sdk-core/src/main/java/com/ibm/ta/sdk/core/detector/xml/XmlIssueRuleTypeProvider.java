@@ -16,7 +16,8 @@ import com.ibm.ta.sdk.core.assessment.GenericIssue;
 import com.ibm.ta.sdk.core.assessment.IssueMatchCriteria;
 import com.ibm.ta.sdk.core.assessment.IssueRule;
 import com.ibm.ta.sdk.core.detector.IssueRuleTypeProvider;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -38,7 +39,7 @@ public class XmlIssueRuleTypeProvider implements IssueRuleTypeProvider {
     private static final String DTD_NAME = "dtdName";
     private static final String XML_FILE = "xmlFile";
 
-    private static Logger logger = Logger.getLogger(XmlIssueRuleTypeProvider.class.getName());
+    private static Logger logger = LogManager.getLogger(XmlIssueRuleTypeProvider.class.getName());
 
     @Override
     public String getName() {

@@ -7,14 +7,14 @@
 package com.ibm.ta.sdk.spi.validation;
 
 import org.apache.commons.cli.*;
-import org.apache.log4j.Logger;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.util.Properties;
 
 public class TaValidator {
 
-    private static Logger logger = Logger.getLogger(TaValidator.class.getName());
+    private static Logger logger = LogManager.getLogger(TaValidator.class.getName());
 
     private static String getTaVersion() {
         String version = null;

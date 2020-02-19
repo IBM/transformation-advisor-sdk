@@ -13,14 +13,15 @@ import com.google.gson.JsonObject;
 import com.ibm.ta.sdk.spi.plugin.TAException;
 import com.ibm.ta.sdk.spi.report.Report;
 import com.ibm.ta.sdk.spi.report.ReportType;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.*;
 
 public class RecommendationReporter implements ReportGenerator {
 
-    private static Logger logger = Logger.getLogger(RecommendationReporter.class.getName());
+    private static Logger logger = LogManager.getLogger(RecommendationReporter.class.getName());
 
     // HTML templates
     private static final String TEMPLATE = "/templates/recommendations.template";

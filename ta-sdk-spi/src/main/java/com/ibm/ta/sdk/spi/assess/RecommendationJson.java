@@ -11,7 +11,8 @@ import com.ibm.ta.sdk.spi.plugin.TAException;
 import com.ibm.ta.sdk.spi.collect.AssessmentUnit;
 import com.ibm.ta.sdk.spi.collect.Environment;
 import com.ibm.ta.sdk.spi.recommendation.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
@@ -57,7 +58,7 @@ public class RecommendationJson {
   protected List<Map<String, Object>> assessmentUnits = new ArrayList<Map<String, Object>>();
   private Recommendation recommendation;
 
-  private static Logger logger = Logger.getLogger(RecommendationJson.class.getName());
+  private static Logger logger = LogManager.getLogger(RecommendationJson.class.getName());
 
   public RecommendationJson(Recommendation recommendation, Environment environment, List<? extends AssessmentUnit> auList) throws TAException {
     this.recommendation = recommendation;
@@ -151,7 +152,7 @@ public class RecommendationJson {
 
           complexityScoreMap.put(catIs.getCategory().getId(), ++ccount);
         } else {
-          logger.error("No complexity rule found for issue:" + catIs.getId());
+          logger.warn("No complexity rule found for issue:" + catIs.getId());
         }
       }
     }

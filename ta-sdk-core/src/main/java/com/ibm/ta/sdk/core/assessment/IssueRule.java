@@ -9,13 +9,14 @@ package com.ibm.ta.sdk.core.assessment;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.jayway.jsonpath.DocumentContext;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class IssueRule {
-  private static Logger logger = Logger.getLogger(IssueRule.class.getName());
+  private static Logger logger = LogManager.getLogger(IssueRule.class.getName());
 
   public static final String OCCURRENCE_TITLE_ATTR = "title";
   public static final String OCCURRENCE_COUNT_UNIQUE_ATTR = "countUnique";

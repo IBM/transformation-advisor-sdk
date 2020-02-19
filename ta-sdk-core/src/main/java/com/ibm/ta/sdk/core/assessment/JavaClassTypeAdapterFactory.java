@@ -12,14 +12,15 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.ibm.ta.sdk.spi.plugin.TARuntimeException;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class JavaClassTypeAdapterFactory implements TypeAdapterFactory {
-  private static Logger logger = Logger.getLogger(JavaClassTypeAdapterFactory.class.getName());
+  private static Logger logger = LogManager.getLogger(JavaClassTypeAdapterFactory.class.getName());
 
   private static final String ISSUE_ATTR_JAVA_CLASS = "javaClass";
 

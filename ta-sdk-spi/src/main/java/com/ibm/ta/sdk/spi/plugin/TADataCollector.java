@@ -18,7 +18,8 @@ import com.ibm.ta.sdk.spi.assess.RecommendationJson;
 import com.ibm.ta.sdk.spi.recommendation.Target;
 import com.ibm.ta.sdk.spi.report.Report;
 import com.ibm.ta.sdk.spi.util.Util;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class TADataCollector {
   private static final String TADATACOLLECTOR_HELP_USAGE_PREFIX = "Usage: TADataCollector";
   private static final String TADATACOLLECTOR_BASE_HELP_USAGE = TADATACOLLECTOR_HELP_USAGE_PREFIX + " MIDDLEWARE COMMAND [OPTIONS]";
 
-  private static Logger logger = Logger.getLogger(TADataCollector.class.getName());
+  private static Logger logger = LogManager.getLogger(TADataCollector.class.getName());
 
   ServiceLoader<PluginProvider> loader = ServiceLoader.load(PluginProvider.class);
 

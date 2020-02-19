@@ -6,14 +6,14 @@
 
 package com.ibm.ta.sdk.spi.plugin;
 
-import org.apache.log4j.Logger;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class CliInputCommand {
-  private static Logger logger = Logger.getLogger(CliInputCommand.class.getName());
+  private static Logger logger = LogManager.getLogger(CliInputCommand.class.getName());
 
   // Names of supported Commands
   public static final String CMD_COLLECT      = "collect";

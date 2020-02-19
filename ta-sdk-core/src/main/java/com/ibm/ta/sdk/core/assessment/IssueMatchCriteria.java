@@ -8,7 +8,8 @@ package com.ibm.ta.sdk.core.assessment;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +26,7 @@ public class IssueMatchCriteria {
   private Map<String, JsonElement> queryPaths = new HashMap<String, JsonElement>();
   protected JsonObject occurenceAttrs;
 
-  private static Logger logger = Logger.getLogger(IssueMatchCriteria.class.getName());
+  private static Logger logger = LogManager.getLogger(IssueMatchCriteria.class.getName());
 
   public IssueMatchCriteria(JsonObject matchCriteriaJsonObj, String queryPathsKeyName) {
     this.matchCriteriaJsonObj = matchCriteriaJsonObj;

@@ -12,14 +12,15 @@ import com.ibm.ta.sdk.spi.plugin.PluginProvider;
 import com.ibm.ta.sdk.spi.plugin.TAException;
 import com.ibm.ta.sdk.spi.report.Report;
 import com.ibm.ta.sdk.spi.util.Util;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
 public abstract class GenericPluginProvider implements PluginProvider {
-  private static Logger logger = Logger.getLogger(GenericPluginProvider.class.getName());
+  private static Logger logger = LogManager.getLogger(GenericPluginProvider.class.getName());
 
   protected List<Report> getHtmlReport(String assessmentName) throws TAException {
     logger.info("Get HTML report for assessment:" + assessmentName);

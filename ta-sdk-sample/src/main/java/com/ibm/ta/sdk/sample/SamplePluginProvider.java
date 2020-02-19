@@ -23,7 +23,8 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +37,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class SamplePluginProvider extends GenericPluginProvider {
-  private static Logger logger = Logger.getLogger(SamplePluginProvider.class.getName());
+  private static Logger logger = LogManager.getLogger(SamplePluginProvider.class.getName());
   private static final String SAMPLE_DOMAIN = "sampleDomain";
   private static final String SAMPLE_MIDDLEWARE= "sample";
 
