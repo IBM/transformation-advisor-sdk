@@ -18,7 +18,8 @@ import com.ibm.ta.sdk.core.detector.IssueRuleTypeProvider;
 
 import java.util.*;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class IssueRuleProcessor {
 
@@ -31,7 +32,7 @@ public class IssueRuleProcessor {
   private ServiceLoader<IssueRuleTypeProvider> serviceLoader = ServiceLoader.load(IssueRuleTypeProvider.class);
   private Map<String, IssueRuleTypeProvider> ruleProviderMap = new HashMap<String, IssueRuleTypeProvider>();
 
-  private static Logger logger = Logger.getLogger(IssueRuleProcessor.class.getName());
+  private static Logger logger = LogManager.getLogger(IssueRuleProcessor.class.getName());
 
   public IssueRuleProcessor(String issuesJson, Map<String, IssueCategory> issueCategories) {
     this.issuesJson = issuesJson;

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+            <!--PatternLayout pattern="[%highlight{%-5level}] %d{DEFAULT} %c{1}.%M() - %msg%n%throwable{short.lineNumber}" /-->
+        </Console>
+        <RollingFile name="RollingFile" fileName="logs/ta_sdk.log" filePattern="logs/ta_sdk_%i.log">
+            <!--PatternLayout pattern="[%highlight{%-5level}] %d{DEFAULT} %c{1}.%M() - %msg%n%throwable{short.lineNumber}" /-->
+            <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <OnStartupTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.ibm.ta-sdk" level="debug" additivity="true">
+            <appender-ref ref="RollingFile" level="debug" />
+        </Logger>
+        <Root level="error">
+            <AppenderRef ref="Console" />
+        </Root>
+    </Loggers>
+</Configuration>

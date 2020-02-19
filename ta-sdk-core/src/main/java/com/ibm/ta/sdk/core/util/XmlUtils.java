@@ -7,7 +7,8 @@
 package com.ibm.ta.sdk.core.util;
 
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -22,7 +23,7 @@ import java.util.List;
 
 public class XmlUtils {
     private final String CLASS_NAME = getClass().getName();
-    private static Logger logger = Logger.getLogger(XmlUtils.class.getName());
+    private static Logger logger = LogManager.getLogger(XmlUtils.class.getName());
 
     /**
      *
