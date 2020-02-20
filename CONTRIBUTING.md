@@ -27,8 +27,8 @@ pull request so it can be tracked.
 ### Merge approval
 
 The project maintainers use LGTM (Looks Good To Me) in comments on the code
-review to indicate acceptance. A change requires LGTMs from two of the
-maintainers of each component affected.
+review to indicate acceptance. A pull request need 2 code review approvals and all the build checks passed before the merge. 
+When create pull request,  you can select **ta-sdk-admin** as the reviewer.
 
 For a list of the maintainers, see the [MAINTAINERS.md](MAINTAINERS.md) page.
 
