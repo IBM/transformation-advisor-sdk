@@ -6,8 +6,8 @@
   "middlewareVersion": "10.0",
   "middlewareInstallPath": "/opt/iib",
   "middlewareDataPath": "/opt/iibdata",
-  "middlewareMetadata": "{\"feature\": \"drilling\"}",
+  "middlewareMetadata": {"feature": "drilling"},
   "assessmentName": "Installation1",
   "assessmentType": "Installation",
-  "assessmentMetadata": "{\"test\": \"value\"}"
+  "assessmentMetadata": {"test": "value"}
 }
