@@ -7,7 +7,7 @@
 package com.ibm.ta.sdk.spi.collect;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.Expose;
 import com.ibm.ta.sdk.spi.collect.Environment;
 
@@ -34,7 +34,7 @@ public class EnvironmentJson {
   private String middlewareDataPath;
 
   @Expose
-  private String middlewareMetadata;
+  private JsonElement middlewareMetadata;
 
   @Expose
   private String assessmentName;
@@ -43,7 +43,7 @@ public class EnvironmentJson {
   private String assessmentType;
 
   @Expose
-  private String assessmentMetadata;
+  private JsonElement assessmentMetadata;
 
   public EnvironmentJson() {
     // For read json from file
@@ -58,12 +58,12 @@ public class EnvironmentJson {
     middlewareInstallPath = environment.getMiddlewareInstallPath();
     middlewareDataPath = environment.getMiddlewareDataPath();
     if (environment.getMiddlewareMetadata() != null) {
-      middlewareMetadata = environment.getMiddlewareMetadata().toString();
+      middlewareMetadata = environment.getMiddlewareMetadata();
     }
     assessmentName = environment.getAssessmentName();
     assessmentType = environment.getAssessmentType();
     if (environment.getAssessmentMetadata() != null) {
-      assessmentMetadata = environment.getAssessmentMetadata().toString();
+      assessmentMetadata = environment.getAssessmentMetadata();
     }
   }
 
@@ -106,8 +106,8 @@ public class EnvironmentJson {
 
       @Override
       public JsonObject getMiddlewareMetadata() {
-        if (middlewareMetadata != null && !"".equals(middlewareMetadata)) {
-          return (JsonObject) new JsonParser().parse(middlewareMetadata);
+        if (middlewareMetadata != null && middlewareMetadata.isJsonObject()) {
+          return middlewareMetadata.getAsJsonObject();
         }
         return null;
       }
@@ -124,8 +124,8 @@ public class EnvironmentJson {
 
       @Override
       public JsonObject getAssessmentMetadata() {
-        if (assessmentMetadata != null && !"".equals(assessmentMetadata)) {
-          return (JsonObject) new JsonParser().parse(assessmentMetadata);
+        if (assessmentMetadata != null && assessmentMetadata.isJsonObject()) {
+          return assessmentMetadata.getAsJsonObject();
         }
         return null;
       }
