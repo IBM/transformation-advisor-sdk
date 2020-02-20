@@ -10,6 +10,19 @@ ta-sdk-spi | Interface of the plug-in framework
 ta-sdk-core | Default implementation of SPI framework
 ta-sdk-sample | Sample plug-in
 
+### Dependency
+Other middleware plug-in project will depend on the ta-sdk-core module.
+
+Need to add this in your pom.xml file.
+```
+        <dependency>
+            <groupId>com.ibm.ta.sdk</groupId>
+            <artifactId>ta-sdk-core</artifactId>
+            <version>0.5.2</version>
+        </dependency>
+```
+ta-sdk-core module will depend on the ta-sdk-spi module.
+
 ### Build
 This project uses Maven to build. Download and configure Maven before building this project.
 
