@@ -72,7 +72,7 @@ public class SamplePluginProvider extends GenericPluginProvider {
     CliInputCommand collectCmd = new CliInputCommand(CliInputCommand.CMD_COLLECT,
             "Performs data collection",
             collectionCmdOpts, null, Arrays.asList("INSTALL_PATH", "DATA_DIR"));
-    return collectCmd;
+    return collectCmd
   }
 
   @Override
