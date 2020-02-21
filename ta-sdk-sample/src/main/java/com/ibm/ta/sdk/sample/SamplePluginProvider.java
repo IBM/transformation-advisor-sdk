@@ -175,7 +175,7 @@ public class SamplePluginProvider extends GenericPluginProvider {
 
   @Override
   public CliInputCommand getReportCommand() {
-    // Collect command
+    // Report command
     CliInputOption reportCmdAllOpt = new CliInputOption("", "html", "HTML report format");
     List<CliInputOption> reportCmdOpts = new LinkedList<>(Arrays.asList(reportCmdAllOpt));
     CliInputCommand reportCmd = new CliInputCommand(CliInputCommand.CMD_REPORT,
