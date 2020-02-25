@@ -1,0 +1,5 @@
+# the default owner of this repo.
+*                            @johnbuckley   @paulbarr
+
+# these included all the github and build files, eg,  file under the .github or .circlecl directory
+.*                           @transformationAdvisor-sdk
