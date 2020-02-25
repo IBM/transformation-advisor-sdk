@@ -49,6 +49,12 @@ public class EnvironmentJson {
     // For read json from file
   }
 
+  public EnvironmentJson(String domain, String middlewareName, String middlewareVersion) {
+    this.domain = domain;
+    this.middlewareName = middlewareName;
+    this.middlewareVersion = middlewareVersion;
+  }
+
   public EnvironmentJson(Environment environment) {
     domain = environment.getDomain();
     operatingSystem = environment.getOperatingSystem();
@@ -131,5 +137,37 @@ public class EnvironmentJson {
       }
     };
     return environment;
+  }
+
+  public void setOperatingSystem(String operatingSystem) {
+    this.operatingSystem = operatingSystem;
+  }
+
+  public void setMiddlewareMetadata(JsonElement middlewareMetadata) {
+    this.middlewareMetadata = middlewareMetadata;
+  }
+
+  public void setHostName(String hostName) {
+    this.hostName = hostName;
+  }
+
+  public void setAssessmentMetadata(JsonElement assessmentMetadata) {
+    this.assessmentMetadata = assessmentMetadata;
+  }
+
+  public void setMiddlewareInstallPath(String middlewareInstallPath) {
+    this.middlewareInstallPath = middlewareInstallPath;
+  }
+
+  public void setMiddlewareDataPath(String middlewareDataPath) {
+    this.middlewareDataPath = middlewareDataPath;
+  }
+
+  public void setAssessmentName(String assessmentName) {
+    this.assessmentName = assessmentName;
+  }
+
+  public void setAssessmentType(String assessmentType) {
+    this.assessmentType = assessmentType;
   }
 }

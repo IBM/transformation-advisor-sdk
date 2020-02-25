@@ -39,6 +39,19 @@ public class GenericDataCollection implements DataCollection {
     }
   }
 
+  public GenericDataCollection(String assessmentName, EnvironmentJson envJson, List<GenericAssessmentUnit> assessmentUnits) throws IOException {
+    this.assessmentName = assessmentName;
+    this.envJson = envJson;
+    if (assessmentUnits == null) {
+      this.assessmentUnits = new ArrayList<>();
+    } else {
+      this.assessmentUnits = assessmentUnits;
+      for (GenericAssessmentUnit au : assessmentUnits) {
+        au.setDataCollection(this);
+      }
+    }
+  }
+
 
   @Override
   public String getAssessmentName() {
