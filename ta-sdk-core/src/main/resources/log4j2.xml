@@ -18,8 +18,8 @@
         <Logger name="com.ibm.ta-sdk" level="debug" additivity="true">
             <appender-ref ref="RollingFile" level="debug" />
         </Logger>
-        <Root level="error">
-            <AppenderRef ref="Console" />
+        <Root level="debug">
+            <AppenderRef ref="RollingFile" />
         </Root>
     </Loggers>
 </Configuration>
