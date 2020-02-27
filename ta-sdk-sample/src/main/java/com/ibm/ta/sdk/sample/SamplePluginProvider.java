@@ -72,9 +72,8 @@ public class SamplePluginProvider extends GenericPluginProvider {
       // put your logic here to detect the middleware runtime environment and construct the environmentJson object
       String instanceName = "Installation1";
       EnvironmentJson envJson = new EnvironmentJson(SAMPLE_DOMAIN, SAMPLE_MIDDLEWARE, "1.0.0");
-      envJson.setHostName("iib1.rtp.raleigh.ibm.com");
-      envJson.setOperatingSystem("RHEL7");
-      envJson.setMiddlewareInstallPath("/opt/sampleSoftware");
+      envJson.setMiddlewareInstallPath(cliInputCommand.getArguments().get(0));
+      envJson.setMiddlewareDataPath(cliInputCommand.getArguments().get(1));
       envJson.setAssessmentType("Instance");
       envJson.setAssessmentName(instanceName);
 
