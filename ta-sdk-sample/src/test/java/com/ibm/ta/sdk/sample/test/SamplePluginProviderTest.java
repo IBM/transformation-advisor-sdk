@@ -25,10 +25,12 @@ public class SamplePluginProviderTest {
     @BeforeEach
     void cleanOutpotDir() throws IOException {
         Path outputDir = Util.getOutputDir().toPath();
-        Files.walk(outputDir)
-                .sorted(Comparator.reverseOrder())
-                .map(Path::toFile)
-                .forEach(File::delete);
+        if (outputDir.toFile().exists()) {
+            Files.walk(outputDir)
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+        }
     }
 
     @Test
