@@ -110,9 +110,11 @@ public abstract class GenericPluginProvider implements PluginProvider {
   }
 
   protected Path getFileFromUri(URI uri) throws IOException {
-    Map<String, String> env = new HashMap<>();
-    env.put("create", "true");
-    FileSystem zipfs = FileSystems.newFileSystem(uri, env);
+    if (!uri.toString().startsWith("file")){
+      Map<String, String> env = new HashMap<>();
+      env.put("create", "true");
+      FileSystem zipfs = FileSystems.newFileSystem(uri, env);
+    }
     return Paths.get(uri);
   }
 
