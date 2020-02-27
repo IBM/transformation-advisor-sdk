@@ -34,7 +34,6 @@ public class SamplePluginProvider extends GenericPluginProvider {
   private static final String SAMPLE_MIDDLEWARE= "sample";
 
   // JSON files
-  private static final String FILE_ENVIRONMENT_JSON = "/sampleData/environment.json";
   private static final String FILE_ASSESS_DATA_JSON = "/sampleData/AssessmentUnit1.json";
   private static final String FILE_ASSESS_CONFIG_FILE_JSON = "/sampleData/SampleConfigFile.json";
   private static final String FILE_ASSESS_CONFIG_FILE2_JSON = "/sampleData/SampleConfigFile2.json";
