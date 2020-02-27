@@ -9,9 +9,15 @@ package com.ibm.ta.sdk.spi.collect;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
 import com.google.gson.annotations.Expose;
-import com.ibm.ta.sdk.spi.collect.Environment;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class EnvironmentJson {
+
+  private static Logger logger = LogManager.getLogger(EnvironmentJson.class.getName());
   @Expose
   private String domain;
 
@@ -53,6 +59,12 @@ public class EnvironmentJson {
     this.domain = domain;
     this.middlewareName = middlewareName;
     this.middlewareVersion = middlewareVersion;
+    this.operatingSystem = System.getProperty("os.name");
+    try {
+      this.hostName = InetAddress.getLocalHost().getCanonicalHostName();
+    } catch (UnknownHostException e) {
+      logger.error("cannot detect the hostname and set it to environment", e);
+    }
   }
 
   public EnvironmentJson(Environment environment) {

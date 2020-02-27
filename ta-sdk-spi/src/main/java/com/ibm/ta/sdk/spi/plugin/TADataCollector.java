@@ -540,7 +540,7 @@ public class TADataCollector {
     }
   }
 
-  public static void main(String[] args) throws IOException, TAException {
+  public static void main(String[] args) {
     List<String> cliCommands = new LinkedList<>();
 
     for (int i = 0; i < args.length; i++) {
@@ -565,6 +565,12 @@ public class TADataCollector {
       new TADataCollector().runCommand(middleware, cliCommands);
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage() + "\n\n" + getBaseHelp() + "\n");
+    } catch (TAException tae) {
+      logger.error("Fail to run the command:", tae);
+      System.out.println("Fail to run the command, check log file for detail information.\n    " +tae.getMessage() +  "\n");
+    } catch (IOException ioe) {
+      logger.error("Fail to run the command:", ioe);
+      System.out.println("Fail to run the command, check log file for detail information.\n    " +ioe.getMessage() +  "\n");
     }
   }
 }
