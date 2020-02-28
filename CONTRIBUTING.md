@@ -69,7 +69,7 @@ git commit -s
 ```
 
 ## Communication
-**_FIXME_** Please feel free to connect with us on our [Slack channel](link).
+Public slack channel will be available soon.
 
 ## Setup
 Install Java and Maven project on your development machine.
