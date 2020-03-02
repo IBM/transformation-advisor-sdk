@@ -162,7 +162,7 @@ Commands:
 
     The options for these commands are defined in the getXXXCommand() method,  when user type the --help for different command,  the plug-in specific command option will be displayed.
   
-    This [diagram](files/TA-SDK.docx) illustrates the the function of each command and the interaction/flow between these commands.
+    This [diagram](images/dataFlow.png) illustrates the the function of each command and the interaction/flow between these commands.
 
     The GenericPluginProvider provide the default implementation for the assess and report method, in here we just implement the collect method.  The collect command take one parameter,  which is the install path of your demo software.
 
