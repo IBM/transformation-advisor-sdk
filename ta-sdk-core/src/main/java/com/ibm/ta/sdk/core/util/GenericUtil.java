@@ -61,13 +61,15 @@ public class GenericUtil {
     if (!queryInputFilesMap.isEmpty()) {
       Collection<String> queryInputFileNamesList = queryInputFilesMap.values();
 
-      for (Path configFile : au.getConfigFiles()) {
-        String configFilename = configFile.getFileName().toString();
-        for (String queryInputFileName : queryInputFileNamesList) {
-          if (configFilename.matches(queryInputFileName)) {
-            // Found, continue with next config file
-            matchingAuConfigFiles.add(configFile);
-            break;
+      if (au.getConfigFiles()!=null) {
+        for (Path configFile : au.getConfigFiles()) {
+          String configFilename = configFile.getFileName().toString();
+          for (String queryInputFileName : queryInputFileNamesList) {
+            if (configFilename.matches(queryInputFileName)) {
+              // Found, continue with next config file
+              matchingAuConfigFiles.add(configFile);
+              break;
+            }
           }
         }
       }

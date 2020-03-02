@@ -83,7 +83,7 @@ public abstract class GenericPluginProvider implements PluginProvider {
     List<CliInputOption> assessCmdOpts = new LinkedList<>(Arrays.asList(assessCmdSkipCollectOpt));
     CliInputCommand assessCmd = new CliInputCommand(CliInputCommand.CMD_ASSESS,
             "Performs data collection and assessment",
-            assessCmdOpts, null, Arrays.asList("INSTALL_PATH", "DATA_DIR"));
+            assessCmdOpts, null, getCollectCommand().getArgumentDisplayNames());
 
     // Assess subcommand get get only costs in days/weeks
     CliInputOption costCmdDayOpt = new CliInputOption(null, "days", "Display cost in days");
@@ -110,9 +110,11 @@ public abstract class GenericPluginProvider implements PluginProvider {
   }
 
   protected Path getFileFromUri(URI uri) throws IOException {
-    Map<String, String> env = new HashMap<>();
-    env.put("create", "true");
-    FileSystem zipfs = FileSystems.newFileSystem(uri, env);
+    if (!uri.toString().startsWith("file")){
+      Map<String, String> env = new HashMap<>();
+      env.put("create", "true");
+      FileSystem zipfs = FileSystems.newFileSystem(uri, env);
+    }
     return Paths.get(uri);
   }
 

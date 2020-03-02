@@ -10,6 +10,9 @@ ta-sdk-spi | Interface of the plug-in framework
 ta-sdk-core | Default implementation of SPI framework
 ta-sdk-sample | Sample plug-in
 
+### Guide for Plugin Developer
+If you want to develop your own plugins using TA SDK,  [here](https://github.com/IBM/transformation-advisor-sdk/wiki/Transformation-Advisor-SDK-Plugin-Developer-Guide) is the step by step guide to get start.
+
 ### Dependency
 Other middleware plug-in project will depend on the ta-sdk-core module.
 

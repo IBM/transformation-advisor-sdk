@@ -34,7 +34,6 @@ public class SamplePluginProvider extends GenericPluginProvider {
   private static final String SAMPLE_MIDDLEWARE= "sample";
 
   // JSON files
-  private static final String FILE_ENVIRONMENT_JSON = "/sampleData/environment.json";
   private static final String FILE_ASSESS_DATA_JSON = "/sampleData/AssessmentUnit1.json";
   private static final String FILE_ASSESS_CONFIG_FILE_JSON = "/sampleData/SampleConfigFile.json";
   private static final String FILE_ASSESS_CONFIG_FILE2_JSON = "/sampleData/SampleConfigFile2.json";
@@ -73,9 +72,8 @@ public class SamplePluginProvider extends GenericPluginProvider {
       // put your logic here to detect the middleware runtime environment and construct the environmentJson object
       String instanceName = "Installation1";
       EnvironmentJson envJson = new EnvironmentJson(SAMPLE_DOMAIN, SAMPLE_MIDDLEWARE, "1.0.0");
-      envJson.setHostName("iib1.rtp.raleigh.ibm.com");
-      envJson.setOperatingSystem("RHEL7");
-      envJson.setMiddlewareInstallPath("/opt/sampleSoftware");
+      envJson.setMiddlewareInstallPath(cliInputCommand.getArguments().get(0));
+      envJson.setMiddlewareDataPath(cliInputCommand.getArguments().get(1));
       envJson.setAssessmentType("Instance");
       envJson.setAssessmentName(instanceName);
 
