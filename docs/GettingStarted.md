@@ -20,7 +20,7 @@ In this document we use IntelliJ as the Java development tool.
         </dependency>
     </dependencies>
 ```
-[[images/image2.png]]
+[[https://github.com/IBM/transformation-advisor-sdk/wiki/images/image2.png]]
    Then click the `Import All Maven Projects` button in the Maven Tool Panel.  
 
 If the specific version of the TA SDK cannot be found in the maven central repository,  you can clone the [TA SDK Repo](https://github.com/IBM/transformation-advisor-sdk) and build the jar files locally.
@@ -83,7 +83,7 @@ mvn clean install
 
     Create a `META-INF/services/com.ibm.ta.sdk.spi.plugin.PluginProvider`  file under your project's `src/main/resources/` directory, the content of this file is just the full class name of your new plug-in java file.
 
-[[images/image3.png]]
+[[https://github.com/IBM/transformation-advisor-sdk/wiki/images/image3.png]]
 
 6.  Create your skeleton plug-in Java class.
     
@@ -255,7 +255,7 @@ Create the `/sampleData/application1.json` file under under your project's `src/
    Test it using this command:
 ```java -jar target/ta-sdk-demo-1.0-SNAPSHOT.jar demo collect /opt/DemoSoftware```     
    You will see the environment.json file created under the output directory and the assessment unit's data file application1.json also copied to the output directory.
-[[images/image5.png]]
+[[https://github.com/IBM/transformation-advisor-sdk/wiki/images/image5.png]]
 
 10. Create the issues, complexity, category and target json files
 
@@ -405,7 +405,7 @@ Create the `/sampleData/application1.json` file under under your project's `src/
 java -jar target/ta-sdk-demo-1.0-SNAPSHOT.jar demo assess /opt/DemoSoftware   
 ```
 You should see that the recommendations.json file is created under the output directory,  and an archive file for this collection is also generated.
-[[images/image6.png]]
+[[https://github.com/IBM/transformation-advisor-sdk/wiki/images/image6.png]]
 
 
 12.  Test the report command
@@ -426,7 +426,7 @@ java -jar target/ta-sdk-demo-1.0-SNAPSHOT.jar demo run /opt/DemoSoftware
 ```
 
    You can check that all the files are generated under the output/ directory.
-[[images/image7.png]]
+[[https://github.com/IBM/transformation-advisor-sdk/wiki/images/image7.png]]
 
 Here is the source files for this demo project
 
