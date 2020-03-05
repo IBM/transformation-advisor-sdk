@@ -26,6 +26,11 @@ import java.util.List;
  * classpath.
  */
 public interface PluginProvider {
+  /**
+   * Version number of the Plug-in.
+   * @return Plug-in version
+   */
+  String getVersion();
 
   /**
    * Domain is a container to group a set of middleware together. These middleware may belong to the same

@@ -1,30 +1,47 @@
 {
-  "$id":"recommendation-assess.schema.json",
+  "$id": "recommendation-assessment-units.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Recommendation Assessment Units Schema",
-  "type": "object",
-  "properties": {
-    "name": {
-      "type": "string",
-      "minLength": 1
-    },
-    "targets": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/Target"
-      },
-      "minItems": 1
-    }
+  "description": "Created by Huang, Fuguo. Created date: 2019-June-20.",
+  "items": {
+    "$ref": "#/definitions/AssessmentUnit"
   },
-  "required": [
-    "name",
-    "targets"
-  ],
-  "definitions" : {
+  "definitions": {
+    "AssessmentUnit": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "targets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Target"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "name",
+        "targets"
+      ],
+      "title": "AssessmentUnit",
+      "description": "A list of assessment units."
+    },
     "Target": {
       "type": "object",
       "properties": {
         "version": {
+          "type": "string"
+        },
+        "productName": {
+          "type": "string"
+        },
+        "productVersion": {
+          "type": "string"
+        },
+        "runtime": {
           "type": "string"
         },
         "platform": {
@@ -33,54 +50,47 @@
         },
         "location": {
           "type": "string",
-          "enum": ["Public", "Private"]
+          "enum": ["Private", "Public"]
         },
         "valid": {
           "type": "string",
           "enum": ["true", "false"]
         },
-        "runtime": {
-          "type": "string"
-        },
         "issues": {
           "$ref": "#/definitions/TargetIssues"
         },
         "summary": {
-          "$ref": "schema/recommendation-assess-summary.schema.json"
+          "$ref": "schema/recommendation-assessment-units-summary.schema.json"
         }
       },
       "required": [
         "issues",
+        "runtime",
         "platform",
+        "location",
         "summary",
         "valid",
         "version",
-        "location",
-        "runtime"
+        "productName",
+        "productVersion"
       ],
       "title": "Target"
     },
     "TargetIssues": {
       "type": "object",
-      "items": {
-        "type": "object",
-        "patternProperties": {
-          ".": {
-            "type":"array",
-            "items": {
-              "$ref": "#/definitions/TargetIssuesItem"
-            }
-          }
-        },
-        "propertyNames": {
-          "pattern": "^[a-z0-9]+([A-Z0-9]{1}[a-z0-9]*)*"
+      "patternProperties": {
+        ".*": {
+          "type": "object",
+          "$ref": "#/definitions/TargetIssuesCategory"
         }
       },
-      "minItems": 1,
-      "required": [
-        "security"
-      ],
       "title": "TargetIssues"
+    },
+    "TargetIssuesCategory": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TargetIssuesItem"
+      }
     },
     "TargetIssuesItem": {
       "type": "object",
@@ -90,10 +100,6 @@
         },
         "title": {
           "type": "string"
-        },
-        "category" : {
-          "type": "string",
-          "minLength": 1
         },
         "cost": {
           "type": "number",
@@ -113,11 +119,10 @@
           }
         },
         "severity": {
-          "type": "string",
-          "enum": ["GREEN", "YERROW", "RED"]
+          "$ref": "schema/recommendation-severity.schema.json"
         },
         "occurrencesFields": {
-          "type": "object"
+          "$ref": "#/definitions/OccurrencesFields"
         },
         "occurrencesCount": {
           "type": "integer",
@@ -126,14 +131,13 @@
         "occurrences": {
           "type": "array",
           "items": {
-            "type": "object"
+            "$ref": "#/definitions/OccurrencesFields"
           }
         }
       },
       "required": [
         "id",
         "cost",
-        "category",
         "issueOverhead",
         "occurrences",
         "occurrencesCost",
@@ -144,6 +148,11 @@
         "title"
       ],
       "title": "TargetIssuesItem"
+    },
+    "OccurrencesFields": {
+      "type": "object",
+      "title": "OccurrencesFields"
     }
   }
+
 }

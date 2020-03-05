@@ -3,7 +3,7 @@
     "id": "dns",
     "name": "DNS Reconfiguration",
     "description": "Issues that require DNS reconfiguration",
-    "complexityContribution": "SIMPLE",
+    "complexityContribution": "simple",
     "issues": [
       "MQCL01"
     ]
@@ -12,7 +12,7 @@
     "id": "cluster",
     "name": "Cluster Reconfiguration",
     "description": "Issues that require cluster reconfiguration",
-    "complexityContribution": "MODERATE",
+    "complexityContribution": "moderate",
     "issuesCategory": [
       "cluster"
     ]
@@ -21,7 +21,7 @@
     "id": "exits",
     "name": "Changing Custom Logic",
     "description": "Issues that require changing custom logic",
-    "complexityContribution": "MODERATE",
+    "complexityContribution": "moderate",
     "issuesCategory": [
       "exits"
     ]
@@ -30,7 +30,7 @@
     "id": "security",
     "name": "Client authentication reconfiguration",
     "description": "Issues that require client authentication reconfiguration",
-    "complexityContribution": "COMPLEX",
+    "complexityContribution": "complex",
     "issues": [
       "MQSEC01"
     ]

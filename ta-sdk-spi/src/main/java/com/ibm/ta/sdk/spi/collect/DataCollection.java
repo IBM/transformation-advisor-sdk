@@ -16,7 +16,7 @@ import java.util.List;
  * running on. {@code Environment} is persisted to JSON format, and written to a file called environment.json
  * in the root of the <i>output</i> directory.
  *
- * <p>@see AssessmentUnit for an overview of an assessment unit. Generally, an assessment unit is a running instance
+ * <p>@see AssessmentUnitMetadataJson for an overview of an assessment unit. Generally, an assessment unit is a running instance
  * of the middleware installation. Each assessment unit contains configuration information in <i>JSON</i> format. In
  * addition, it may include other configuration files that is relevant to the assessment of this unit. The artifacts
  * for each assessment unit are persisted in a separate sub-directory in the <i>output</i> directory. The name
@@ -46,7 +46,7 @@ public interface DataCollection {
    * assessment unit are stored separately as well. {@link AssessmentUnit} contains all the information for each
    * assessment unit, which will be persisted in its own sub-directory.
    *
-   * @return {@code List} of {@code AssessmentUnit}, with configuration data and files for each assessment unit
+   * @return {@code List} of {@code AssessmentUnitMetadataJson}, with configuration data and files for each assessment unit
    * @see AssessmentUnit
    */
   List<? extends AssessmentUnit> getAssessmentUnits();

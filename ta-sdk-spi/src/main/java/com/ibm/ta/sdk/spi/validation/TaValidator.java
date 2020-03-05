@@ -58,8 +58,21 @@ public class TaValidator {
                 if (TaJsonFileValidator.validateTarget(jsonFile)) {
                     System.out.println("The resource " + jsonFile + " is a valid target json file. No anomaly were found.");
                 }
+            } else if (commandLine.hasOption("e")) {
+                String jsonFile = commandLine.getOptionValue("e");
+                if (TaJsonFileValidator.validateEnvironment(jsonFile)) {
+                    System.out.println("The resource " + jsonFile + " is a valid environment json file. No anomaly were found.");
+                }
+            } else if (commandLine.hasOption("r")) {
+                String jsonFile = commandLine.getOptionValue("r");
+                if (TaJsonFileValidator.validateRecommendation(jsonFile)) {
+                    System.out.println("The resource " + jsonFile + " is a valid recommendation json file. No anomaly were found.");
+                }
             } else if (commandLine.hasOption("z")) {
                 String zipFile = commandLine.getOptionValue("z");
+                if (TaCollectionZipValidator.validateCollectionArchive(zipFile)) {
+                  System.out.println("The resource " + zipFile + " is a valid collection archive file. No anomaly were found.");
+                }
             } else {
                 getHelpPrintOut(options);
             }

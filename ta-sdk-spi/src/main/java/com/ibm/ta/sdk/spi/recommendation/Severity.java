@@ -27,7 +27,8 @@ package com.ibm.ta.sdk.spi.recommendation;
  * Description: This issue should be investigated after migration or the application may function below an optimal level in the cloud environment. 
  */
 public enum Severity {
-  RED,
-  YELLOW,
-  GREEN;
+  // TODO: Lowercase?
+  Critical,
+  Potential,
+  Suggested;
 }

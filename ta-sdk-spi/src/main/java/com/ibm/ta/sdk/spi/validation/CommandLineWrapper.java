@@ -60,6 +60,20 @@ public class CommandLineWrapper {
                 .hasArg()
                 .desc("Validate collection zip file")
                 .build();
+        Option envOption = Option
+                .builder("e")
+                .longOpt("environment")
+                .hasArg()
+                .desc("Validate environment json file")
+                .build();
+
+        Option recOption = Option
+                .builder("r")
+                .longOpt("recommendation")
+                .hasArg()
+                .desc("Validate recommendation json file")
+                .build();
+
 
         options
                 .addOption(issueOption)
@@ -68,7 +82,9 @@ public class CommandLineWrapper {
                 .addOption(complexOption)
                 .addOption(recommOption)
                 .addOption(targetOption)
-                .addOption(zipOption);
+                .addOption(zipOption)
+                .addOption(envOption)
+                .addOption(recommOption);
     }
 
     private CommandLineWrapper() {

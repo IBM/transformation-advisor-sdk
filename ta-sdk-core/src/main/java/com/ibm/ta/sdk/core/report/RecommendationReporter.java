@@ -391,15 +391,15 @@ public class RecommendationReporter implements ReportGenerator {
                 JsonObject issuesInSummary = (JsonObject) summary.get("issues");
                 int numOfRedIssues = issuesInSummary.get("severe") == null ? 0 : issuesInSummary.get("severe").getAsInt();
                 if (numOfRedIssues == 0){
-                    numOfRedIssues = issuesInSummary.get("RED") == null ? 0 : issuesInSummary.get("RED").getAsInt();
+                    numOfRedIssues = issuesInSummary.get("Critical") == null ? 0 : issuesInSummary.get("Critical").getAsInt();
                 }
                 int numOfYellowIssues = issuesInSummary.get("warning") == null ? 0 : issuesInSummary.get("warning").getAsInt();
                 if (numOfYellowIssues == 0){
-                    numOfYellowIssues = issuesInSummary.get("YELLOW") == null ? 0 : issuesInSummary.get("YELLOW").getAsInt();
+                    numOfYellowIssues = issuesInSummary.get("Potential") == null ? 0 : issuesInSummary.get("Potential").getAsInt();
                 }
                 int numOfGreenIssues = issuesInSummary.get("info") == null ? 0 : issuesInSummary.get("simple").getAsInt();
                 if (numOfGreenIssues == 0){
-                    numOfGreenIssues = issuesInSummary.get("GREEN") == null ? 0 : issuesInSummary.get("GREEN").getAsInt();
+                    numOfGreenIssues = issuesInSummary.get("Suggested") == null ? 0 : issuesInSummary.get("Suggested").getAsInt();
                 }
 
                 JsonObject complexity = (JsonObject) summary.get("complexity");

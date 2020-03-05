@@ -17,21 +17,34 @@ import org.apache.commons.compress.utils.IOUtils;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class Util {
   public static void zipDir(Path zipOutFile, File zipInDir) throws IOException {
-    try (OutputStream fo = Files.newOutputStream(zipOutFile);
-         OutputStream gzo = new GzipCompressorOutputStream(fo);
-         ArchiveOutputStream o = new TarArchiveOutputStream(gzo)) {
-      for (File file : zipInDir.listFiles()) {
-        ArchiveEntry entry = o.createArchiveEntry(file, file.getName());
-        o.putArchiveEntry(entry);
-        if (file.isFile()) {
-          try (InputStream i = Files.newInputStream(file.toPath())) {
-            IOUtils.copy(i, o);
-          }
-        }
-        o.closeArchiveEntry();
+    ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipOutFile.toFile()));
+    addZipEntry(zipInDir, null, zos);
+    zos.finish();
+    zos.close();
+  }
+
+  private static void addZipEntry(File file, String parentDir, ZipOutputStream zos) throws IOException {
+    // Add current file/dir
+    zos.putNextEntry(new ZipEntry(
+            (parentDir != null ? parentDir + File.separator : "")  // Do not start with leading /
+                    + file.getName()
+                    + (file.isDirectory() ? File.separator : "")  // Add trailing / to directories
+    ));
+    if (file.isFile()) {
+      IOUtils.copy(new FileInputStream(file), zos);
+    }
+    zos.closeEntry();
+
+    // Add subdir files
+    if (file.isDirectory()) {
+      parentDir = (parentDir != null ? parentDir + File.separator : "") + file.getName();
+      for (File dirFile : file.listFiles()) {
+        addZipEntry(dirFile, parentDir, zos);
       }
     }
   }

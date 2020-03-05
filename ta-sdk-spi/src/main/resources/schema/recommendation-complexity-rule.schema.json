@@ -1,0 +1,51 @@
+{
+  "$id": "recommendation-complexity-rule.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Recommendation Complexity Rule Schema",
+  "description": "Created by Huang, Fuguo. Created date: 2019-June-20.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "complexityContribution": {
+      "$ref": "schema/recommendation-complexity-contribution.schema.json"
+    },
+    "issues": {
+      "$ref": "#/definitions/Issues"
+    },
+    "issuesCategory": {
+      "$ref": "#/definitions/IssuesCategory"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "complexityContribution"
+  ],
+  "definitions" : {
+    "Issues": {
+      "title": "Issues",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "IssuesCategory": {
+      "title": "IssueCategories",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    }
+  }
+}

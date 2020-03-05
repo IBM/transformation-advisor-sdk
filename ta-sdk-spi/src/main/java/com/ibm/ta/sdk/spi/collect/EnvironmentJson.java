@@ -14,10 +14,15 @@ import org.apache.logging.log4j.Logger;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.List;
+
 
 public class EnvironmentJson {
 
   private static Logger logger = LogManager.getLogger(EnvironmentJson.class.getName());
+  @Expose
+  private String pluginVersion;
+
   @Expose
   private String domain;
 
@@ -43,13 +48,16 @@ public class EnvironmentJson {
   private JsonElement middlewareMetadata;
 
   @Expose
-  private String assessmentName;
+  private String executionContextName;
 
   @Expose
-  private String assessmentType;
+  private String executionContextType;
 
   @Expose
   private JsonElement assessmentMetadata;
+
+  @Expose
+  private List<String> assessmentUnits;
 
   public EnvironmentJson() {
     // For read json from file
@@ -78,8 +86,8 @@ public class EnvironmentJson {
     if (environment.getMiddlewareMetadata() != null) {
       middlewareMetadata = environment.getMiddlewareMetadata();
     }
-    assessmentName = environment.getAssessmentName();
-    assessmentType = environment.getAssessmentType();
+    executionContextName = environment.getExecutionContextName();
+    executionContextType = environment.getExecutionContextType();
     if (environment.getAssessmentMetadata() != null) {
       assessmentMetadata = environment.getAssessmentMetadata();
     }
@@ -131,13 +139,13 @@ public class EnvironmentJson {
       }
 
       @Override
-      public String getAssessmentName() {
-        return assessmentName;
+      public String getExecutionContextName() {
+        return executionContextName;
       }
 
       @Override
-      public String getAssessmentType() {
-        return assessmentType;
+      public String getExecutionContextType() {
+        return executionContextType;
       }
 
       @Override
@@ -175,11 +183,23 @@ public class EnvironmentJson {
     this.middlewareDataPath = middlewareDataPath;
   }
 
-  public void setAssessmentName(String assessmentName) {
-    this.assessmentName = assessmentName;
+  public void setExecutionContextName(String executionContextName) {
+    this.executionContextName = executionContextName;
   }
 
-  public void setAssessmentType(String assessmentType) {
-    this.assessmentType = assessmentType;
+  public void setExecutionContextType(String executionContextType) {
+    this.executionContextType = executionContextType;
+  }
+
+  public void setPluginVersion(String version) {
+    this.pluginVersion = version;
+  }
+
+  public List<String> getAssessmentUnits() {
+    return assessmentUnits;
+  }
+
+  public void setAssessmentUnits(List<String> auNamesList) {
+    this.assessmentUnits = auNamesList;
   }
 }

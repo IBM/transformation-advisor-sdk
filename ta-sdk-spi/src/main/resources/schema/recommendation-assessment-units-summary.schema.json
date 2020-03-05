@@ -1,5 +1,5 @@
 {
-  "$id":"recommendation-assess-summary.schema.json",
+  "$id": "recommendation-assessment-units-summary.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Recommendation Assessment Units Summary Schema",
   "description": "Created by Huang, Fuguo. Created date: 2019-June-21.",
@@ -24,18 +24,17 @@
     "Complexity": {
       "type": "object",
       "properties": {
-        "COMPLEX": {
+        "complex": {
           "$ref": "#/definitions/ComplexityContribution"
         },
-        "SIMPLE": {
+        "simple": {
           "$ref": "#/definitions/ComplexityContribution"
         },
-        "MODERATE": {
+        "moderate": {
           "$ref": "#/definitions/ComplexityContribution"
         },
         "score": {
-          "type": "string",
-          "enum": ["SIMPLE", "MODERATE", "COMPLEX"]
+          "$ref": "schema/recommendation-complexity-contribution.schema.json"
         }
       },
       "required": [
@@ -60,19 +59,19 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "GREEN": {
+        "Critical": {
           "type": "integer"
         },
-        "YELLOW": {
+        "Potential": {
           "type": "integer"
         },
-        "RED": {
+        "Suggested": {
           "type": "integer"
         }
       },
       "propertyNames": {
         "description": "Limited the property names used in the 'issues'",
-        "pattern": "^GREEN|YELLOW|RED$"
+        "pattern": "^Suggested|Potential|Critical"
       },
       "title": "SummaryIssues"
     },

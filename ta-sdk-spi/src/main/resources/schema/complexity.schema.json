@@ -1,48 +1,54 @@
 {
   "$id": "complexity.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Complexity",
-  "description": "the complexity of an issue during migration",
-  "type": "array",
-  "items": {
-    "type": "object",
-    "properties": {
-      "id": {
-        "description": "The id of the complexity",
-        "type": "string"
-      },
-      "name": {
-        "description": "The name of the complexity",
-        "type": "string"
-      },
-      "description": {
-        "description": "The description of the complexity",
-        "type": "string"
-      },
-      "complexityContribution": {
-        "description": "The level of the complexity",
-        "type": "string"
-      },
-      "issues": {
-        "description": "The list of issues which has complexity",
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
-      "issuesCategory": {
-        "description": "The list of issue categories which has this complexity",
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
+
+  "definitions": {
+    "complexity": {
+      "title": "Complexity",
+      "description": "the complexity of an issue during migration",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The id of the complexity",
+            "type": "string"
+          },
+          "name": {
+            "description": "The name of the complexity",
+            "type": "string"
+          },
+          "description": {
+            "description": "The description of the complexity",
+            "type": "string"
+          },
+          "complexityContribution": {
+            "description": "The level of the complexity",
+            "type": "string"
+          },
+          "issues": {
+            "description": "The list of issues which has complexity",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "issuesCategory": {
+            "description": "The list of issue categories which has this complexity",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "complexityContribution"
+        ]
       }
-    },
-    "required": [
-      "id",
-      "name",
-      "description",
-      "complexityContribution"
-    ]
-  }
+    }
+  },
+  "$ref": "#/definitions/complexity"
 }

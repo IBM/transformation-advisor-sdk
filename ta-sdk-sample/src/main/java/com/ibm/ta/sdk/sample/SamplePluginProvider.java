@@ -41,6 +41,11 @@ public class SamplePluginProvider extends GenericPluginProvider {
   private static final String FILE_ASSESS_CONFIG_FILE_XML2= "/sampleData/Plants.ear_server.xml";
 
   @Override
+  public String getVersion() {
+    return "0.9.1";
+  }
+
+  @Override
   public String getDomain() {
     return SAMPLE_DOMAIN;
   }
@@ -74,8 +79,8 @@ public class SamplePluginProvider extends GenericPluginProvider {
       EnvironmentJson envJson = new EnvironmentJson(SAMPLE_DOMAIN, SAMPLE_MIDDLEWARE, "1.0.0");
       envJson.setMiddlewareInstallPath(cliInputCommand.getArguments().get(0));
       envJson.setMiddlewareDataPath(cliInputCommand.getArguments().get(1));
-      envJson.setAssessmentType("Instance");
-      envJson.setAssessmentName(instanceName);
+      envJson.setExecutionContextType("Instance");
+      envJson.setExecutionContextName(instanceName);
 
       // use the middleware specific technology to generate the assesment unit data json file
       // in this sample plug-in we assume the /sampleData/AssessmentUnit1.json is the generated file

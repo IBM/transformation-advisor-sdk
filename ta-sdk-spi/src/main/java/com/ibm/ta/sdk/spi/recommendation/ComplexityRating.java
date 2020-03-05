@@ -19,7 +19,7 @@ package com.ibm.ta.sdk.spi.recommendation;
  * @see ComplexityContribution
  */
 public enum ComplexityRating {
-  SIMPLE,
-  MODERATE,
-  COMPLEX;
+  simple,
+  moderate,
+  complex;
 }
