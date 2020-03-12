@@ -27,22 +27,22 @@ public class AssessmentUnitMetadataJson {
   private String assessmentUnitName;
 
   @Expose
-  private String archiveType;
+  private String collectionUnitType;
 
   @Expose
-  private String archiveName;
+  private String collectionUnitName;
 
   @Expose
   private Properties identifier;
 
   public AssessmentUnitMetadataJson(String domain, String middleWare, String hostname, String assessmentUnitName,
-                                    String executionContextType, String executionContextName) {
+                                    String collectionUnitType, String collectionUnitName) {
     this.domain = domain;
     this.middleware = middleWare;
     this.host = hostname;
     this.assessmentUnitName = assessmentUnitName;
-    this.archiveType = executionContextType;
-    this.archiveName = executionContextName;
+    this.collectionUnitType = collectionUnitType;
+    this.collectionUnitName = collectionUnitName;
     addIdentifier("assessmentUnitName", assessmentUnitName);
   }
 

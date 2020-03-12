@@ -41,12 +41,12 @@
       "description": "Additional metadata for the middleware",
       "type": "object"
     },
-    "executionContextName": {
-      "description": "Name of the assessment",
+    "collectionUnitName": {
+      "description": "Name of the collection unit",
       "type": "string"
     },
-    "executionContextType": {
-      "description": "Type of the assessment",
+    "collectionUnitType": {
+      "description": "Type of the collection unit",
       "type": "string"
     },
     "assessmentMetadata": {
@@ -67,8 +67,8 @@
     "middlewareVersion",
     "middlewareInstallPath",
     "middlewareDataPath",
-    "executionContextName",
-    "executionContextType",
+    "collectionUnitName",
+    "collectionUnitType",
     "assessmentUnits"
   ]
 }

@@ -59,19 +59,19 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "Critical": {
+        "critical": {
           "type": "integer"
         },
-        "Potential": {
+        "potential": {
           "type": "integer"
         },
-        "Suggested": {
+        "suggested": {
           "type": "integer"
         }
       },
       "propertyNames": {
         "description": "Limited the property names used in the 'issues'",
-        "pattern": "^Suggested|Potential|Critical"
+        "pattern": "^suggested|potential|critical"
       },
       "title": "SummaryIssues"
     },

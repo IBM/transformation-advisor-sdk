@@ -32,7 +32,8 @@ public class TaCollectionZipValidator {
             return false;
         }
         try {
-            return validateArchive(collectionFile);
+            ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(collectionFile));
+            return validateArchive(zipInputStream);
         } catch (IOException e) {
             System.err.println("Error validating collection archive:" + e.getMessage());
             e.printStackTrace();
@@ -40,9 +41,7 @@ public class TaCollectionZipValidator {
         }
     }
 
-    private static boolean validateArchive(File collectionArchiveZip) throws IOException {
-        ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(collectionArchiveZip));
-
+    public static boolean validateArchive(ZipInputStream zipInputStream) throws IOException {
         String recJsonStr = null;
         String envJsonStr = null;
         Map<String, String> auMetadataMap = new HashMap<>();

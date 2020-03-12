@@ -14,21 +14,20 @@ package com.ibm.ta.sdk.spi.recommendation;
  * Note: The actual values here will likely change from a color scheme to something else e.g. fire, smoke, smell
  * because RED issues are incorrectly assumed to be associated with Complexity
  * 
- * RED: Critical
+ * RED: critical
  * Hover Text: Must be addressed before migration
  * Description: This issue must be addressed before migration or the application will break in the cloud environment.
  *
- * YELLOW: Potential
+ * YELLOW: potential
  * Hover Text: Must be investigated before migration
  * Description: This issue must be investigated before migration or the application may break in the cloud environment. 
 
- * GREEN: Suggested
+ * GREEN: suggested
  * Hover Text: Suggested to investigate after migration
  * Description: This issue should be investigated after migration or the application may function below an optimal level in the cloud environment. 
  */
 public enum Severity {
-  // TODO: Lowercase?
-  Critical,
-  Potential,
-  Suggested;
+  critical,
+  potential,
+  suggested;
 }

@@ -48,10 +48,10 @@ public class EnvironmentJson {
   private JsonElement middlewareMetadata;
 
   @Expose
-  private String executionContextName;
+  private String collectionUnitName;
 
   @Expose
-  private String executionContextType;
+  private String collectionUnitType;
 
   @Expose
   private JsonElement assessmentMetadata;
@@ -86,8 +86,8 @@ public class EnvironmentJson {
     if (environment.getMiddlewareMetadata() != null) {
       middlewareMetadata = environment.getMiddlewareMetadata();
     }
-    executionContextName = environment.getExecutionContextName();
-    executionContextType = environment.getExecutionContextType();
+    collectionUnitName = environment.getExecutionContextName();
+    collectionUnitType = environment.getExecutionContextType();
     if (environment.getAssessmentMetadata() != null) {
       assessmentMetadata = environment.getAssessmentMetadata();
     }
@@ -140,12 +140,12 @@ public class EnvironmentJson {
 
       @Override
       public String getExecutionContextName() {
-        return executionContextName;
+        return collectionUnitName;
       }
 
       @Override
       public String getExecutionContextType() {
-        return executionContextType;
+        return collectionUnitType;
       }
 
       @Override
@@ -183,12 +183,12 @@ public class EnvironmentJson {
     this.middlewareDataPath = middlewareDataPath;
   }
 
-  public void setExecutionContextName(String executionContextName) {
-    this.executionContextName = executionContextName;
+  public void setCollectionUnitName(String collectionUnitName) {
+    this.collectionUnitName = collectionUnitName;
   }
 
-  public void setExecutionContextType(String executionContextType) {
-    this.executionContextType = executionContextType;
+  public void setCollectionUnitType(String collectionUnitType) {
+    this.collectionUnitType = collectionUnitType;
   }
 
   public void setPluginVersion(String version) {

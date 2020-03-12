@@ -37,10 +37,10 @@ public class RecommendationJson {
   protected String domain;
 
   @Expose
-  protected String executionContextType;
+  protected String collectionUnitType;
 
   @Expose
-  protected String executionContextName;
+  protected String collectionUnitName;
 
   @Expose
   protected String middleware;
@@ -64,8 +64,8 @@ public class RecommendationJson {
     this.recommendation = recommendation;
     domain = environment.getDomain();
     middleware = environment.getMiddlewareName();
-    executionContextType = environment.getExecutionContextType();
-    executionContextName = environment.getExecutionContextName();
+    collectionUnitType = environment.getExecutionContextType();
+    collectionUnitName = environment.getExecutionContextName();
     version = environment.getMiddlewareVersion();
     complexityRules = ComplexityContributionJson.getComplexityContributionJsonList(recommendation.getComplexityContributions());
     issueCategories = IssueCategoryJson.getIssueCategoryJsonMap(recommendation.getIssueCategories());
