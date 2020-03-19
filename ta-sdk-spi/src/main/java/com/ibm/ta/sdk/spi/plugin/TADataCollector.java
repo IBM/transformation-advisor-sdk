@@ -152,7 +152,7 @@ public class TADataCollector {
       if (configFiles != null) {
         List<Path> outputConfigFiles = new LinkedList<>();
         for (Path file : configFiles) {
-          File destFile = new File(auOutputDir, file.toAbsolutePath().toString());
+          File destFile = new File(auOutputDir, file.getFileName().toString());
           Path destPath = destFile.toPath();
           if (!destFile.getParentFile().exists()) {
             destFile.getParentFile().mkdirs();
@@ -508,7 +508,11 @@ public class TADataCollector {
 
       // Find provider that matches domain
       if (recProvider.getMiddleware().equals(middleware)) {
-        recProvider.validateJsonFiles();
+        try {
+          recProvider.validateJsonFiles();
+        } catch (TAException e) {
+          recProvider = null;
+        }
         return recProvider;
       }
     }
