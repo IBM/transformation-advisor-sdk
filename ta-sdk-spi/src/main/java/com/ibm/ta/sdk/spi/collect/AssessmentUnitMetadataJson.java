@@ -18,7 +18,7 @@ public class AssessmentUnitMetadataJson {
   private String middleware;
 
   @Expose
-  private String dcVersion = "2.1.3";
+  private String dcVersion = "2.0.4";
 
   @Expose
   private String host;

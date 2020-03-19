@@ -1,7 +1,7 @@
 {
-  "$id": "recommendation-severity.schema.json",
+  "$id": "recommendation-complexity-contrib.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Recommendation Severity Schema",
+  "title": "Recommendation Complexity Contribution Schema",
   "description": "Created by Huang, Fuguo. Created date: 2019-June-21.",
   "type": "string",
   "enum": ["simple", "moderate", "complex"]
