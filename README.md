@@ -1,6 +1,8 @@
 # Transformation Advisor SDK
 
-This is a tool to help developer to create and build a middleware data collection plug-in, which can be used to gether the information of an application deployed on a middleware server,  and the collection can be uploaded to Transformation Advisor server for further analysis.
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.ibm.ta.sdk/ta-sdk/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.ibm.ta.sdk/ta-sdk)
+
+This is a tool to help a developer to create and build a middleware data collection plug-in, which can be used to gather the information of an application deployed on a middleware server, and provide modernization help and recommendations.  See [Getting Started Guide](docs/GettingStarted.md)
 
 ### Modules
 
