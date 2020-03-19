@@ -7,7 +7,7 @@
     <groupId>com.ibm.ta.sdk</groupId>
     <artifactId>ta-sdk</artifactId>
     <packaging>pom</packaging>
-    <version>0.5.2</version>
+    <version>0.5.3</version>
 
     <modules>
         <module>ta-sdk-spi</module>

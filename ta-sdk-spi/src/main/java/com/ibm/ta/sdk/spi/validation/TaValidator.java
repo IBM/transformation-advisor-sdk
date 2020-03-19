@@ -6,6 +6,7 @@
 
 package com.ibm.ta.sdk.spi.validation;
 
+import com.ibm.ta.sdk.spi.plugin.TAException;
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,37 +46,33 @@ public class TaValidator {
                 System.out.println("Current TA Validator version: " + getTaVersion());
             } else if (commandLine.hasOption("c")) {
                 String jsonFile = commandLine.getOptionValue("c");
-                if (TaJsonFileValidator.validateComplexity(jsonFile)) {
-                    System.out.println("The resource " + jsonFile + " is a valid complexity json file. No anomaly were found.");
-                }
+                TaJsonFileValidator.validateComplexity(jsonFile);
+                System.out.println("The resource " + jsonFile + " is a valid complexity json file. No anomaly were found.");
             } else if (commandLine.hasOption("i")) {
                 String jsonFile = commandLine.getOptionValue("i");
-                if (TaJsonFileValidator.validateIssue(jsonFile)) {
-                    System.out.println("The resource " + jsonFile + " is a vlid issue rule json file. No anomaly were found.");
-                }
+                TaJsonFileValidator.validateIssue(jsonFile);
+                System.out.println("The resource " + jsonFile + " is a valid issue rule json file. No anomaly were found.");
             } else if (commandLine.hasOption("t")) {
                 String jsonFile = commandLine.getOptionValue("t");
-                if (TaJsonFileValidator.validateTarget(jsonFile)) {
-                    System.out.println("The resource " + jsonFile + " is a valid target json file. No anomaly were found.");
-                }
+                TaJsonFileValidator.validateTarget(jsonFile);
+                System.out.println("The resource " + jsonFile + " is a valid target json file. No anomaly were found.");
             } else if (commandLine.hasOption("e")) {
                 String jsonFile = commandLine.getOptionValue("e");
-                if (TaJsonFileValidator.validateEnvironment(jsonFile)) {
-                    System.out.println("The resource " + jsonFile + " is a valid environment json file. No anomaly were found.");
-                }
+                TaJsonFileValidator.validateEnvironment(jsonFile);
+                System.out.println("The resource " + jsonFile + " is a valid environment json file. No anomaly were found.");
             } else if (commandLine.hasOption("r")) {
                 String jsonFile = commandLine.getOptionValue("r");
-                if (TaJsonFileValidator.validateRecommendation(jsonFile)) {
-                    System.out.println("The resource " + jsonFile + " is a valid recommendation json file. No anomaly were found.");
-                }
+                TaJsonFileValidator.validateRecommendation(jsonFile);
+                System.out.println("The resource " + jsonFile + " is a valid recommendation json file. No anomaly were found.");
             } else if (commandLine.hasOption("z")) {
                 String zipFile = commandLine.getOptionValue("z");
-                if (TaCollectionZipValidator.validateCollectionArchive(zipFile)) {
-                  System.out.println("The resource " + zipFile + " is a valid collection archive file. No anomaly were found.");
-                }
+                TaCollectionZipValidator.validateCollectionArchive(zipFile);
+                System.out.println("The resource " + zipFile + " is a valid collection archive file. No anomaly were found.");
             } else {
                 getHelpPrintOut(options);
             }
+        } catch (TAException e) {
+            System.err.println(e.getMessage());
         } catch (ParseException e) {
             System.out.println(e.getMessage());
             getHelpPrintOut(options);

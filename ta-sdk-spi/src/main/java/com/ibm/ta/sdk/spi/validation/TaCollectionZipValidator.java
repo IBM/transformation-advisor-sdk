@@ -9,6 +9,7 @@ package com.ibm.ta.sdk.spi.validation;
 import com.google.gson.Gson;
 import com.ibm.ta.sdk.spi.collect.EnvironmentJson;
 import com.ibm.ta.sdk.spi.plugin.TADataCollector;
+import com.ibm.ta.sdk.spi.plugin.TAException;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -21,27 +22,47 @@ import java.util.zip.ZipInputStream;
 public class TaCollectionZipValidator {
     private static final String FILE_ZIP = ".zip";
 
-    public static boolean validateCollectionArchive(String zipFilePath) {
+    /**
+     * Validates a zip collection archive created by the SDK.
+     *
+     * The validation checks:
+     * 1. The archive is a zip file
+     * 2. Checks that environment.json exists and validate that the schema is correct
+     * 3. Checks that recommendations.json exists and validate that the schema is correct
+     * 4. Checks the folder structure for assessment units and it matches the assessment units in the environment.json
+     *
+     * @param zipFilePath Collection archive file to validate
+     * @throws TAException TAException is thrown when the validation fails
+     */
+    public static void validateCollectionArchive(String zipFilePath) throws TAException{
         if (!zipFilePath.endsWith(FILE_ZIP)) {
-            System.err.println("Input collection archive file is not a zip file");
-            return false;
+            throw new TAException("Input collection archive file is not a zip file");
         }
         File collectionFile = new File(zipFilePath);
         if (!collectionFile.exists()) {
-            System.err.println("Input collection archive file does not exist");
-            return false;
+            throw new TAException("Input collection archive file does not exist");
         }
         try {
             ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(collectionFile));
-            return validateArchive(zipInputStream);
+            validateArchive(zipInputStream);
         } catch (IOException e) {
-            System.err.println("Error validating collection archive:" + e.getMessage());
-            e.printStackTrace();
-            return false;
+            throw new TAException(e);
         }
     }
 
-    public static boolean validateArchive(ZipInputStream zipInputStream) throws IOException {
+    /**
+     * Validates a zip collection archive created by the SDK.
+     *
+     * The validation checks:
+     * 1. The archive is a zip file
+     * 2. Checks that environment.json exists and validate that the schema is correct
+     * 3. Checks that recommendations.json exists and validate that the schema is correct
+     * 4. Checks the folder structure for assessment units and it matches the assessment units in the environment.json
+     *
+     * @param zipInputStream InputStream of the collection archive to validate
+     * @throws TAException TAException is thrown when the validation fails
+     */
+    public static void validateArchive(ZipInputStream zipInputStream) throws IOException, TAException {
         String recJsonStr = null;
         String envJsonStr = null;
         Map<String, String> auMetadataMap = new HashMap<>();
@@ -70,59 +91,43 @@ public class TaCollectionZipValidator {
             }
         }
 
-        boolean isValid = true;
-
-        // Validate environment json file
-        if (envJsonStr != null) {
-            isValid = TaJsonFileValidator.validateEnvironment(new ByteArrayInputStream(envJsonStr.getBytes()));
-            if (!isValid) {
-                System.err.println("Anomaly found. Environment JSON schema validation failed.");
-            }
-        } else {
-            System.err.println("Anomaly found. Environment JSON not found.");
-            isValid = false;
-        }
-
-        // Validate recommendation json file
-        if (isValid) {
-            if (recJsonStr != null) {
-                isValid = TaJsonFileValidator.validateRecommendation(new ByteArrayInputStream(recJsonStr.getBytes()));
-                if (!isValid) {
-                    System.err.println("Anomaly found. Recommendation JSON schema validation failed.");
-                }
+        try {
+            // Validate environment json file
+            if (envJsonStr != null) {
+                TaJsonFileValidator.validateEnvironment(new ByteArrayInputStream(envJsonStr.getBytes()));
             } else {
-                System.err.println("Anomaly found. Recommendation JSON not found.");
-                isValid = false;
+                throw new TAException("Anomaly found. Environment JSON not found.");
             }
-        }
 
-        // Validate assessment units
-        if (isValid) {
+            // Validate recommendation json file
+            if (recJsonStr != null) {
+                TaJsonFileValidator.validateRecommendation(new ByteArrayInputStream(recJsonStr.getBytes()));
+            } else {
+                throw new TAException("Anomaly found. Recommendation JSON not found.");
+            }
+
+            // Validate assessment units
             EnvironmentJson envJson = new Gson().fromJson(envJsonStr, EnvironmentJson.class);
 
             List<String> envAuNamesList = envJson.getAssessmentUnits();
             if (assessmentUnits.size() != envAuNamesList.size()) {
-                System.err.println("Anomaly found. Number of asessment unit directories in archive does not match data in environment JSON.");
-                isValid = false;
+                throw new TAException("Anomaly found. Number of asessment unit directories in archive does not match data in environment JSON.");
             } else {
-                isValid = assessmentUnits.containsAll(envAuNamesList);
-                if (!isValid) {
-                    System.err.println("Anomaly found. Asessment unit directories in archive does not match environment JSON.");
+                if (!assessmentUnits.containsAll(envAuNamesList)) {
+                    throw new TAException("Anomaly found. Asessment unit directories in archive does not match environment JSON.");
                 }
             }
-        }
 
-        // Check assessment unit metadata json exists in each assessment unit directory
-        if (isValid) {
+            // Check assessment unit metadata json exists in each assessment unit directory
             // In future, may want to validation the schema of the file as well
             Set<String> auMetaKeys = auMetadataMap.keySet();
-            isValid = assessmentUnits.size() == auMetaKeys.size() && assessmentUnits.containsAll(auMetaKeys);
+            boolean isValid = assessmentUnits.size() == auMetaKeys.size() && assessmentUnits.containsAll(auMetaKeys);
             if (!isValid) {
-                System.err.println("Anomaly found. Missing assessment unit metadata JSON file in assessment unit directory.");
+                throw new TAException("Anomaly found. Missing assessment unit metadata JSON file in assessment unit directory.");
             }
+        } catch (TAException ex) {
+            throw new TAException("Invalid collection archive.\n" + ex.getMessage(), ex);
         }
-
-        return isValid;
     }
 
     private static String getStringFromZipInputStream(ZipInputStream zipInputStream) throws IOException {

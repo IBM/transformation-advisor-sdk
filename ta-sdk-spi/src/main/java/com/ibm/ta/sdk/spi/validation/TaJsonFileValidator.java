@@ -6,6 +6,9 @@
 
 package com.ibm.ta.sdk.spi.validation;
 
+import com.ibm.ta.sdk.spi.plugin.TAException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.leadpony.justify.api.*;
 
 import javax.json.JsonReader;
@@ -19,6 +22,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class TaJsonFileValidator {
+
+    private static Logger logger = LogManager.getLogger(TaJsonFileValidator.class.getName());
+
     private static final String ISSUE_SCHEMA = "schema/issue.schema.json";
     private static final String TARGET_SCHEMA = "schema/target.schema.json";
     private static final String COMPLEXITY_SCHEMA = "schema/complexity.schema.json";
@@ -78,8 +84,8 @@ public class TaJsonFileValidator {
             InputStream jrIs = getResource(jsonResourcePath);
             isValid = validateJsonBySchema(schemaPath, jrIs);
         } catch (FileNotFoundException e) {
-            System.err.println("We have problem to process the json files.");
-            e.printStackTrace();
+            logger.error("We have problem to process the json files.");
+            logger.error(e);
             isValid = false;
         }
 
@@ -114,48 +120,62 @@ public class TaJsonFileValidator {
 
                 if (problemList.size() > 0) {
                     isValid = false;
-                    System.out.println("For resource " + jrIs + ", ");
-                    System.out.println("We have found problems below:");
+                    logger.info("For resource " + jrIs + ", ");
+                    logger.info("We have found problems below:");
                     problemList.forEach(System.out::println);
                 }
             } else {
-                System.err.println("Cannot find file " + jrIs + " to validate");
+                logger.error("Cannot find file " + jrIs + " to validate");
             }
         } catch (Exception e) {
-            System.err.println("We have problem to process the json files.");
-            e.printStackTrace();
+            logger.error("We have problem to process the json files.");
+            logger.error(e);
             isValid = false;
         }
 
         return isValid;
     }
 
-    public static boolean validateIssue(String issueJsonFile) {
-        return validateJsonBySchema(ISSUE_SCHEMA, issueJsonFile);
+    public static void validateIssue(String issueJsonFile) throws TAException {
+        if (!validateJsonBySchema(ISSUE_SCHEMA, issueJsonFile)) {
+            throw new TAException("Anomalies found. The resource " + issueJsonFile + " is not a valid issue rule json file.");
+        }
     }
 
-    public static boolean validateTarget(String targetJsonFile) {
-        return validateJsonBySchema(TARGET_SCHEMA, targetJsonFile);
+    public static void validateTarget(String targetJsonFile) throws TAException {
+        if (!validateJsonBySchema(TARGET_SCHEMA, targetJsonFile)) {
+            throw new TAException("Anomalies found. The resource " + targetJsonFile + " is not a valid target json file.");
+        }
     }
 
-    public static boolean validateComplexity(String complexityJsonFile) {
-        return validateJsonBySchema(COMPLEXITY_SCHEMA, complexityJsonFile);
+    public static void validateComplexity(String complexityJsonFile) throws TAException {
+        if (!validateJsonBySchema(COMPLEXITY_SCHEMA, complexityJsonFile)) {
+            throw new TAException("Anomalies found. The resource " + complexityJsonFile + " is not a valid complexity json file.");
+        }
     }
 
-    public static boolean validateEnvironment(String environmentJsonFile) {
-        return validateJsonBySchema(ENVIRONMENT_SCHEMA, environmentJsonFile);
+    public static void validateEnvironment(String environmentJsonFile) throws TAException {
+        if (!validateJsonBySchema(ENVIRONMENT_SCHEMA, environmentJsonFile)) {
+            throw new TAException("Anomalies found. The resource " + environmentJsonFile + " is not a valid environment json file.");
+        }
     }
 
-    public static boolean validateEnvironment(InputStream envFileIs) {
-        return validateJsonBySchema(ENVIRONMENT_SCHEMA, envFileIs);
+    public static void validateEnvironment(InputStream envFileIs) throws TAException {
+        if (!validateJsonBySchema(ENVIRONMENT_SCHEMA, envFileIs)) {
+            throw new TAException("Anomalies found. The resource is not a valid environment json file.");
+        }
     }
 
-    public static boolean validateRecommendation(String recommendationJsonFile) {
-        return validateJsonBySchema(RECOMMENDATION_SCHEMA, recommendationJsonFile);
+    public static void validateRecommendation(String recommendationJsonFile) throws TAException {
+        if (!validateJsonBySchema(RECOMMENDATION_SCHEMA, recommendationJsonFile)) {
+            throw new TAException("Anomalies found. The resource " + recommendationJsonFile + " is a valid recommendation json file.");
+        }
     }
 
-    public static boolean validateRecommendation(InputStream recFileIs) {
-        return validateJsonBySchema(RECOMMENDATION_SCHEMA, recFileIs);
+    public static void validateRecommendation(InputStream recFileIs) throws TAException {
+        if (!validateJsonBySchema(RECOMMENDATION_SCHEMA, recFileIs)) {
+            throw new TAException("Anomalies found. The resource is a valid recommendation json file.");
+        }
     }
 
     private static InputStream getResource(String filePath) throws FileNotFoundException {
@@ -166,12 +186,4 @@ public class TaJsonFileValidator {
             return TaJsonFileValidator.class.getClassLoader().getResourceAsStream(filePath);
         }
     }
-
-    public static void main(String[] argu) {
-        System.out.println("start");
-        //validateComplexity("recommendation.json");
-        boolean result = validateRecommendation("recommendation.json");
-        System.out.println("end="+result);
-    }
-
 }
