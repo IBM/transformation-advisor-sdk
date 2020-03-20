@@ -83,15 +83,15 @@ public interface Environment {
    *
    * @return Name of the assessment
    */
-  String getExecutionContextName();
+  String getConnectionUnitName();
 
   /**
-   * As with the {@link #getExecutionContextName()}, the assessment type will generally be different for different
+   * As with the {@link #getConnectionUnitName()}, the assessment type will generally be different for different
    * middleware. Examples of assessment type my be "Installation", or "Node".
    *
    * @return Type of the assessment
    */
-  String getExecutionContextType();
+  String getConnectionUnitType();
 
   /**
    * Additional metadata about the assessment, in addition to the name and type. This information is available

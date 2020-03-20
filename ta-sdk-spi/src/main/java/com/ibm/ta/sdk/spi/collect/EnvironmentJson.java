@@ -86,8 +86,8 @@ public class EnvironmentJson {
     if (environment.getMiddlewareMetadata() != null) {
       middlewareMetadata = environment.getMiddlewareMetadata();
     }
-    collectionUnitName = environment.getExecutionContextName();
-    collectionUnitType = environment.getExecutionContextType();
+    collectionUnitName = environment.getConnectionUnitName();
+    collectionUnitType = environment.getConnectionUnitType();
     if (environment.getAssessmentMetadata() != null) {
       assessmentMetadata = environment.getAssessmentMetadata();
     }
@@ -139,12 +139,12 @@ public class EnvironmentJson {
       }
 
       @Override
-      public String getExecutionContextName() {
+      public String getConnectionUnitName() {
         return collectionUnitName;
       }
 
       @Override
-      public String getExecutionContextType() {
+      public String getConnectionUnitType() {
         return collectionUnitType;
       }
 

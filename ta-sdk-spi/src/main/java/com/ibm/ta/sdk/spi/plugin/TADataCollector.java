@@ -114,7 +114,7 @@ public class TADataCollector {
       Environment environment = dataCollection.getEnvironment();
 
       // Create output dir
-      String assessmentName = environment.getExecutionContextName();
+      String assessmentName = environment.getConnectionUnitName();
       File outputDir = Util.getAssessmentOutputDir(assessmentName);
       if (!outputDir.exists()) {
         outputDir.mkdirs();
@@ -250,7 +250,7 @@ public class TADataCollector {
       writeRecommendationsJson(recJson, outputDir);
 
       // zip output dir
-      String zipFileName = environment.getExecutionContextName() + ".zip";
+      String zipFileName = environment.getConnectionUnitName() + ".zip";
       File zipFile = new File(outputDir.getParentFile(), zipFileName);
       Util.zipDir(zipFile.toPath(), outputDir);
     }
