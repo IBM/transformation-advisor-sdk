@@ -76,6 +76,7 @@ public class TaJsonFileValidator {
      *
      * @param schemaPath The path to the JSON schema file in resource.
      * @param jsonResourcePath The path to the JSON file to be validated in resource.
+     * @return True if the schema is valid
      */
     private static boolean validateJsonBySchema(String schemaPath, String jsonResourcePath) {
         boolean isValid = true;

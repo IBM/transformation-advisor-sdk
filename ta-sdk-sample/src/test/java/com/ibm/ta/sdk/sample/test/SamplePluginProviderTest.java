@@ -99,7 +99,7 @@ public class SamplePluginProviderTest {
         assertTrue(reportFile.exists());
         assertTrue(reportFile.isFile());
         assertTrue(reportFile.length() > 2);
-        File collectionFile = new File (outputDir+"/Installation1.tar.gz");
+        File collectionFile = new File (outputDir+"/Installation1.zip");
         assertTrue(collectionFile.exists());
         assertTrue(collectionFile.isFile());
         assertTrue(collectionFile.length() > 2);

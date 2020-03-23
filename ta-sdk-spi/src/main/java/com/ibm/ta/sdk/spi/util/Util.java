@@ -64,6 +64,7 @@ public class Util {
    *
    * @param assessmentName Name of the assessment
    * @return JsonObject for the recommendations.json
+   * @throws FileNotFoundException Exception is thrown if recommendations artifacts are not found in the output directory
    */
   public static JsonObject getRecommendationsJson(String assessmentName) throws FileNotFoundException {
     String cwd = System.getProperty("user.dir");

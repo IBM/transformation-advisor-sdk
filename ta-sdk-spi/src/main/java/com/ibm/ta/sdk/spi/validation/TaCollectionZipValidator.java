@@ -61,6 +61,7 @@ public class TaCollectionZipValidator {
      *
      * @param zipInputStream InputStream of the collection archive to validate
      * @throws TAException TAException is thrown when the validation fails
+     * @throws IOException IOException is thrown if there is an error with the zipInputStream
      */
     public static void validateArchive(ZipInputStream zipInputStream) throws IOException, TAException {
         String recJsonStr = null;
