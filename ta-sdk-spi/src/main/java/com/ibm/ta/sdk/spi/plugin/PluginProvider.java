@@ -26,6 +26,11 @@ import java.util.List;
  * classpath.
  */
 public interface PluginProvider {
+  /**
+   * Version number of the Plug-in.
+   * @return Plug-in version
+   */
+  String getVersion();
 
   /**
    * Domain is a container to group a set of middleware together. These middleware may belong to the same
@@ -124,15 +129,9 @@ public interface PluginProvider {
    */
   List<Report> getReport(String assessmentName, CliInputCommand reportCommand) throws TAException;
 
-  default void validateJsonFiles(){
-    if (!TaJsonFileValidator.validateIssue(getMiddleware()+"/issue.json")) {
-      System.err.println("The file " + getMiddleware()+"/issue.json in middleware plug-in " + getMiddleware() + " failed validation.");
-    }
-    if (!TaJsonFileValidator.validateComplexity(getMiddleware()+"/complexity.json")){
-      System.err.println("The file " + getMiddleware()+"/complexity.json in middleware plug-in " + getMiddleware() + "failed validation.");
-    }
-    if (!TaJsonFileValidator.validateTarget(getMiddleware()+"/target.json")){
-      System.err.println("The file " + getMiddleware()+"/target.json in middleware plug-in " + getMiddleware() + "failed validation.");
-    }
+  default void validateJsonFiles() throws TAException {
+    TaJsonFileValidator.validateIssue(getMiddleware()+"/issue.json");
+    TaJsonFileValidator.validateComplexity(getMiddleware()+"/complexity.json");
+    TaJsonFileValidator.validateTarget(getMiddleware()+"/target.json");
   }
 }

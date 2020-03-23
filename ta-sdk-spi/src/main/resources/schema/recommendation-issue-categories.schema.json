@@ -1,0 +1,19 @@
+{
+  "$id": "recommendation-issue-categories.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Recommendation Issue Categories Schema",
+  "description": "Created by Huang, Fuguo. Created date: 2019-June-20.",
+  "type": "object",
+  "patternProperties": {
+    ".*": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["title"]
+    }
+  }
+}

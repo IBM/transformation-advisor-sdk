@@ -8,11 +8,7 @@ package com.ibm.ta.sdk.spi.plugin;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.ibm.ta.sdk.spi.collect.AssessmentUnit;
-import com.ibm.ta.sdk.spi.collect.ContentMask;
-import com.ibm.ta.sdk.spi.collect.DataCollection;
-import com.ibm.ta.sdk.spi.collect.Environment;
-import com.ibm.ta.sdk.spi.collect.EnvironmentJson;
+import com.ibm.ta.sdk.spi.collect.*;
 import com.ibm.ta.sdk.spi.recommendation.Recommendation;
 import com.ibm.ta.sdk.spi.assess.RecommendationJson;
 import com.ibm.ta.sdk.spi.recommendation.Target;
@@ -27,11 +23,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class TADataCollector {
   private static final String TADATACOLLECTOR_COMMAND_HELP = "Run 'TADataCollector MIDDLEWARE COMMAND --help' for more information on a command.";
   private static final String TADATACOLLECTOR_HELP_USAGE_PREFIX = "Usage: TADataCollector";
   private static final String TADATACOLLECTOR_BASE_HELP_USAGE = TADATACOLLECTOR_HELP_USAGE_PREFIX + " MIDDLEWARE COMMAND [OPTIONS]";
+  public static final String ENVIRONMENT_JSON_FILE = "environment.json";
+  public static final String RECOMMENDATIONS_JSON_FILE = "recommendations.json";
+  public static final String ASSESSMENTUNIT_META_JSON_FILE = ".assessmentUnit.json";
 
   private static Logger logger = LogManager.getLogger(TADataCollector.class.getName());
 
@@ -104,24 +104,32 @@ public class TADataCollector {
   }
 
   public void runCollect(PluginProvider provider, CliInputCommand cliInputCommand) throws TAException, IOException {
+    collectData(provider, cliInputCommand);
+  }
+
+  private List<DataCollection> collectData(PluginProvider provider, CliInputCommand cliInputCommand) throws TAException, IOException {
     List<DataCollection> dataCollections = provider.getCollection(cliInputCommand);
     for (DataCollection dataCollection : dataCollections) {
       // Get environment
       Environment environment = dataCollection.getEnvironment();
 
       // Create output dir
-      String assessmentName = environment.getAssessmentName();
+      String assessmentName = environment.getConnectionUnitName();
       File outputDir = Util.getAssessmentOutputDir(assessmentName);
       if (!outputDir.exists()) {
         outputDir.mkdirs();
       }
 
-      // Write environment json to output dir
-      writeEnvironmentJson(environment, outputDir);
-
       // Get assessment units
-      getAssessmentUnits(dataCollection, outputDir);
+      List<? extends AssessmentUnit> aus = getAssessmentUnits(dataCollection, outputDir);
+      List<String> auNameList = aus.stream()
+              .map(au -> ((AssessmentUnit) au).getName())
+              .collect(Collectors.toList());
+
+      // Write environment json to output dir
+      writeEnvironmentJson(environment, provider.getVersion(), auNameList, outputDir);
     }
+    return dataCollections;
   }
 
   private List<? extends AssessmentUnit> getAssessmentUnits(DataCollection dataCollection, File outputDir) throws TAException, IOException {
@@ -133,14 +141,18 @@ public class TADataCollector {
         auOutputDir.mkdirs();
       }
 
+      // Write assessment unit data file
       writeAssessmentDataJson(au, auOutputDir);
+
+      // Write assessment unit metadata file
+      writeAssessmentUnitMetaJson(au, dataCollection.getEnvironment(), auOutputDir);
 
       // Copy assessment files to make them available during recommendations
       List<Path> configFiles = au.getConfigFiles();
       if (configFiles != null) {
         List<Path> outputConfigFiles = new LinkedList<>();
         for (Path file : configFiles) {
-          File destFile = new File(auOutputDir, file.toAbsolutePath().toString());
+          File destFile = new File(auOutputDir, file.getFileName().toString());
           Path destPath = destFile.toPath();
           if (!destFile.getParentFile().exists()) {
             destFile.getParentFile().mkdirs();
@@ -216,23 +228,7 @@ public class TADataCollector {
 
   public void runAssess(PluginProvider provider, CliInputCommand cliInputCommand) throws TAException, IOException {
     // Run collections
-    List<DataCollection> dataCollections = provider.getCollection(cliInputCommand);
-    for (DataCollection dataCollection : dataCollections) {
-      // Get environment
-      Environment environment = dataCollection.getEnvironment();
-
-      // Create output dir
-      String assessmentName = environment.getAssessmentName();
-      File outputDir = Util.getAssessmentOutputDir(assessmentName);
-      if (!outputDir.exists()) {
-        outputDir.mkdirs();
-      }
-
-      // Write environment json to output dir
-      writeEnvironmentJson(environment, outputDir);
-
-      List<? extends AssessmentUnit> assessUnits = getAssessmentUnits(dataCollection, outputDir);
-    }
+    List<DataCollection> dataCollections = collectData(provider, cliInputCommand);
 
     // Generate and write recommendations
     List<Recommendation> recs = provider.getRecommendation(cliInputCommand);
@@ -254,7 +250,7 @@ public class TADataCollector {
       writeRecommendationsJson(recJson, outputDir);
 
       // zip output dir
-      String zipFileName = environment.getAssessmentName() + ".tar.gz";
+      String zipFileName = environment.getConnectionUnitName() + ".zip";
       File zipFile = new File(outputDir.getParentFile(), zipFileName);
       Util.zipDir(zipFile.toPath(), outputDir);
     }
@@ -290,7 +286,7 @@ public class TADataCollector {
         writeFile(recFile, report.getReport());
 
         // Update assessment unit zip
-        String zipFileName = assessmentName + ".tar.gz";
+        String zipFileName = assessmentName + ".zip";
         File zipFile = new File(aOutputDir.getParentFile(), zipFileName);
         Util.zipDir(zipFile.toPath(), aOutputDir);
       }
@@ -444,7 +440,7 @@ public class TADataCollector {
   }
 
   private void writeRecommendationsJson(RecommendationJson recJson, File outputDir) throws TAException {
-    File rjFile = new File(outputDir, "recommendations.json");
+    File rjFile = new File(outputDir, RECOMMENDATIONS_JSON_FILE);
     if (rjFile.exists()) {
       rjFile.delete();
     }
@@ -459,7 +455,7 @@ public class TADataCollector {
     if (auFile.exists()) {
       auFile.delete();
     }
-    logger.debug("Writing assessment unit json file:" + auFile);
+    logger.debug("Writing assessment unit data json file:" + auFile);
 
     // Convert recommendation to JSON
     String auJsonStr = getJsonStr(au.getAssessmentData());
@@ -467,16 +463,30 @@ public class TADataCollector {
   }
 
 
-  private void writeEnvironmentJson(Environment environment, File outputDir) throws TAException {
-    File envFile = new File(outputDir, "environment.json");
+  private void writeEnvironmentJson(Environment environment, String version, List<String> auNameList, File outputDir) throws TAException {
+    File envFile = new File(outputDir, ENVIRONMENT_JSON_FILE);
     if (envFile.exists()) {
       envFile.delete();
     }
     logger.debug("Writing env file:" + envFile);
 
     EnvironmentJson envJson = new EnvironmentJson(environment);
+    envJson.setPluginVersion(version);
+    envJson.setAssessmentUnits(auNameList);
     String envJsonStr = getJsonStr(envJson);
     writeFile(envFile, envJsonStr);
+  }
+
+  private void writeAssessmentUnitMetaJson(AssessmentUnit au, Environment environment, File outputDir) throws TAException {
+    File auMetaFile = new File(outputDir, au.getName() + ASSESSMENTUNIT_META_JSON_FILE);
+    if (auMetaFile.exists()) {
+      auMetaFile.delete();
+    }
+    logger.debug("Writing assessment unit metadata json file:" + auMetaFile);
+
+    AssessmentUnitMetadataJson auMeta = new AssessmentUnitMetadataJson(environment, au.getName());
+    String auMetaJsonStr = getJsonStr(auMeta.toJsonObject());
+    writeFile(auMetaFile, auMetaJsonStr);
   }
 
   private static void writeFile(File file, String content) throws TAException {
@@ -498,7 +508,11 @@ public class TADataCollector {
 
       // Find provider that matches domain
       if (recProvider.getMiddleware().equals(middleware)) {
-        recProvider.validateJsonFiles();
+        try {
+          recProvider.validateJsonFiles();
+        } catch (TAException e) {
+          recProvider = null;
+        }
         return recProvider;
       }
     }

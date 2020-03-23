@@ -1,13 +1,14 @@
 {
-  "$id": "recommendation.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "recommendation.schema.json",
   "type": "object",
   "required": [
     "domain",
-    "assessmentType",
-    "assessmentName",
+    "collectionUnitType",
+    "collectionUnitName",
     "version",
     "complexityRules",
+    "issueCategories",
     "assessmentUnits"
   ],
   "properties": {
@@ -15,11 +16,15 @@
       "type": "string",
       "minLength": 1
     },
-    "assessmentType": {
+    "collectionUnitType": {
       "type": "string",
       "minLength": 1
     },
-    "assessmentName": {
+    "collectionUnitName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "middleware": {
       "type": "string",
       "minLength": 1
     },
@@ -28,16 +33,16 @@
       "minLength": 1
     },
     "complexityRules": {
-      "$ref": "schema/complexity.schema.json"
-    },
-    "issueCategories": {
-      "type": "object"
-    },
-    "assessmentUnits": {
       "type": "array",
       "items": {
-        "$ref": "schema/recommendation-assess.schema.json"
+        "$ref": "schema/recommendation-complexity-rule.schema.json"
       }
+    },
+    "issueCategories": {
+      "$ref": "schema/recommendation-issue-categories.schema.json"
+    },
+    "assessmentUnits": {
+      "$ref": "schema/recommendation-assessment-units.schema.json"
     }
   }
 }

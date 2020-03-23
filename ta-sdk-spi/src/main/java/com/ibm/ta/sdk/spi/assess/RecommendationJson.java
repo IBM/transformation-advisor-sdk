@@ -37,10 +37,10 @@ public class RecommendationJson {
   protected String domain;
 
   @Expose
-  protected String assessmentType;
+  protected String collectionUnitType;
 
   @Expose
-  protected String assessmentName;
+  protected String collectionUnitName;
 
   @Expose
   protected String middleware;
@@ -64,8 +64,8 @@ public class RecommendationJson {
     this.recommendation = recommendation;
     domain = environment.getDomain();
     middleware = environment.getMiddlewareName();
-    assessmentType = environment.getAssessmentType();
-    assessmentName = environment.getAssessmentName();
+    collectionUnitType = environment.getConnectionUnitType();
+    collectionUnitName = environment.getConnectionUnitName();
     version = environment.getMiddlewareVersion();
     complexityRules = ComplexityContributionJson.getComplexityContributionJsonList(recommendation.getComplexityContributions());
     issueCategories = IssueCategoryJson.getIssueCategoryJsonMap(recommendation.getIssueCategories());
@@ -77,7 +77,11 @@ public class RecommendationJson {
         // Build map of issues by category
         Map<String, List<Issue>> issuesMap = new LinkedHashMap<String, List<Issue>>();
         for (Issue issue : auIssues) {
-          String issueCat = issue.getCategory().getId();
+          IssueCategory iCat = issue.getCategory();
+          if (iCat == null) {
+            throw new TAException("No matching issue category found for issue with ID:" + issue.getId());
+          }
+          String issueCat = iCat.getId();
 
           List<Issue> issuesList = issuesMap.get(issueCat);
           if (issuesList == null) {
@@ -197,7 +201,7 @@ public class RecommendationJson {
   }
 
   private void addComplexityScore(Map<String, Object> complexityMap) {
-    ComplexityRating maxComplexity = ComplexityRating.SIMPLE;
+    ComplexityRating maxComplexity = ComplexityRating.simple;
 
     Iterator<String> itComplexity = complexityMap.keySet().iterator();
     while (itComplexity.hasNext()) {

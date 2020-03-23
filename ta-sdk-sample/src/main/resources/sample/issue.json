@@ -8,7 +8,7 @@
     "solutionText": [
       "Update other Cluster members using IPAddresses to use the new IPAddress after migrating"
     ],
-    "severity": "YELLOW",
+    "severity": "potential",
     "matchCriteria": {
       "ruleType": "json",
       "jsonQueryPath": {
@@ -37,7 +37,7 @@
       "(3) Exit will be carried forward as-is in your migrated Queue Manager.",
       "Embed the binaries into the new Docker container.  Check to see if binaries need to be ported to run in your desired Container Base OS and target cluster architecture."
     ],
-    "severity": "YELLOW",
+    "severity": "potential",
     "matchCriteria": {
       "ruleType": "json",
       "jsonQueryPath": {
@@ -79,7 +79,7 @@
       "(3) Exit will be carried forward as-is in your migrated Queue Manager.",
       "Embed the binaries into the new Docker container.  Check to see if binaries need to be ported to run in your desired Container Base OS and target cluster architecture."
     ],
-    "severity": "YELLOW",
+    "severity": "potential",
     "matchCriteria": {
       "ruleType": "json",
       "jsonQueryPath": {
@@ -125,7 +125,7 @@
       "(3) Exit will be carried forward as-is in your migrated Queue Manager.",
       "Embed the binaries into the new Docker container.  Check to see if binaries need to be ported to run in your desired Container Base OS and target cluster architecture."
     ],
-    "severity": "YELLOW",
+    "severity": "potential",
     "matchCriteria": {
       "ruleType": "json",
       "jsonQueryPath": {
@@ -169,7 +169,7 @@
       "(3) Exit will be carried forward as-is in your migrated Queue Manager.",
       "Embed the binaries into the new Docker container.  Check to see if binaries need to be ported to run in your desired Container Base OS and target cluster architecture."
     ],
-    "severity": "RED",
+    "severity": "critical",
     "matchCriteria": {
       "ruleType": "json",
       "jsonQueryPath": {
@@ -208,7 +208,7 @@
       "(3) Binary will be carried forward as-is in your migrated Queue Manager.",
       "Embed the binaries into the new Docker container.  Check to see if binaries need to be ported to run in your desired Container Base OS and target cluster architecture."
     ],
-    "severity": "RED",
+    "severity": "critical",
     "matchCriteria": {
       "ruleType": "json",
       "jsonQueryPath": {
@@ -237,7 +237,7 @@
       "(3) Binary will be carried forward as-is in your migrated Queue Manager.",
       "Embed the binaries into the new Docker container.  Check to see if binaries need to be ported to run in your desired Container Base OS and target cluster architecture."
     ],
-    "severity": "RED",
+    "severity": "critical",
     "matchCriteria": {
       "ruleType": "json",
       "queryInputFile": {
@@ -269,7 +269,7 @@
       "(3) Binary will be carried forward as-is in your migrated Queue Manager.",
       "Embed the binaries into the new Docker container.  Check to see if binaries need to be ported to run in your desired Container Base OS and target cluster architecture."
     ],
-    "severity": "RED",
+    "severity": "critical",
     "matchCriteria": {
       "ruleType": "xml",
       "criteria": {
@@ -310,7 +310,7 @@
       "Scenarios:",
       "Check the server.xml file in the migration bundle to make sure the datasource configuration is correct"
     ],
-    "severity": "YELLOW",
+    "severity": "potential",
     "matchCriteria": {
       "ruleType": "xml",
       "criteria": {
@@ -345,7 +345,7 @@
       "(1) Port OS config: Migrate Users, Passwords and Groups to the container environment.",
       "(2) Adopt LDAP: Configure migrated Queue Manager to use LDAP instead of Operating System based authentication"
     ],
-    "severity": "YELLOW",
+    "severity": "potential",
     "javaClass": "com.ibm.ta.sdk.sample.assessment.CustomRule",
     "matchCriteria": {
       "ruleType": "json",

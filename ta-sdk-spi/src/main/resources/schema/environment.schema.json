@@ -1,0 +1,74 @@
+{
+  "$id": "environment.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Environment Json Schema",
+  "description": "Environment information",
+  "type": "object",
+  "properties": {
+    "pluginVersion": {
+      "description": "Version of the plug-in",
+      "type": "string"
+    },
+    "domain": {
+      "description": "Domain name, or product family, is a product grouping that the middleware belongs to",
+      "type": "string"
+    },
+    "operatingSystem": {
+      "description": "Name of the Operating System that the middleware is installed on",
+      "type": "string"
+    },
+    "hostName": {
+      "description": "Hostname of the system where the middleware is installed on",
+      "type": "string"
+    },
+    "middlewareName": {
+      "description": "Name of the middleware installed on the system that is being analyzed",
+      "type": "string"
+    },
+    "middlewareVersion": {
+      "description": "Version of the middleware installed on the system that is being analyzed",
+      "type": "string"
+    },
+    "middlewareInstallPath": {
+      "description": "Filesystem path on the system where the middleware is installed on",
+      "type": "string"
+    },
+    "middlewareDataPath": {
+      "description": "Filesystem path on the system where the data for the middleware is store on",
+      "type": "string"
+    },
+    "middlewareMetadata": {
+      "description": "Additional metadata for the middleware",
+      "type": "object"
+    },
+    "collectionUnitName": {
+      "description": "Name of the collection unit",
+      "type": "string"
+    },
+    "collectionUnitType": {
+      "description": "Type of the collection unit",
+      "type": "string"
+    },
+    "assessmentMetadata": {
+      "description": "Additional metadata for the assessment",
+      "type": "object"
+    },
+    "assessmentUnits": {
+      "description": "List of assessment units",
+      "type": "array"
+    }
+  },
+  "required": [
+    "pluginVersion",
+    "domain",
+    "operatingSystem",
+    "hostName",
+    "middlewareName",
+    "middlewareVersion",
+    "middlewareInstallPath",
+    "middlewareDataPath",
+    "collectionUnitName",
+    "collectionUnitType",
+    "assessmentUnits"
+  ]
+}

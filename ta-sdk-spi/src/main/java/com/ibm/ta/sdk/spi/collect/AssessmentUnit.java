@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * Most middleware installations support many running instances of the middleware. Each of these instance is
- * generically represent as an {@code AssessmentUnit}. Examples of assessment units include profiles in <b>WebSphere
+ * generically represent as an {@code AssessmentUnitMetadataJson}. Examples of assessment units include profiles in <b>WebSphere
  * Application Server</b>, or Queue Managers in <b>WebSphere MQ</b>.
  *
  * <p>All collected artifacts for an assessment unit exist in a separate subdirectory, by the asssessment unit name,
