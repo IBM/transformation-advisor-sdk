@@ -61,6 +61,30 @@ The `<middleware> help` command shows the command usage for that middleware.
 java -jar ta-sdk-sample-0.5.2.jar sample help
 ```
 
+### Run data validator
+The TA SDK includes a validation utility that could be used to validate the output artifacts created by a 
+plugin. Plugin developers could also use this utility to validate the metadata files that are used to generate 
+the recommendations.
+
+To run the data validator:
+```
+cd target
+java -cp ta-sdk-sample-0.5.2.jar com.ibm.ta.sdk.spi.validation.TaValidator [OPTIONS]
+```
+
+These options are available to validate the output artifacts created by a plugin:
+ -e,--environment <arg>      Validate environment JSON file
+ -r,--recommendation <arg>   Validate recommendation JSON file
+ -z,--collection <arg>       Validate collection zip file, including directory structure, environment and 
+recommendation JSON file
+
+
+These options are available to validate the metadata files used to generate the recommendations:
+ -c,--complexity <arg>       Validate complexity JSON file
+ -i,--issue <arg>            Validate issue rule JSON file.
+ -t,--target <arg>           Validate target JSON file
+ 
+
 ### Contributing to Transformation Advisor SDK
 See [CONTRIBUTING.md](CONTRIBUTING.md).
 
