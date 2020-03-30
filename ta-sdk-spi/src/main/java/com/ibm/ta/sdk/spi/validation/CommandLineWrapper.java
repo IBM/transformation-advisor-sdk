@@ -18,7 +18,7 @@ public class CommandLineWrapper {
                 .builder("i")
                 .longOpt("issue")
                 .hasArg()
-                .desc("Validate issue rule json file.")
+                .desc("Validate issue rule JSON file.")
                 .build();
 
         Option versionOption = Option
@@ -30,57 +30,48 @@ public class CommandLineWrapper {
         Option helpOption = Option
                 .builder("h")
                 .longOpt("help")
-                .desc("Get to start to use the TA validator command line tool")
+                .desc("Get information on the commands and options available for TA validator command line tool")
                 .build();
 
         Option targetOption = Option
                 .builder("t")
                 .longOpt("target")
                 .hasArg()
-                .desc("Validate target json file")
+                .desc("Validate target JSON file")
                 .build();
 
         Option complexOption = Option
                 .builder("c")
                 .longOpt("complexity")
                 .hasArg()
-                .desc("Validate complexity json file")
+                .desc("Validate complexity JSON file")
                 .build();
 
         Option recommOption = Option
                 .builder("r")
                 .longOpt("recommendation")
                 .hasArg()
-                .desc("Validate recommendation json file")
+                .desc("Validate recommendation JSON file")
                 .build();
 
         Option zipOption = Option
                 .builder("z")
                 .longOpt("collection")
                 .hasArg()
-                .desc("Validate collection zip file")
+                .desc("Validate collection zip file, including directory structure, environment and recommendation JSON file")
                 .build();
         Option envOption = Option
                 .builder("e")
                 .longOpt("environment")
                 .hasArg()
-                .desc("Validate environment json file")
+                .desc("Validate environment JSON file")
                 .build();
-
-        Option recOption = Option
-                .builder("r")
-                .longOpt("recommendation")
-                .hasArg()
-                .desc("Validate recommendation json file")
-                .build();
-
 
         options
                 .addOption(issueOption)
                 .addOption(versionOption)
                 .addOption(helpOption)
                 .addOption(complexOption)
-                .addOption(recommOption)
                 .addOption(targetOption)
                 .addOption(zipOption)
                 .addOption(envOption)
