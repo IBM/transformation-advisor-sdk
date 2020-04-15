@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>ta-sdk-sample</artifactId>
+    <name>${project.groupId}:${project.artifactId}</name>
     <build>
         <plugins>
             <plugin>

@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>ta-sdk-spi</artifactId>
-
+    <name>${project.groupId}:${project.artifactId}</name>
     <build>
         <plugins>
             <plugin>
