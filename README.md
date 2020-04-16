@@ -69,7 +69,7 @@ the recommendations.
 To run the data validator:
 ```
 cd target
-java -cp ta-sdk-sample-0.5.2.jar com.ibm.ta.sdk.spi.validation.TaValidator [OPTIONS]
+java -cp ta-sdk-sample-0.5.3.jar com.ibm.ta.sdk.spi.validation.TaValidator [OPTIONS]
 ```
 
 These options are available to validate the output artifacts created by a plugin:
