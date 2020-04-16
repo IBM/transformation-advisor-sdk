@@ -23,13 +23,13 @@ Need to add this in your pom.xml file.
         <dependency>
             <groupId>com.ibm.ta.sdk</groupId>
             <artifactId>ta-sdk-core</artifactId>
-            <version>0.5.2</version>
+            <version>0.5.3</version>
         </dependency>
 ```
 ta-sdk-core module will depend on the ta-sdk-spi module.
 
 ### Build
-This project uses Maven to build. Download and configure Maven before building this project.
+This project uses Maven version later than 3.6.0 to build. Download and configure Maven before building this project.
 
 On all platforms, build by running this command:
 ```bash
@@ -41,7 +41,7 @@ Output archive files can be find in target/ directory.
 To run the data data collector:
 ```
 cd target
-java -jar ta-sdk-sample-0.5.2.jar help
+java -jar ta-sdk-sample-0.5.3.jar help
 ```
 
 The `help` command shows the usage for the data collector. The usage information for `middleware` shows the list
@@ -58,7 +58,7 @@ Logs are in `logs` directory.
 
 The `<middleware> help` command shows the command usage for that middleware.
 ```
-java -jar ta-sdk-sample-0.5.2.jar sample help
+java -jar ta-sdk-sample-0.5.3.jar sample help
 ```
 
 ### Run data validator
