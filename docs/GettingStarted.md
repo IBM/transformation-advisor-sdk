@@ -16,7 +16,7 @@ In this document we use IntelliJ as the Java development tool.
         <dependency>
             <groupId>com.ibm.ta.sdk</groupId>
             <artifactId>ta-sdk-core</artifactId>
-            <version>0.5.2</version>
+            <version>0.5.2-2</version>
         </dependency>
     </dependencies>
 ```
@@ -162,7 +162,9 @@ Commands:
 
     The options for these commands are defined in the getXXXCommand() method,  when user type the --help for different command,  the plug-in specific command option will be displayed.
   
-    This [diagram](images/dataFlow.png) illustrates the the function of each command and the interaction/flow between these commands.
+    ![diagram](images/dataFlow.png)
+    
+    This diagram illustrates the the function of each command and the interaction/flow between these commands.
 
     The GenericPluginProvider provide the default implementation for the assess and report method, in here we just implement the collect method.  The collect command take one parameter,  which is the install path of your demo software.
 
@@ -384,15 +386,9 @@ Create the `/sampleData/application1.json` file under under your project's `src/
    Create the target.json file using this content:
 ```
 {
-  "security": {
-    "title": "Authentication considerations"
-  },
-  "exits": {
-    "title": "Exit and custom binary considerations"
-  },
-  "cluster": {
-    "title": "Cluster considerations"
-  }
+  "productName": "DemoOnCloud",
+  "productVersion": "19.0.0",
+  "runtime": "ACE"
 }
 ```
 
