@@ -55,6 +55,7 @@ The `<middleware> help` command shows the command usage for that middleware.
 ```
 java -jar ta-sdk-sample-0.5.3.jar sample help
 ```
+
 You can run all the stages of the sample plugin using the `run` option and 2 arguments, `INSTALL_PATH` and `DATA_DIR`.
 The `INSTALL_PATH` is the directory called `sampleData` in the `resources` folder and `DATA_DIR` is the `sample` directory in the `resources` folder.
 ```
