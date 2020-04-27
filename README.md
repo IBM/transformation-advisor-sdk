@@ -51,15 +51,19 @@ is available:
 Middleware:
   Plug-ins available for these middleware [ sample ]
 ```
-
-Output artifacts are in `output` directory.
-
-Logs are in `logs` directory.
-
 The `<middleware> help` command shows the command usage for that middleware.
 ```
 java -jar ta-sdk-sample-0.5.3.jar sample help
 ```
+You can run all the stages of the sample plugin using the `run` option and 2 arguments, `INSTALL_PATH` and `DATA_DIR`.
+The `INSTALL_PATH` is the directory called `sampleData` in the `resources` folder and `DATA_DIR` is the `sample` directory in the `resources` folder.
+```
+java -jar ta-sdk-sample-0.5.3.jar sample run <YOUR_LOCATION>/transformation-advisor-sdk/ta-sdk-sample/src/main/resources/sampleData <YOUR_LOCATION>/transformation-advisor-sdk/ta-sdk-sample/src/main/resources/sample
+``` 
+
+Output artifacts are in `output` directory.
+
+Logs are in `logs` directory.
 
 ### Run data validator
 The TA SDK includes a validation utility that could be used to validate the output artifacts created by a 
