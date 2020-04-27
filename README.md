@@ -57,9 +57,10 @@ java -jar ta-sdk-sample-0.5.3.jar sample help
 ```
 
 You can run all the stages of the sample plugin using the `run` option and 2 arguments, `INSTALL_PATH` and `DATA_DIR`.
-The `INSTALL_PATH` is the directory called `sampleData` in the `resources` folder and `DATA_DIR` is the `sample` directory in the `resources` folder.
+
+**Note:** For the sake of simplicity, the sample plugin does not actually use the argument values. To run the sample, you can supply any text in place of those arguments.
 ```
-java -jar ta-sdk-sample-0.5.3.jar sample run <YOUR_LOCATION>/transformation-advisor-sdk/ta-sdk-sample/src/main/resources/sampleData <YOUR_LOCATION>/transformation-advisor-sdk/ta-sdk-sample/src/main/resources/sample
+java -jar ta-sdk-sample-0.5.3.jar sample run myarg1 myarg2
 ``` 
 
 Output artifacts are in `output` directory.
