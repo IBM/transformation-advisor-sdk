@@ -176,7 +176,7 @@ public class TADataCollector {
             for (ContentMask mask : contentMasks) {
               for (String contentMaskFile : mask.getFiles()) {
                 // Use the original path of the file, not the new path where the file is copied to
-                String origPath = path.toAbsolutePath().toString().replaceFirst(auOutputDir.getAbsolutePath(), "");
+                String origPath = path.toAbsolutePath().toString().replace(auOutputDir.getAbsolutePath(), "");
 
                 logger.debug("Comparing file:" + origPath + " to contentMaskFile:" + contentMaskFile);
 
