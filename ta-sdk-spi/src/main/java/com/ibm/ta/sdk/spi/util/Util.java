@@ -21,6 +21,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class Util {
+
+  private static final String ZIP_FILE_SEPARATOR = "/"; // File.separator should not be used in zips
+
   public static void zipDir(Path zipOutFile, File zipInDir) throws IOException {
     ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipOutFile.toFile()));
     addZipEntry(zipInDir, null, zos);
@@ -31,9 +34,9 @@ public class Util {
   private static void addZipEntry(File file, String parentDir, ZipOutputStream zos) throws IOException {
     // Add current file/dir
     zos.putNextEntry(new ZipEntry(
-            (parentDir != null ? parentDir + File.separator : "")  // Do not start with leading /
+            (parentDir != null ? parentDir + ZIP_FILE_SEPARATOR : "")  // Do not start with leading /
                     + file.getName()
-                    + (file.isDirectory() ? File.separator : "")  // Add trailing / to directories
+                    + (file.isDirectory() ? ZIP_FILE_SEPARATOR : "")  // Add trailing / to directories
     ));
     if (file.isFile()) {
       IOUtils.copy(new FileInputStream(file), zos);
@@ -42,7 +45,7 @@ public class Util {
 
     // Add subdir files
     if (file.isDirectory()) {
-      parentDir = (parentDir != null ? parentDir + File.separator : "") + file.getName();
+      parentDir = (parentDir != null ? parentDir + ZIP_FILE_SEPARATOR : "") + file.getName();
       for (File dirFile : file.listFiles()) {
         addZipEntry(dirFile, parentDir, zos);
       }

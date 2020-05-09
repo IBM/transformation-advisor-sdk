@@ -16,7 +16,7 @@ In this document we use IntelliJ as the Java development tool.
         <dependency>
             <groupId>com.ibm.ta.sdk</groupId>
             <artifactId>ta-sdk-core</artifactId>
-            <version>0.5.2-2</version>
+            <version>0.5.3</version>
         </dependency>
     </dependencies>
 ```
@@ -111,6 +111,11 @@ import java.net.URISyntaxException;
                                
 public class DemoPlugin extends GenericPluginProvider {
 
+    @Override
+    public String getVersion() {
+        return "0.5.3";
+    }
+    
     @Override
     public String getDomain() {
         return "Plugin-Demo";
@@ -218,8 +223,8 @@ You can replace the collect() method with the following code:
         String instanceName = "instance1";
         EnvironmentJson envJson = new EnvironmentJson("Plugin-Demo", "demo", "1.0.0");
         envJson.setMiddlewareInstallPath(cliInputCommand.getArguments().get(0));
-        envJson.setAssessmentType("Instance");
-        envJson.setAssessmentName(instanceName);
+        envJson.setCollectionUnitType("Instance");
+        envJson.setCollectionUnitName(instanceName);
         try {
             Path assessDataJsonFile = getFileFromUri(DemoPlugin.class.getResource("/sampleData/application1.json").toURI());
             List<GenericAssessmentUnit> auList = new ArrayList<>();
@@ -270,7 +275,7 @@ Create the `/sampleData/application1.json` file under under your project's `src/
     "id": "dns",
     "name": "DNS Reconfiguration",
     "description": "Issues that require DNS reconfiguration",
-    "complexityContribution": "SIMPLE",
+    "complexityContribution": "simple",
     "issues": [
       "MQCL01"
     ]
@@ -279,7 +284,7 @@ Create the `/sampleData/application1.json` file under under your project's `src/
     "id": "cluster",
     "name": "Cluster Reconfiguration",
     "description": "Issues that require cluster reconfiguration",
-    "complexityContribution": "MODERATE",
+    "complexityContribution": "moderate",
     "issuesCategory": [
       "cluster"
     ]
@@ -288,7 +293,7 @@ Create the `/sampleData/application1.json` file under under your project's `src/
     "id": "security",
     "name": "Client authentication reconfiguration",
     "description": "Issues that require client authentication reconfiguration",
-    "complexityContribution": "COMPLEX",
+    "complexityContribution": "complex",
     "issues": [
       "MQSEC01"
     ]
@@ -308,7 +313,7 @@ Create the `/sampleData/application1.json` file under under your project's `src/
     "solutionText": [
       "Update other Cluster members using IPAddresses to use the new IPAddress after migrating"
     ],
-    "severity": "YELLOW",
+    "severity": "potential",
     "matchCriteria": {
       "ruleType": "json",
       "jsonQueryPath": {
@@ -337,7 +342,7 @@ Create the `/sampleData/application1.json` file under under your project's `src/
       "(3) Exit will be carried forward as-is in your migrated Queue Manager.",
       "Embed the binaries into the new Docker container.  Check to see if binaries need to be ported to run in your desired Container Base OS and target cluster architecture."
     ],
-    "severity": "YELLOW",
+    "severity": "potential",
     "matchCriteria": {
       "ruleType": "json",
       "jsonQueryPath": {
