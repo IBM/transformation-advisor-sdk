@@ -6,6 +6,7 @@
  */
 package com.ibm.ta.sdk.sample.test;
 
+import com.ibm.ta.sdk.core.util.GenericUtil;
 import com.ibm.ta.sdk.spi.plugin.TADataCollector;
 import com.ibm.ta.sdk.spi.plugin.TAException;
 
@@ -95,7 +96,7 @@ public class SamplePluginProviderTest {
         assertTrue(recommFile.exists());
         assertTrue(recommFile.isFile());
         assertTrue(recommFile.length() > 2);
-        File reportFile = new File (directories[0]+"/AssessmentUnit1/recommendations_Private_Docker.html");
+        File reportFile = new File (directories[0]+"/Plants.ear/recommendations_Private_Docker.html");
         assertTrue(reportFile.exists());
         assertTrue(reportFile.isFile());
         assertTrue(reportFile.length() > 2);
@@ -105,4 +106,56 @@ public class SamplePluginProviderTest {
         assertTrue(collectionFile.length() > 2);
     }
 
+    @Test
+    public void migrateCommandTest() throws TAException, IOException {
+        List<String> argus = new ArrayList<>();
+        argus.add("run");
+        argus.add("test");
+        argus.add("test");
+        TADataCollector tadc = new TADataCollector();
+        tadc.runCommand("sample", argus);
+        List<String> migrateArgus = new ArrayList<>();
+        migrateArgus.add("migrate");
+        migrateArgus.add("./output/Installation1");
+        tadc.runCommand("sample", migrateArgus);
+        File outputDir = Util.getOutputDir();
+        File bundleZipFile = new File (outputDir+"/Installation1/Plants.ear/migrationBundle/Plants.ear_ACE.zip");
+        assertTrue(bundleZipFile.exists());
+        assertTrue(bundleZipFile.isFile());
+        assertTrue(bundleZipFile.length() > 2);
+        File bundleDir = new File (outputDir+"/Installation1/Plants.ear/migrationBundle/ACE/");
+        assertTrue(bundleDir.exists());
+        assertTrue(bundleDir.isDirectory());
+        File pomFile = new File(bundleDir.getAbsolutePath()+File.separator+"pom.xml");
+        assertTrue(pomFile.exists());
+        assertTrue(pomFile.isFile());
+        assertTrue(pomFile.length() > 2);
+        String pomFileContent = GenericUtil.readFileToString(pomFile.toPath());
+        assertFalse(pomFileContent.contains("[="));
+        assertTrue(pomFileContent.contains("project.artifactId"));
+        assertTrue(pomFileContent.contains("Plants.ear"));
+        File dockerFile = new File(bundleDir.getAbsolutePath()+File.separator+"Dockerfile");
+        assertTrue(dockerFile.exists());
+        assertTrue(dockerFile.isFile());
+        assertTrue(dockerFile.length() > 2);
+        String dockerFileContent = GenericUtil.readFileToString(dockerFile.toPath());
+        assertFalse(dockerFileContent.contains("[="));
+        assertTrue(dockerFileContent.contains("2.1"));
+        assertTrue(dockerFileContent.contains("Plants.ear"));
+        File jvmFile = new File(bundleDir.getAbsolutePath()+File.separator+"jvm.options");
+        assertTrue(jvmFile.exists());
+        assertTrue(jvmFile.isFile());
+        assertTrue(jvmFile.length() > 2);
+        String jvmFileContent = GenericUtil.readFileToString(jvmFile.toPath());
+        assertFalse(jvmFileContent.contains("[="));
+        assertTrue(jvmFileContent.contains("-Duser.country=CA"));
+        File serverXmlFile = new File(bundleDir.getAbsolutePath()+File.separator+"server.xml");
+        assertTrue(serverXmlFile.exists());
+        assertTrue(serverXmlFile.isFile());
+        assertTrue(serverXmlFile.length() > 2);
+        File serverPyFile = new File(bundleDir.getAbsolutePath()+File.separator+"server_config.py");
+        assertTrue(serverPyFile.exists());
+        assertTrue(serverPyFile.isFile());
+        assertTrue(serverPyFile.length() > 2);
+    }
 }

@@ -38,7 +38,7 @@ public class SamplePluginProvider extends GenericPluginProvider {
   private static final String FILE_ASSESS_CONFIG_FILE_JSON = "/sampleData/SampleConfigFile.json";
   private static final String FILE_ASSESS_CONFIG_FILE2_JSON = "/sampleData/SampleConfigFile2.json";
   private static final String FILE_ASSESS_CONFIG_FILE_XML= "/sampleData/sampleData.xml";
-  private static final String FILE_ASSESS_CONFIG_FILE_XML2= "/sampleData/Plants.ear_server.xml";
+  private static final String FILE_ASSESS_CONFIG_FILE_XML2= "/sampleData/server.xml";
 
   @Override
   public String getVersion() {
@@ -110,7 +110,7 @@ public class SamplePluginProvider extends GenericPluginProvider {
       // for plug-in developers,  you also need to provide a set of issue json file under <middlewareName> dir
       // in runtime,  TA SDK will load these issue json files from classpath to detect the issues from the asseesment data file or configure files
       List<GenericAssessmentUnit> auList = new ArrayList<>();
-      auList.add(super.getAssessmentUnit(null, assessDataJsonFile, assessmentConfigFiles));
+      auList.add(super.getAssessmentUnit("Plants.ear", assessDataJsonFile, assessmentConfigFiles));
 
       GenericDataCollection coll = new GenericDataCollection(instanceName, envJson, auList);
       List<DataCollection> colls = new ArrayList<>();
