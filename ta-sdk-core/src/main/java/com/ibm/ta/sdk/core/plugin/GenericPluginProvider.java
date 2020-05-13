@@ -14,6 +14,7 @@ import com.ibm.ta.sdk.core.assessment.GenericRecommendation;
 import com.ibm.ta.sdk.core.collect.GenericAssessmentUnit;
 import com.ibm.ta.sdk.core.collect.TextContextMask;
 import com.ibm.ta.sdk.core.report.RecommendationReporter;
+import com.ibm.ta.sdk.core.util.Constants;
 import com.ibm.ta.sdk.core.util.FreeMarkerTemplateResolver;
 import com.ibm.ta.sdk.core.util.GenericUtil;
 import com.ibm.ta.sdk.spi.collect.ContentMask;
@@ -177,7 +178,7 @@ public abstract class GenericPluginProvider implements PluginProvider {
     CliInputOption migrateCmdAssessNameOpt = new CliInputOption("n", "assessUnitName", "The name of assessment unit", true, true, null, null);
     List<CliInputOption> migrateCmdOpts = new LinkedList<>(Arrays.asList(migrateCmdAssessNameOpt));
     CliInputCommand migrateCmd = new CliInputCommand(CliInputCommand.CMD_MIGRATE,
-            "Generate migration bundle for sample assessment unit",
+            "Generate migration bundle for different target based on assessment unit files in the collection",
             migrateCmdOpts, null, Arrays.asList("COLLECTION_UNIT_DIR"));
     return migrateCmd;
   }
@@ -194,7 +195,7 @@ public abstract class GenericPluginProvider implements PluginProvider {
     }
 
     // check the environment.json file is in the collection directory.
-    File envJsonFile = new File(collectionDir.getAbsolutePath()+File.separator+"environment.json");
+    File envJsonFile = new File(collectionDir.getAbsolutePath()+File.separator+ ENVIRONMENT_JSON);
     if (!envJsonFile.exists()) {
       throw new TAException("The value for collectionDir isnot valid collection directory,  cannot find the environment.json file in that directory");
     }
@@ -228,7 +229,7 @@ public abstract class GenericPluginProvider implements PluginProvider {
       String assessName = assess.getAsString();
       if (assessNames.size()==0 || assessNames.contains(assessName)) {
           FreeMarkerTemplateResolver fmtr = new FreeMarkerTemplateResolver(this, new File(collectionDir.getAbsolutePath()+File.separator+assessName), envJson);
-          fmtr.resolveTemplatesForAllTargsts();
+          fmtr.resolveTemplatesForAllTargets();
       } else {
           logger.warn("skip generate migration bundle for assessment unit " + assessName);
       }

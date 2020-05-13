@@ -6,6 +6,7 @@
  */
 package com.ibm.ta.sdk.sample.test;
 
+import com.ibm.ta.sdk.core.util.Constants;
 import com.ibm.ta.sdk.core.util.GenericUtil;
 import com.ibm.ta.sdk.spi.plugin.TADataCollector;
 import com.ibm.ta.sdk.spi.plugin.TAException;
@@ -23,6 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SamplePluginProviderTest {
 
+    static final String MIDDLEWARE_NAME = "sample";
+    static final String COLLECTION_UNIT_NAME = "Installation1";
+    static final String ASSESS_UNIT_NAME = "Plants.ear";
     @BeforeEach
     void cleanOutpotDir() throws IOException {
         Path outputDir = Util.getOutputDir().toPath();
@@ -41,16 +45,16 @@ public class SamplePluginProviderTest {
         argus.add("test");
         argus.add("test");
         TADataCollector tadc = new TADataCollector();
-        tadc.runCommand("sample", argus);
+        tadc.runCommand(MIDDLEWARE_NAME, argus);
         File outputDir = Util.getOutputDir();
         File[] directories = outputDir.listFiles(File::isDirectory);
         assertEquals(directories.length, 1);
-        assertEquals(directories[0].getName(), "Installation1");
-        File envFile = new File (directories[0]+"/environment.json");
+        assertEquals(directories[0].getName(), COLLECTION_UNIT_NAME);
+        File envFile = new File (directories[0]+File.separator+ Constants.ENVIRONMENT_JSON);
         assertTrue(envFile.exists());
         assertTrue(envFile.isFile());
         assertTrue(envFile.length() > 2);
-        File recommFile = new File (directories[0]+"/recommendations.json");
+        File recommFile = new File (directories[0]+File.separator+ Constants.RECOMMENDATIONS_JSON);
         assertFalse(recommFile.exists());
     }
 
@@ -61,16 +65,16 @@ public class SamplePluginProviderTest {
         argus.add("test");
         argus.add("test");
         TADataCollector tadc = new TADataCollector();
-        tadc.runCommand("sample", argus);
+        tadc.runCommand(MIDDLEWARE_NAME, argus);
         File outputDir = Util.getOutputDir();
         File[] directories = outputDir.listFiles(File::isDirectory);
         assertEquals(directories.length, 1);
-        assertEquals(directories[0].getName(), "Installation1");
-        File envFile = new File (directories[0]+"/environment.json");
+        assertEquals(directories[0].getName(), COLLECTION_UNIT_NAME);
+        File envFile = new File (directories[0]+File.separator+ Constants.ENVIRONMENT_JSON);
         assertTrue(envFile.exists());
         assertTrue(envFile.isFile());
         assertTrue(envFile.length() > 2);
-        File recommFile = new File (directories[0]+"/recommendations.json");
+        File recommFile = new File (directories[0]+File.separator+ Constants.RECOMMENDATIONS_JSON);
         assertTrue(recommFile.exists());
         assertTrue(recommFile.isFile());
         assertTrue(recommFile.length() > 2);
@@ -83,20 +87,20 @@ public class SamplePluginProviderTest {
         argus.add("test");
         argus.add("test");
         TADataCollector tadc = new TADataCollector();
-        tadc.runCommand("sample", argus);
+        tadc.runCommand(MIDDLEWARE_NAME, argus);
         File outputDir = Util.getOutputDir();
         File[] directories = outputDir.listFiles(File::isDirectory);
         assertEquals(directories.length, 1);
-        assertEquals(directories[0].getName(), "Installation1");
-        File envFile = new File (directories[0]+"/environment.json");
+        assertEquals(directories[0].getName(), COLLECTION_UNIT_NAME);
+        File envFile = new File (directories[0]+File.separator+ Constants.ENVIRONMENT_JSON);
         assertTrue(envFile.exists());
         assertTrue(envFile.isFile());
         assertTrue(envFile.length() > 2);
-        File recommFile = new File (directories[0]+"/recommendations.json");
+        File recommFile = new File (directories[0]+File.separator+ Constants.RECOMMENDATIONS_JSON);
         assertTrue(recommFile.exists());
         assertTrue(recommFile.isFile());
         assertTrue(recommFile.length() > 2);
-        File reportFile = new File (directories[0]+"/Plants.ear/recommendations_Private_Docker.html");
+        File reportFile = new File (directories[0]+File.separator+ASSESS_UNIT_NAME+"/recommendations_Private_Docker.html");
         assertTrue(reportFile.exists());
         assertTrue(reportFile.isFile());
         assertTrue(reportFile.length() > 2);
@@ -113,17 +117,18 @@ public class SamplePluginProviderTest {
         argus.add("test");
         argus.add("test");
         TADataCollector tadc = new TADataCollector();
-        tadc.runCommand("sample", argus);
+        tadc.runCommand(MIDDLEWARE_NAME, argus);
         List<String> migrateArgus = new ArrayList<>();
         migrateArgus.add("migrate");
-        migrateArgus.add("./output/Installation1");
-        tadc.runCommand("sample", migrateArgus);
+        migrateArgus.add("./output/"+COLLECTION_UNIT_NAME);
+        tadc.runCommand(MIDDLEWARE_NAME, migrateArgus);
         File outputDir = Util.getOutputDir();
-        File bundleZipFile = new File (outputDir+"/Installation1/Plants.ear/migrationBundle/Plants.ear_ACE.zip");
+        String migrationBundleDir = outputDir+File.separator+COLLECTION_UNIT_NAME+File.separator+ASSESS_UNIT_NAME+"/migrationBundle/";
+        File bundleZipFile = new File (migrationBundleDir+"Plants.ear_ACE.zip");
         assertTrue(bundleZipFile.exists());
         assertTrue(bundleZipFile.isFile());
         assertTrue(bundleZipFile.length() > 2);
-        File bundleDir = new File (outputDir+"/Installation1/Plants.ear/migrationBundle/ACE/");
+        File bundleDir = new File (migrationBundleDir+"ACE/");
         assertTrue(bundleDir.exists());
         assertTrue(bundleDir.isDirectory());
         File pomFile = new File(bundleDir.getAbsolutePath()+File.separator+"pom.xml");
@@ -157,5 +162,24 @@ public class SamplePluginProviderTest {
         assertTrue(serverPyFile.exists());
         assertTrue(serverPyFile.isFile());
         assertTrue(serverPyFile.length() > 2);
+    }
+
+    @Test
+    public void migrateCommandNoCollectionTest() throws TAException, IOException {
+        TADataCollector tadc = new TADataCollector();
+        List<String> nodirArgus = new ArrayList<>();
+        nodirArgus.add("migrate");
+        nodirArgus.add("./output/"+COLLECTION_UNIT_NAME);
+        Exception exception = assertThrows(TAException.class, () -> {
+            tadc.runCommand(MIDDLEWARE_NAME, nodirArgus);
+        });
+        assertTrue(exception.getMessage().contains("collectionDir isnot a directory"));
+        List<String> noEnvArgus = new ArrayList<>();
+        noEnvArgus.add("migrate");
+        noEnvArgus.add("/tmp");
+        exception = assertThrows(TAException.class, () -> {
+            tadc.runCommand(MIDDLEWARE_NAME, noEnvArgus);
+        });
+        assertTrue(exception.getMessage().contains("cannot find the environment.json file"));
     }
 }

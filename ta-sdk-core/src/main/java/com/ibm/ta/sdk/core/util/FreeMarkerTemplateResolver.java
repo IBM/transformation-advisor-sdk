@@ -37,8 +37,8 @@ public class FreeMarkerTemplateResolver {
         if (!migrationDir.exists()) {
             migrationDir.mkdir();
         }
-        this.data = new Gson().fromJson(envJson, HashMap.class);
-        initData();
+        this.data = new HashMap();
+        initData(envJson);
     }
 
     private void initFMConfig(){
@@ -54,9 +54,23 @@ public class FreeMarkerTemplateResolver {
         cfg.setClassForTemplateLoading(getClass(), "/");
     }
 
-    private void initData(){
+    private void initData(JsonObject envJson){
+        String key = Constants.ENVIRONMENT_JSON.replace('.','_');
+        this.data.put(key, new Gson().fromJson(envJson, HashMap.class));
+        File recommandationJson = new File(this.assessmentUnitDir.getParentFile().getAbsolutePath()+
+                File.separator+Constants.RECOMMENDATIONS_JSON);
+        if (recommandationJson.exists()) {
+            try {
+                key = Constants.RECOMMENDATIONS_JSON.replace('.','_');
+                JsonObject recJsonContent = GenericUtil.getJsonObj(new TypeToken<JsonObject>(){}, recommandationJson.toPath());
+                this.data.put(key,new Gson().fromJson(recJsonContent, HashMap.class));
+                logger.debug("insert to recommendations.json file to data mode with key="+key);
+            } catch (IOException e) {
+                logger.error("error to load recommendations.json file: "+recommandationJson, e);
+            }
+        }
         for (String sFileName: this.assessmentUnitDir.list()) {
-            String key = sFileName.replace('.','_');
+            key = sFileName.replace('.','_');
             //key = key.replaceAll(this.assessmentUnitDir.getName(), "");
             if (sFileName.endsWith(".json")) {
                 try {
@@ -65,7 +79,6 @@ public class FreeMarkerTemplateResolver {
                             new File(assessmentUnitDir.getAbsolutePath()+File.separator+sFileName).toPath());
                     this.data.put(key,new Gson().fromJson(jsonContent, HashMap.class));
                     logger.debug("insert to json file to data mode with key="+key);
-                    logger.debug("fileContent="+jsonContent);
                 } catch (IOException e) {
                     logger.error("error to load json file: "+sFileName, e);
                 }
@@ -87,7 +100,7 @@ public class FreeMarkerTemplateResolver {
         }
     }
 
-    public void resolveTemplatesForAllTargsts() throws TAException {
+    public void resolveTemplatesForAllTargets() throws TAException {
         String[] targets = new String[0];
         try {
             targets = GenericUtil.getResourceListing(getClass(),this.middleware+"/templates/");
@@ -137,10 +150,14 @@ public class FreeMarkerTemplateResolver {
                 out.flush();
                 out.close();
             } else if (targetFileType.equals("placeholder")) {
+                String sourceFileName = targetFileName;
                 Path filePath = Paths.get(getClass().getClassLoader().getResource(templatesDir+templateFileName).toURI());
                 String contents = GenericUtil.readFileToString(filePath);
-                String sourceFileName = contents.split("=")[1];
                 logger.debug("place holder file content is " + contents);
+                if (contents != null && contents.contains("=")) {
+                    sourceFileName = contents.split("=")[1];
+                }
+                logger.debug("place holder source file name is " + sourceFileName);
                 Files.copy(new File(this.assessmentUnitDir.getAbsolutePath()+File.separator+sourceFileName).toPath(),
                         targetFile.toPath());
             } else {

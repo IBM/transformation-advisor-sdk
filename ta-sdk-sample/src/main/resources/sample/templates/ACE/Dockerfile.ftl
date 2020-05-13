@@ -2,7 +2,7 @@ FROM ibmcom/websphere-traditional:latest-ubi
 
 # put app and scripts and properties in /work/config
 # put external library (e.g db driver) in /work/config/lib
-# get from the env.json file [=collectionUnitName]
+# get from the env.json file [=environment_json.collectionUnitName]
 # get from the sampleData.xml file [=sampleData_xml.ejb\-jar.@version]
 
 COPY --chown=was:root [=metadata_assessmentUnit_json.assessmentUnitName] /work/config/dropins/[=metadata_assessmentUnit_json.assessmentUnitName]
