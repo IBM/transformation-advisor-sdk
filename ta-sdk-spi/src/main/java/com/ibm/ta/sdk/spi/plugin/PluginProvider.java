@@ -129,6 +129,27 @@ public interface PluginProvider {
    */
   List<Report> getReport(String assessmentName, CliInputCommand reportCommand) throws TAException;
 
+  /**
+   * The Migrate command is a command with the name {@link CliInputCommand#CMD_MIGRATE}. It contains the options and
+   * arguments that is required by the plug-in to run the migrate command. The user input values for the options
+   * and arguments is passed to the {@link #getMigrationBundle(CliInputCommand)} method when it is invoked.
+   *
+   * @return Migrate command including required options and arguments.
+   */
+  CliInputCommand getMigrateCommand();
+
+  /**
+   * This method is invoked from the {@link CliInputCommand#CMD_MIGRATE} command.
+   * This command will read the freeMarker template files created by the plug-in provider.
+   * It also need user to indicate the collection unit directory as the input for these templates,
+   * and generate the migration bundle zip file.
+   * The generated migration bundle zip files will be found in the {collectionUintDir}/{assessmentUnitDir}/migrationBundle/ directory.
+   *
+   * @param migrateCommand Migrate command containing user input options and arguments
+   * @throws TAException TAException If an error occurs when generating the reports
+   */
+  void getMigrationBundle(CliInputCommand migrateCommand) throws TAException;
+
   default void validateJsonFiles() throws TAException {
     TaJsonFileValidator.validateIssue(getMiddleware()+"/issue.json");
     TaJsonFileValidator.validateComplexity(getMiddleware()+"/complexity.json");

@@ -56,6 +56,7 @@ public class TADataCollector {
     CliInputCommand assessCommand = provider.getAssessCommand();
     providerCommands.add(assessCommand);
     providerCommands.add(provider.getReportCommand());
+    providerCommands.add(provider.getMigrateCommand());
 
     // Add 'run' command which performs collect, assess, and report
     // The command does not be be provided by the provided, we could re-use the 'assess' command
@@ -94,6 +95,8 @@ public class TADataCollector {
       runAssess(provider, matchedCommand);
     } else if (CliInputCommand.CMD_REPORT.equals(matchedCommand.getName())) {
       runReport(provider, matchedCommand);
+    } else if (CliInputCommand.CMD_MIGRATE.equals(matchedCommand.getName())) {
+      runMigrate(provider, matchedCommand);
     } else if (CliInputCommand.CMD_RUN.equals(matchedCommand.getName())) {
       runRun(provider, matchedCommand);
     } else {
@@ -114,8 +117,13 @@ public class TADataCollector {
       Environment environment = dataCollection.getEnvironment();
 
       // Create output dir
-      String assessmentName = environment.getConnectionUnitName();
-      File outputDir = Util.getAssessmentOutputDir(assessmentName);
+      String collectionName = environment.getConnectionUnitName();
+      // collectionName need to be set in the env.json,  otherwise cannot find the output dir,
+      // throw exception here
+      if (collectionName==null || collectionName.length()==0) {
+        throw new TAException("Collection unit name isnot set in the environment by the plug-in provider "+provider.getClass());
+      }
+      File outputDir = Util.getAssessmentOutputDir(collectionName);
       if (!outputDir.exists()) {
         outputDir.mkdirs();
       }
@@ -293,6 +301,10 @@ public class TADataCollector {
     }
   }
 
+  public void runMigrate(PluginProvider provider, CliInputCommand cliInputCommand) throws TAException, IOException {
+    provider.getMigrationBundle(cliInputCommand);
+  }
+
   public void runRun(PluginProvider provider, CliInputCommand cliInputCommand) throws TAException, IOException {
     runAssess(provider, cliInputCommand);
     runReport(provider, cliInputCommand);
@@ -451,7 +463,7 @@ public class TADataCollector {
   }
 
   private void writeAssessmentDataJson(AssessmentUnit au, File outputDir) throws TAException {
-    File auFile = new File(outputDir, au.getName() + ".json");
+    File auFile = new File(outputDir, "data" + ".json");
     if (auFile.exists()) {
       auFile.delete();
     }
@@ -478,7 +490,7 @@ public class TADataCollector {
   }
 
   private void writeAssessmentUnitMetaJson(AssessmentUnit au, Environment environment, File outputDir) throws TAException {
-    File auMetaFile = new File(outputDir, au.getName() + ASSESSMENTUNIT_META_JSON_FILE);
+    File auMetaFile = new File(outputDir, "metadata" + ASSESSMENTUNIT_META_JSON_FILE);
     if (auMetaFile.exists()) {
       auMetaFile.delete();
     }

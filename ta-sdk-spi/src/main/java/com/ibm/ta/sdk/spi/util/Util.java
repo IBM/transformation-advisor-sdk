@@ -8,22 +8,32 @@ package com.ibm.ta.sdk.spi.util;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.apache.commons.compress.archivers.ArchiveEntry;
-import org.apache.commons.compress.archivers.ArchiveOutputStream;
-import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.commons.compress.utils.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class Util {
 
   private static final String ZIP_FILE_SEPARATOR = "/"; // File.separator should not be used in zips
+  private static Logger logger = LogManager.getLogger(Util.class.getName());
 
+  public static String getSDKVersion() {
+    String version = null;
+    final Properties properties = new Properties();
+    try {
+      properties.load(Util.class.getClassLoader().getResourceAsStream("version.properties"));
+      version = properties.getProperty("version");
+    } catch (IOException ioe) {
+      logger.error("Cannot get TA SDK version.", ioe);
+    }
+    return version;
+  }
   public static void zipDir(Path zipOutFile, File zipInDir) throws IOException {
     ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipOutFile.toFile()));
     addZipEntry(zipInDir, null, zos);
