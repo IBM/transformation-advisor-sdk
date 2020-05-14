@@ -41,11 +41,6 @@ public class SamplePluginProvider extends GenericPluginProvider {
   private static final String FILE_ASSESS_CONFIG_FILE_XML2= "/sampleData/server.xml";
 
   @Override
-  public String getVersion() {
-    return "0.5.3";
-  }
-
-  @Override
   public String getDomain() {
     return SAMPLE_DOMAIN;
   }

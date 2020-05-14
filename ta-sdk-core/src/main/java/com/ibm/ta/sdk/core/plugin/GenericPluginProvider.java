@@ -46,6 +46,11 @@ public abstract class GenericPluginProvider implements PluginProvider {
   private static Logger logger = LogManager.getLogger(GenericPluginProvider.class.getName());
 
   @Override
+  public String getVersion() {
+    return Util.getSDKVersion();
+  }
+
+  @Override
   public List<Recommendation> getRecommendation(CliInputCommand cliInputCommand) throws TAException {
     try {
 
