@@ -216,10 +216,7 @@ public abstract class GenericPluginProvider implements PluginProvider {
     try {
       getFileFromUri(getClass().getClassLoader()
               .getResource(getMiddleware()+"/templates").toURI());
-    } catch (IOException e) {
-      throw new TAException("Command migrate is not supported for plugin provider "+this.getClass()+
-              "\n        No target template files found in plugin provider ");
-    } catch (URISyntaxException e) {
+    } catch (Exception e) {
       throw new TAException("Command migrate is not supported for plugin provider "+this.getClass()+
               "\n        No target template files found in plugin provider ");
     }
