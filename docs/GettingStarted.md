@@ -16,7 +16,7 @@ In this document we use IntelliJ as the Java development tool.
         <dependency>
             <groupId>com.ibm.ta.sdk</groupId>
             <artifactId>ta-sdk-core</artifactId>
-            <version>0.5.3</version>
+            <version>0.6.0</version>
         </dependency>
     </dependencies>
 ```
@@ -25,12 +25,14 @@ In this document we use IntelliJ as the Java development tool.
 
 If the specific version of the TA SDK cannot be found in the maven central repository,  you can clone the [TA SDK Repo](https://github.com/IBM/transformation-advisor-sdk) and build the jar files locally.
 
+**Note: To build TA SDK project it need Maven version later than 3.6.0.**
+
 The following commands will build the TA SDK.
 Once the build completes the TA SDK jar files will be stored in your local maven repository, by default it will in the ~/.m2/repository/ directory.
 ```
 git clone https://github.com/IBM/transformation-advisor-sdk.git
 cd transformation-advisor-sdk/
-mvn clean install
+mvn clean install -Pdev
 ```
 
 4.  Add plug-in build and steps to your project's pom.xml file.
@@ -110,11 +112,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
                                
 public class DemoPlugin extends GenericPluginProvider {
-
-    @Override
-    public String getVersion() {
-        return "0.5.3";
-    }
     
     @Override
     public String getDomain() {
@@ -164,6 +161,8 @@ Commands:
     Assess - The collected data is used as input to the `assess` command, which parses the data looking for issues. The output from the `assess` command is a recommendations.json. The recommendations.json file contains a list of issues identified by the recommendations logic. In addition to metadata that describes the issue, each issue also includes cost information, severity, complexity and information on how to resolve it. 
 
     Report - Parses the recommendations.json and generates reports from it. There is currently only support for HTML reports. The report presents a more user friendly and readable version of recommendations.json.
+    
+    Migrate - Generate the migration artifacts for the target runtime of all the assessment units in a collection unit.  This command need to be invoked after the collect and assess command.  It will take the directory of a collection unit as the input parameter, also take the assessment unit name as an optional parameter.  It based on the template files provided by the middleware plugin to generate the migration artifacts for a target runtime.  The output migration artifacts can be found in the `migrationBundle` sub directory of the collection unit.
 
     The options for these commands are defined in the getXXXCommand() method,  when user type the --help for different command,  the plug-in specific command option will be displayed.
   
@@ -428,6 +427,33 @@ java -jar target/ta-sdk-demo-1.0-SNAPSHOT.jar demo run /opt/DemoSoftware
 
    You can check that all the files are generated under the output/ directory.
 ![Image7](https://github.com/IBM/transformation-advisor-sdk/wiki/images/image7.png)
+
+14.  Support the migrate command to generate migration artifacts
+
+   In order to support the migration command,  you need to create template files under your plugin's  `src/main/resources/<middlewareName>/templates/<targetName>/` directory.  Otherwise,   the migrate command will report not supported error.
+    
+    ```
+     java -jar ta-sdk-demo-1.0-SNAPSHOT.jar demo migrate ./output/instance1
+     Fail to run the command, check log file for detail information.
+         Command migrate is not supported for plugin provider class com.ibm.ta.sdk.demo.DemoPlugin
+             No target template files found in plugin provider 
+    ```
+   The template we supported in TA SDK is [FreeMarker template](https://freemarker.apache.org/) files.  
+   By default SDK GenericProvider will load all the of xml file and json file under the assessment unit directory.  And put these file contents in the free marker data model.  The environment.jason file and recommendations.json file under the collection unit directory will also be loaded into the data model.  It will use the file name with the dot ('.') replaced with the under score ('\_') as the key in the data model.  So you can refer these value in your template file. (eg. `\[=metadata_assessmentUnit_json.assessmentUnitName\]` refers to the assessment unit name defined in the metadata.assessmentUnit.json)
+   
+   If you want to copy some file under the assessment unit directly to the migration bundle without change any thing,  you can create a _.placehoder_ file in your template directory.  (eg.  if you create a _server.xml.placehoder_ file in the template dir, it will copy the server.xml file in the assessment unit dir to the migration bundle dir)
+   
+   If the template directory contains some file neither a template file (.ftl) nor a place doler file (.placeholder),  that file will also copied to the migration bundle directory. 
+
+15.  Test the migrate command
+
+   Need to invoke the run command first to generate the collection,  then invoke the migrate command.  The output of the migration artifacts will be stored in the /output/<collectionUnit>/<assessmentUnit>/migrationBundle/ directory.  Will create one zip file per target.
+
+```
+rm -rf output/
+java -jar target/ta-sdk-demo-1.0-SNAPSHOT.jar demo run /opt/DemoSoftware
+java -jar target/ta-sdk-demo-1.0-SNAPSHOT.jar demo migrate ./output/instance1
+```
 
 Here is the source files for this demo project
 
