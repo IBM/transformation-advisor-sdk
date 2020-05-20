@@ -443,17 +443,36 @@ java -jar target/ta-sdk-demo-1.0-SNAPSHOT.jar demo run /opt/DemoSoftware
    
    If you want to copy some file under the assessment unit directly to the migration bundle without change any thing,  you can create a _.placehoder_ file in your template directory.  (eg.  if you create a _server.xml.placehoder_ file in the template dir, it will copy the server.xml file in the assessment unit dir to the migration bundle dir)
    
-   If the template directory contains some file neither a template file (.ftl) nor a place doler file (.placeholder),  that file will also copied to the migration bundle directory. 
+   If the template directory contains some file neither a template file (.ftl) nor a place doler file (.placeholder),  that file will also copied to the migration bundle directory.
+   
+   Create a template file in `src/main/resources/demo/templates/ACE/Dockerfile.ftl` with the following content.
+   ```
+FROM ibmcom/websphere-traditional:latest-ubi
+
+# get from the env.json file [=environment_json.collectionUnitName]
+# get from the data.json file [=data_json.version]
+
+COPY --chown=was:root [=metadata_assessmentUnit_json.assessmentUnitName] /work/config/dropins/[=metadata_assessmentUnit_json.assessmentUnitName]
+COPY --chown=was:root server.xml /work/config
+COPY --chown=was:root ./lib /work/config/lib
+RUN /work/configure.sh
+   ```
+   The variable syntax in the template file is like `[= ]`
 
 15.  Test the migrate command
 
-   Need to invoke the run command first to generate the collection,  then invoke the migrate command.  The output of the migration artifacts will be stored in the /output/<collectionUnit>/<assessmentUnit>/migrationBundle/ directory.  Will create one zip file per target.
+   Need to invoke the run command first to generate the collection,  then invoke the migrate command.  
 
 ```
 rm -rf output/
 java -jar target/ta-sdk-demo-1.0-SNAPSHOT.jar demo run /opt/DemoSoftware
 java -jar target/ta-sdk-demo-1.0-SNAPSHOT.jar demo migrate ./output/instance1
 ```
+
+The output of the migration artifacts will be stored in the `/output/instance1/application1/migrationBundle/ACE/` directory.  It will also create one zip file per target.  
+Check the `Dockerfile` in the migration bundle directory.  
+You can see that all variables in that file are replaced with concreate value.
+
 
 Here is the source files for this demo project
 
