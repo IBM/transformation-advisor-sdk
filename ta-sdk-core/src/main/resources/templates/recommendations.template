@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Assessment Unit Recommendation</title>
-<meta name="description" content="Recommendation Reprot for Unit: {ASSESSMENT_UNIT_NAME}">
+<meta name="description" content="Recommendation Report for Unit: {ASSESSMENT_UNIT_NAME}">
 <meta name="author" content="IBM Transformation Advisor">
 <style type="text/css">
 	html, body, div, iframe, h1, h2, h3, h4, p, a, em, sup,
@@ -323,7 +323,7 @@
 <body id="top" class="analyze">
 
   <div id="wrapper" class="wrapper" role="main">
-    <h1>Recommendation Reprot for Assessment Unit: {ASSESSMENT_UNIT_NAME}</h1>
+    <h1>Recommendation Report for Assessment Unit: {ASSESSMENT_UNIT_NAME}</h1>
     <div class="header-sections list-header" role="main"><h2 id="Target" class="results-title">Target</h2></div>
     <div class="recommendations" role="main">
       <table summary="{ISSUE_CATEGORY_TITLE}">
