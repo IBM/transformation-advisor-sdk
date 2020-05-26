@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
+    <Properties>
+        <!--if no env:TA_LOG_LEVEL, use this-->
+        <Property name="TA_SDK_LOG_LEVEL">debug</Property>
+    </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
@@ -15,10 +19,10 @@
         </RollingFile>
     </Appenders>
     <Loggers>
-        <Logger name="com.ibm.ta-sdk" level="debug" additivity="true">
-            <appender-ref ref="RollingFile" level="debug" />
+        <Logger name="com.ibm.ta-sdk" additivity="true">
+            <appender-ref ref="RollingFile" />
         </Logger>
-        <Root level="debug">
+        <Root level="${env:TA_SDK_LOG_LEVEL}">
             <AppenderRef ref="RollingFile" />
         </Root>
     </Loggers>
