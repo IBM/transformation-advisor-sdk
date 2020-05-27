@@ -7,31 +7,20 @@
 package com.ibm.ta.sdk.spi.validation;
 
 import com.ibm.ta.sdk.spi.plugin.TAException;
+import com.ibm.ta.sdk.spi.util.Util;
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import java.io.IOException;
-import java.util.Properties;
 
 public class TaValidator {
 
     private static Logger logger = LogManager.getLogger(TaValidator.class.getName());
 
-    private static String getTaVersion() {
-        String version = null;
-        final Properties properties = new Properties();
-        try {
-            properties.load(TaValidator.class.getClassLoader().getResourceAsStream("version.properties"));
-            version = properties.getProperty("version");
-        } catch (IOException ioe) {
-            logger.error("Cannot get TA SDK version.", ioe);
-        }
-        return version;
-    }
+    private static final String sdk_version = Util.getSDKVersion();
 
     private static void getHelpPrintOut(Options options) {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("ta-validation-" + getTaVersion() + ".jar [OPTION] [ARGUMENT]", options);
+        formatter.printHelp("ta-validation-" + sdk_version + ".jar [OPTION] [ARGUMENT]", options);
     }
 
     public static void main(String[] args) {
@@ -43,7 +32,7 @@ public class TaValidator {
             if (commandLine.hasOption("h")) {
                 getHelpPrintOut(options);
             } else if (commandLine.hasOption("v")) {
-                System.out.println("Current TA Validator version: " + getTaVersion());
+                System.out.println("Current TA Validator version: " + sdk_version);
             } else if (commandLine.hasOption("c")) {
                 String jsonFile = commandLine.getOptionValue("c");
                 TaJsonFileValidator.validateComplexity(jsonFile);

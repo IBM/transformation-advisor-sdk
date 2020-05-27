@@ -22,6 +22,8 @@ public class CliInputCommand {
   public static final String CMD_ASSESS_DESC  = "Performs data collection and assessment";
   public static final String CMD_REPORT       = "report";
   public static final String CMD_REPORT_DESC  = "Generates reports";
+  public static final String CMD_MIGRATE       = "migrate";
+  public static final String CMD_MIGRATE_DESC  = "Generates migration bundle for assessment";
   public static final String CMD_RUN          = "run";
   public static final String CMD_RUN_DESC     = "Performs data collection, assessment, and generate reports";
 
@@ -131,7 +133,7 @@ public class CliInputCommand {
 
     String usageCommands = null;
     if (!commands.isEmpty()) {
-      usage += " COMMMAND";
+      usage += " COMMAND";
 
       usageCommands = "\nCommands:\n";
       for (CliInputCommand c : commands) {

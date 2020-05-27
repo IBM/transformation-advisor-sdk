@@ -18,4 +18,5 @@ target/
 *.zip
 *.tar.gz
 *.rar
+.flattened-pom.xml
 

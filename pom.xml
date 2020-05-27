@@ -22,7 +22,7 @@
     </modules>
 
     <properties>
-        <ta.sdk.version>0.5.3</ta.sdk.version>
+        <ta.sdk.version>0.6.0</ta.sdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <log4j.version>2.13.0</log4j.version>
         <junit5.version>5.6.0</junit5.version>
@@ -106,20 +106,52 @@
                         </execution>
                     </executions>
                 </plugin>
-		<plugin>
-      		    <groupId>org.sonatype.plugins</groupId>
-     		    <artifactId>nexus-staging-maven-plugin</artifactId>
-      		    <version>1.6.8</version>
-      		    <extensions>true</extensions>
-      		    <configuration>
-        		<serverId>ossrh</serverId>
-        		<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-        		<autoReleaseAfterClose>true</autoReleaseAfterClose>
-      		   </configuration>
-    		</plugin>
+		        <plugin>
+      		        <groupId>org.sonatype.plugins</groupId>
+     		        <artifactId>nexus-staging-maven-plugin</artifactId>
+      		        <version>1.6.8</version>
+      		        <extensions>true</extensions>
+      		        <configuration>
+        		    <serverId>ossrh</serverId>
+        		    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+        		    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+      		        </configuration>
+    		    </plugin>
             </plugins>
          </build>
       </profile>
+         <profile>
+            <id>dev</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>flatten-maven-plugin</artifactId>
+                        <version>1.2.1</version>
+                        <configuration>
+                            <updatePomFile>true</updatePomFile>
+                            <flattenMode>ossrh</flattenMode>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>flatten</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>flatten</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>flatten.clean</id>
+                                <phase>clean</phase>
+                                <goals>
+                                    <goal>clean</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
    </profiles>
 
 </project>
