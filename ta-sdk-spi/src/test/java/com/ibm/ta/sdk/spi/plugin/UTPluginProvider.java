@@ -104,4 +104,14 @@ public class UTPluginProvider implements PluginProvider {
     public List<Report> getReport(String assessmentName, CliInputCommand reportCommand) throws TAException {
         return this.reports;
     }
+
+    @Override
+    public CliInputCommand getMigrateCommand() {
+        return null;
+    }
+
+    @Override
+    public void getMigrationBundle(CliInputCommand migrateCommand) throws TAException {
+
+    }
 }

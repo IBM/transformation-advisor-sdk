@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
 public class TestUtils {
     public static final String TEST_RESOURCES_DIR = "src" + File.separator + "test" + File.separator + "resources";
     public static final String TEST_OUTPUT_DIR = "output";
+    public static final String DATA_JSON = "data.json";
+    public static final String ASSESSMENTUNIT_JSON = "metadata.assessmentUnit.json";
     public static final String ENVIRONMENT_JSON = "environment.json";
     public static final String RECOMMENDATIONS_JSON = "recommendations.json";
 

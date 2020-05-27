@@ -77,8 +77,8 @@ public class ValidationUtils {
             assertTrue(auDir.exists());
 
             // assessmentUnit file and asessmentUnit data file
-            assertTrue(new File(auDir, au + ".json").exists());
-            assertTrue(new File(auDir, au + ".assessmentUnit.json").exists());
+            assertTrue(new File(auDir, DATA_JSON).exists());
+            assertTrue(new File(auDir, ASSESSMENTUNIT_JSON).exists());
         }
     }
 
@@ -90,8 +90,8 @@ public class ValidationUtils {
         // Check for config files in the output
         File auDir = new File(TEST_OUTPUT_DIR, collectionUnitName + File.separator + assessmentUnitName);
         assertEquals(2 + expectedAuConfigFiles.size(), auDir.list().length);
-        assertTrue(new File(auDir, assessmentUnitName + ".json").exists());
-        assertTrue(new File(auDir, assessmentUnitName + ".assessmentUnit.json").exists());
+        assertTrue(new File(auDir, DATA_JSON).exists());
+        assertTrue(new File(auDir, ASSESSMENTUNIT_JSON).exists());
 
         for (String configFileName : expectedAuConfigFiles) {
             File configFile = new File(auDir, configFileName);
