@@ -71,7 +71,7 @@ public class TADataCollector {
     }
 
     // version command - lists the version for SDK and the provider
-    if (cliArguments.get(0).contains("version")) {
+    if (cliArguments.get(0).contains("version")||cliArguments.get(0).equals("-v") ) {
       System.out.println("\n  Transformation Advisor SDK version: "+Util.getSDKVersion());
       System.out.println("    - Plugin provider "+provider.getClass()+" version: "+provider.getVersion()+"\n");
       return;
@@ -537,7 +537,7 @@ public class TADataCollector {
     }
     return null;
   }
-
+/*
   private static void processInput(String[] args) {
     Properties cliArgs = new Properties();
     List<String> cliCommands = new LinkedList<>();
@@ -572,7 +572,7 @@ public class TADataCollector {
       }
     }
   }
-
+*/
   public static void main(String[] args) {
     List<String> cliCommands = new LinkedList<>();
 
