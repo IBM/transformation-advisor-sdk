@@ -91,6 +91,13 @@ public class TADataCollector {
       return;
     }
 
+    // version command - lists the version for SDK and the provider
+    if (cliArguments.get(0).contains("version")||cliArguments.get(0).equals("-v") ) {
+      System.out.println("\n  Transformation Advisor SDK version: "+Util.getSDKVersion());
+      System.out.println("    - Plugin provider "+provider.getClass()+" version: "+provider.getVersion()+"\n");
+      return;
+    }
+
     // Find command and display help for that command
     if (cliArguments.contains("--help") || cliArguments.contains("-h")) {
       CliInputCommand commandHelp = findMatchingCommandForUsageHelp(cliArguments, providerCommands);
@@ -561,7 +568,7 @@ public class TADataCollector {
     }
     return null;
   }
-
+/*
   private static void processInput(String[] args) {
     Properties cliArgs = new Properties();
     List<String> cliCommands = new LinkedList<>();
@@ -596,7 +603,7 @@ public class TADataCollector {
       }
     }
   }
-
+*/
   public static void main(String[] args) {
     List<String> cliCommands = new LinkedList<>();
 
@@ -614,6 +621,10 @@ public class TADataCollector {
     String middleware = cliCommands.get(0);
     if (middleware.startsWith("-")) {
       System.out.println("\n" + getBaseHelp() + "\n");
+      return;
+    }
+    if (middleware.contains("version")) {
+      System.out.println("\n  Transformation Advisor SDK version: "+Util.getSDKVersion()+"\n");
       return;
     }
     cliCommands.remove(0); // Pop out middleware from CLI args
