@@ -70,6 +70,12 @@ public class TADataCollector {
       reportCommand.setDescription(CliInputCommand.CMD_REPORT_DESC);
       providerCommands.add(reportCommand);
     }
+    CliInputCommand migrateCommand = provider.getMigrateCommand();
+    if (migrateCommand != null) {
+      migrateCommand.setName(CliInputCommand.CMD_MIGRATE);
+      migrateCommand.setDescription(CliInputCommand.CMD_MIGRATE_DESC);
+      providerCommands.add(migrateCommand);
+    }
 
     // Add 'run' command which performs collect, assess, and report
     // The command does not be be provided by the provided, we could re-use the 'assess' command
