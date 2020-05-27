@@ -1,0 +1,15 @@
+{
+  "metadata_version": "1.0.0.0",
+  "name": "NewYork",
+  "version": "8.0.0.9",
+  "channels": [
+    {
+      "name": "INVENTORY.NEWYORK",
+      "type": 8,
+      "clusterNames": [
+        "INVENTORY"
+      ],
+      "mcatype": 2
+    }
+  ]
+}

@@ -19,12 +19,12 @@ import java.util.*;
 public class RecommendationJson {
   private static final String REC_ATTR_QM_NAME = "name";
   private static final String ASS_ATTR_TARGET = "targets";
-  private static final String ASS_ATTR_TARGET_ICP_MQ_VERSION = "version";
+  private static final String ASS_ATTR_TARGET_VERSION = "version";
   private static final String ASS_ATTR_TARGET_PLATFORM = "platform";
   private static final String ASS_ATTR_TARGET_LOCATION = "location";
   private static final String ASS_ATTR_TARGET_RUNTIME  = "runtime";
-  private static final String ASS_ATTR_TARGET_ProductName  = "productName";
-  private static final String ASS_ATTR_TARGET_ProductVersion  = "productVersion";
+  private static final String ASS_ATTR_TARGET_PRODUCTNAME = "productName";
+  private static final String ASS_ATTR_TARGET_PRODUCTVERSION = "productVersion";
   private static final String ASS_ATTR_ISSUES = "issues";
   private static final String ASS_ATTR_SUMMARY = "summary";
   private static final String ASS_ATTR_VALID = "valid";
@@ -60,12 +60,16 @@ public class RecommendationJson {
 
   private static Logger logger = LogManager.getLogger(RecommendationJson.class.getName());
 
+  public RecommendationJson() {
+    // Read from Json file
+  }
+
   public RecommendationJson(Recommendation recommendation, Environment environment, List<? extends AssessmentUnit> auList) throws TAException {
     this.recommendation = recommendation;
     domain = environment.getDomain();
     middleware = environment.getMiddlewareName();
-    collectionUnitType = environment.getConnectionUnitType();
-    collectionUnitName = environment.getConnectionUnitName();
+    collectionUnitType = environment.getCollectionUnitType();
+    collectionUnitName = environment.getCollectionUnitName();
     version = environment.getMiddlewareVersion();
     complexityRules = ComplexityContributionJson.getComplexityContributionJsonList(recommendation.getComplexityContributions());
     issueCategories = IssueCategoryJson.getIssueCategoryJsonMap(recommendation.getIssueCategories());
@@ -105,9 +109,9 @@ public class RecommendationJson {
     Map<String, Object> targetMap = new LinkedHashMap<String, Object>();
     targetList.add(targetMap);
 
-    targetMap.put(ASS_ATTR_TARGET_ICP_MQ_VERSION, target.getProductVersion());
-    targetMap.put(ASS_ATTR_TARGET_ProductName, target.getProductName());
-    targetMap.put(ASS_ATTR_TARGET_ProductVersion, target.getProductVersion());
+    targetMap.put(ASS_ATTR_TARGET_VERSION, target.getProductVersion());
+    targetMap.put(ASS_ATTR_TARGET_PRODUCTNAME, target.getProductName());
+    targetMap.put(ASS_ATTR_TARGET_PRODUCTVERSION, target.getProductVersion());
     String targetRuntime = target.getRuntime();
     if (targetRuntime != null && !targetRuntime.equals("")) {
       targetMap.put(ASS_ATTR_TARGET_RUNTIME, target.getRuntime());

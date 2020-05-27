@@ -62,7 +62,7 @@ public class GenericRecommendation implements Recommendation {
   }
 
   @Override
-  public String getAssessmentName() {
+  public String getCollectionUnitName() {
     return assessmentName;
   }
 

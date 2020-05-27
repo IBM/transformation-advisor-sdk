@@ -1,0 +1,13 @@
+{
+  "domain": "testDomain",
+  "operatingSystem": "RedHat Enterprise 7",
+  "hostName": "iib1.rtp.raleigh.ibm.com",
+  "middlewareName": "testMiddleware",
+  "middlewareVersion": "10.0",
+  "middlewareInstallPath": "/opt/test",
+  "middlewareDataPath": "/opt/testdata",
+  "middlewareMetadata": {"feature": "drilling"},
+  "collectionUnitName": "Installation1",
+  "collectionUnitType": "Installation",
+  "assessmentMetadata": {"test": "value"}
+}

@@ -45,7 +45,7 @@ public class SamplePluginProviderTest {
         File[] directories = outputDir.listFiles(File::isDirectory);
         assertEquals(directories.length, 1);
         assertEquals(directories[0].getName(), "Installation1");
-        File envFile = new File (directories[0]+"/environment.json");
+        File envFile = new File (directories[0]+ "/environment.json");
         assertTrue(envFile.exists());
         assertTrue(envFile.isFile());
         assertTrue(envFile.length() > 2);
@@ -65,7 +65,7 @@ public class SamplePluginProviderTest {
         File[] directories = outputDir.listFiles(File::isDirectory);
         assertEquals(directories.length, 1);
         assertEquals(directories[0].getName(), "Installation1");
-        File envFile = new File (directories[0]+"/environment.json");
+        File envFile = new File (directories[0]+ "/environment.json");
         assertTrue(envFile.exists());
         assertTrue(envFile.isFile());
         assertTrue(envFile.length() > 2);
@@ -87,7 +87,7 @@ public class SamplePluginProviderTest {
         File[] directories = outputDir.listFiles(File::isDirectory);
         assertEquals(directories.length, 1);
         assertEquals(directories[0].getName(), "Installation1");
-        File envFile = new File (directories[0]+"/environment.json");
+        File envFile = new File (directories[0]+ "/environment.json");
         assertTrue(envFile.exists());
         assertTrue(envFile.isFile());
         assertTrue(envFile.length() > 2);

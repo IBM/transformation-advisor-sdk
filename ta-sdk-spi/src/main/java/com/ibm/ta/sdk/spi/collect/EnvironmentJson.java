@@ -86,8 +86,8 @@ public class EnvironmentJson {
     if (environment.getMiddlewareMetadata() != null) {
       middlewareMetadata = environment.getMiddlewareMetadata();
     }
-    collectionUnitName = environment.getConnectionUnitName();
-    collectionUnitType = environment.getConnectionUnitType();
+    collectionUnitName = environment.getCollectionUnitName();
+    collectionUnitType = environment.getCollectionUnitType();
     if (environment.getAssessmentMetadata() != null) {
       assessmentMetadata = environment.getAssessmentMetadata();
     }
@@ -139,12 +139,12 @@ public class EnvironmentJson {
       }
 
       @Override
-      public String getConnectionUnitName() {
+      public String getCollectionUnitName() {
         return collectionUnitName;
       }
 
       @Override
-      public String getConnectionUnitType() {
+      public String getCollectionUnitType() {
         return collectionUnitType;
       }
 
@@ -157,6 +157,18 @@ public class EnvironmentJson {
       }
     };
     return environment;
+  }
+
+  public void setDomain(String domain) {
+    this.domain = domain;
+  }
+
+  public void setMiddlewareName(String middlewareName) {
+    this.middlewareName = middlewareName;
+  }
+
+  public void setMiddlewareVersion(String middlewareVersion) {
+    this.middlewareVersion = middlewareVersion;
   }
 
   public void setOperatingSystem(String operatingSystem) {
