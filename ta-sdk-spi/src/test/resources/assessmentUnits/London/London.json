@@ -1,0 +1,21 @@
+{
+  "metadata_version": "1.0.0.0",
+  "name": "London",
+  "version": "8.0.0.9",
+  "channels": [
+    {
+      "name": "INVENTORY.LONDON",
+      "type": 9,
+      "conname": [
+        "LONDON.CHSTORE.COM"
+      ],
+      "clusterNames": [
+        "INVENTORY"
+      ],
+      "mcatype": 2,
+      "mcausers": [
+        ""
+      ]
+    }
+  ]
+}

@@ -48,7 +48,7 @@ public class AssessmentUnitMetadataJson {
 
   public AssessmentUnitMetadataJson(Environment env, String assessmentUnitName) {
     this(env.getDomain(), env.getMiddlewareName(), env.getHostname(), assessmentUnitName,
-            env.getConnectionUnitType(), env.getConnectionUnitName());
+            env.getCollectionUnitType(), env.getCollectionUnitName());
   }
 
   public void addIdentifier(String key, Object value) {

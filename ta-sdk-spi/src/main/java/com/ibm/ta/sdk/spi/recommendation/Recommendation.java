@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface Recommendation {
 
-  String getAssessmentName();
+  String getCollectionUnitName();
 
   List<ComplexityContribution> getComplexityContributions();
 

@@ -54,12 +54,32 @@ public class CliInputCommand {
     this(cmd.name, cmd.description, null, null, cmd.argumentDisplayNames);
   }
 
+  public static CliInputCommand buildCollectCommand(List<CliInputOption> options, List<CliInputCommand> commands, List<String> argumentDisplayNames) {
+    return new CliInputCommand(CMD_COLLECT, CMD_COLLECT_DESC, options, commands, argumentDisplayNames);
+  }
+
+  public static CliInputCommand buildAssessCommand(List<CliInputOption> options, List<CliInputCommand> commands, List<String> argumentDisplayNames) {
+    return new CliInputCommand(CMD_ASSESS, CMD_ASSESS_DESC, options, commands, argumentDisplayNames);
+  }
+
+  public static CliInputCommand buildReportCommand(List<CliInputOption> options, List<CliInputCommand> commands, List<String> argumentDisplayNames) {
+    return new CliInputCommand(CMD_REPORT, CMD_REPORT_DESC, options, commands, argumentDisplayNames);
+  }
+
   public String getName() {
     return name;
   }
 
+  public void setName(String name) {
+    this.name = name;
+  }
+
   public String getDescription() {
     return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public List<CliInputOption> getOptions() {
