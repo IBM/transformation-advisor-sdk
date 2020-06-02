@@ -1,0 +1,14 @@
+{
+  "metadata_version": "1.0.0.0",
+  "name": "Cork",
+  "version": "8.0.0.9",
+  "chadexit": "",
+  "clwlexit": "",
+  "connAuth": "SYSTEM.DEFAULT.AUTHINFO.IDPWOS",
+  "clusters": [
+    {
+      "name": "CORK",
+      "fullRepository": true
+    }
+  ]
+}

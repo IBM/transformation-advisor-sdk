@@ -1,0 +1,35 @@
+[
+  {
+    "id": "MQEXIT01",
+    "title": "Channel Exits defined. Review whether usage affects your MQ deployment architecture when migrating.",
+    "category": "exits",
+    "issueOverhead": 1.0,
+    "occurrencesCost": 1.0,
+    "solutionText": [
+      "Check if Exit has been replaced with Product Capability in MQ 9 and adopt that instead."
+    ],
+    "severity": "potential",
+    "matchCriteria": {
+      "ruleType": "json",
+      "jsonQueryPath": {
+        "sendch": "$.channels[?(@.type in [9])]",
+        "rcvch": "$.channels[?(@.type in [7])]"
+      },
+      "occurrenceAttr": {
+        "channel": {
+          "title": "Channel",
+          "path": "name"
+        },
+        "channelType": {
+          "title": "Channel Type",
+          "path": "@filterPathKey"
+        },
+        "channelTypeName": {
+          "title": "Channel Type Name",
+          "path": "@filterPathKeyValue",
+          "countUnique": true
+        }
+      }
+    }
+  }
+]
