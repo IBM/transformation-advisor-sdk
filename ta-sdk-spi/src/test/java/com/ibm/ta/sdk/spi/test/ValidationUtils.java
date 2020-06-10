@@ -31,7 +31,8 @@ public class ValidationUtils {
     public static void assertEnvironmentJson(String domain, String middlewareName, String middlewareVersion,
                                              String operatingSystem, String hostName, String middlewareInstallPath,
                                              String middlewareDataPath, JsonElement middlewareMetadata, String collectionUnitName,
-                                             String collectionUnitType, JsonElement assessmentMetadata,
+                                             String collectionUnitType, String collectionUnitLabel,
+                                             String assessmentUnitLSingleLabel, String assessmentUnitMultipleLabel, JsonElement assessmentMetadata,
                                              List<String> assessmentUnits, String pluginVersion) {
         File envFile = new File(TEST_OUTPUT_DIR, collectionUnitName + File.separator + ENVIRONMENT_JSON);
         assertTrue(envFile.exists());
@@ -48,6 +49,9 @@ public class ValidationUtils {
         expectedEnvJson.setMiddlewareMetadata(middlewareMetadata);
         expectedEnvJson.setCollectionUnitName(collectionUnitName);
         expectedEnvJson.setCollectionUnitType(collectionUnitType);
+        expectedEnvJson.setCollectionUnitLabel(collectionUnitLabel);
+        expectedEnvJson.setAssessmentUnitSingleLabel(assessmentUnitLSingleLabel);
+        expectedEnvJson.setAssessmentUnitMultipleLabel(assessmentUnitMultipleLabel);
         expectedEnvJson.setAssessmentMetadata(assessmentMetadata);
         expectedEnvJson.setAssessmentUnits(assessmentUnits);
         expectedEnvJson.setPluginVersion(pluginVersion);
