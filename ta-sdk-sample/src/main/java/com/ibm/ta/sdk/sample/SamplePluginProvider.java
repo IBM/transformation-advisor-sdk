@@ -76,6 +76,9 @@ public class SamplePluginProvider extends GenericPluginProvider {
       envJson.setMiddlewareDataPath(cliInputCommand.getArguments().get(1));
       envJson.setCollectionUnitType("Instance");
       envJson.setCollectionUnitName(instanceName);
+      envJson.setCollectionUnitLabel("Instance");
+      envJson.setAssessmentUnitSingleLabel("Assessment unit");
+      envJson.setAssessmentUnitMultipleLabel("Assessment units");
 
       // use the middleware specific technology to generate the assesment unit data json file
       // in this sample plug-in we assume the /sampleData/AssessmentUnit1.json is the generated file

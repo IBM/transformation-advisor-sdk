@@ -54,6 +54,15 @@ public class EnvironmentJson {
   private String collectionUnitType;
 
   @Expose
+  private String collectionUnitLabel;
+
+  @Expose
+  private String assessmentUnitSingleLabel;
+
+  @Expose
+  private String assessmentUnitMultipleLabel;
+
+  @Expose
   private JsonElement assessmentMetadata;
 
   @Expose
@@ -88,6 +97,9 @@ public class EnvironmentJson {
     }
     collectionUnitName = environment.getCollectionUnitName();
     collectionUnitType = environment.getCollectionUnitType();
+    collectionUnitLabel = environment.getCollectionUnitLabel();
+    assessmentUnitSingleLabel = environment.getAssessmentUnitSingleLabel();
+    assessmentUnitMultipleLabel = environment.getAssessmentUnitMultipleLabel();
     if (environment.getAssessmentMetadata() != null) {
       assessmentMetadata = environment.getAssessmentMetadata();
     }
@@ -149,6 +161,21 @@ public class EnvironmentJson {
       }
 
       @Override
+      public String getCollectionUnitLabel() {
+        return collectionUnitLabel;
+      }
+
+      @Override
+      public String getAssessmentUnitSingleLabel() {
+        return assessmentUnitSingleLabel;
+      }
+
+      @Override
+      public String getAssessmentUnitMultipleLabel() {
+        return assessmentUnitMultipleLabel;
+      }
+
+      @Override
       public JsonObject getAssessmentMetadata() {
         if (assessmentMetadata != null && assessmentMetadata.isJsonObject()) {
           return assessmentMetadata.getAsJsonObject();
@@ -201,6 +228,18 @@ public class EnvironmentJson {
 
   public void setCollectionUnitType(String collectionUnitType) {
     this.collectionUnitType = collectionUnitType;
+  }
+
+  public void setCollectionUnitLabel(String collectionUnitLabel) {
+    this.collectionUnitLabel = collectionUnitLabel;
+  }
+
+  public void setAssessmentUnitSingleLabel(String assessmentUnitSingleLabel) {
+    this.assessmentUnitSingleLabel = assessmentUnitSingleLabel;
+  }
+
+  public void setAssessmentUnitMultipleLabel(String assessmentUnitMultipleLabel) {
+    this.assessmentUnitMultipleLabel = assessmentUnitMultipleLabel;
   }
 
   public void setPluginVersion(String version) {

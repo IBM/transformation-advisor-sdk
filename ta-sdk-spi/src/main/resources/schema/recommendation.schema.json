@@ -25,6 +25,18 @@
       "type": "string",
       "minLength": 1
     },
+    "collectionUnitLabel": {
+      "description": "Label for the collection unit",
+      "type": "string"
+    },
+    "assessmentUnitSingleLabel": {
+      "description": "Label for assessment units (singular)",
+      "type": "string"
+    },
+    "assessmentUnitMultipleLabel": {
+      "description": "Label for assessment units (plural)",
+      "type": "string"
+    },
     "middleware": {
       "type": "string",
       "minLength": 1
