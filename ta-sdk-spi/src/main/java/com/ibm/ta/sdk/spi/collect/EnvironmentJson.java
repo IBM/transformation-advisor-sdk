@@ -54,7 +54,7 @@ public class EnvironmentJson {
   private String collectionUnitType;
 
   @Expose
-  private String collectionUnitLabel;
+  private String collectionUnitTypeLabel;
 
   @Expose
   private String assessmentUnitSingleLabel;
@@ -97,7 +97,7 @@ public class EnvironmentJson {
     }
     collectionUnitName = environment.getCollectionUnitName();
     collectionUnitType = environment.getCollectionUnitType();
-    collectionUnitLabel = environment.getCollectionUnitLabel();
+    collectionUnitTypeLabel = environment.getCollectionUnitTypeLabel();
     assessmentUnitSingleLabel = environment.getAssessmentUnitSingleLabel();
     assessmentUnitMultipleLabel = environment.getAssessmentUnitMultipleLabel();
     if (environment.getAssessmentMetadata() != null) {
@@ -161,8 +161,8 @@ public class EnvironmentJson {
       }
 
       @Override
-      public String getCollectionUnitLabel() {
-        return collectionUnitLabel;
+      public String getCollectionUnitTypeLabel() {
+        return collectionUnitTypeLabel;
       }
 
       @Override
@@ -230,8 +230,8 @@ public class EnvironmentJson {
     this.collectionUnitType = collectionUnitType;
   }
 
-  public void setCollectionUnitLabel(String collectionUnitLabel) {
-    this.collectionUnitLabel = collectionUnitLabel;
+  public void setCollectionUnitTypeLabel(String collectionUnitTypeLabel) {
+    this.collectionUnitTypeLabel = collectionUnitTypeLabel;
   }
 
   public void setAssessmentUnitSingleLabel(String assessmentUnitSingleLabel) {

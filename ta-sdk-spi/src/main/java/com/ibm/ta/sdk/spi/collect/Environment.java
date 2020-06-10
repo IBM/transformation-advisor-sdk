@@ -99,7 +99,7 @@ public interface Environment {
    *
    * @return Type of the collection unit
    */
-  String getCollectionUnitLabel();
+  String getCollectionUnitTypeLabel();
 
   /**
    * Label to be used to describe the assessment unit (for a single assessment unit, e.g. MyAssessmentUnit: MyAssessmentUnitName)

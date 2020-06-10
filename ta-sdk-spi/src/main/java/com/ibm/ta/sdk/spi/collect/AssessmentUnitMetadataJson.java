@@ -36,7 +36,7 @@ public class AssessmentUnitMetadataJson {
   private String collectionUnitType;
 
   @Expose
-  private String collectionUnitLabel;
+  private String collectionUnitTypeLabel;
 
   @Expose
   private String collectionUnitName;
@@ -46,7 +46,7 @@ public class AssessmentUnitMetadataJson {
 
   public AssessmentUnitMetadataJson(String domain, String middleWare, String hostname, String assessmentUnitName,
                                     String assessmentUnitSingleLabel, String assessmentUnitMultipleLabel,
-                                    String collectionUnitType, String collectionUnitName, String collectionUnitLabel) {
+                                    String collectionUnitType, String collectionUnitName, String collectionUnitTypeLabel) {
     this.domain = domain;
     this.middleware = middleWare;
     this.host = hostname;
@@ -55,14 +55,14 @@ public class AssessmentUnitMetadataJson {
     this.assessmentUnitMultipleLabel = assessmentUnitMultipleLabel;
     this.collectionUnitType = collectionUnitType;
     this.collectionUnitName = collectionUnitName;
-    this.collectionUnitLabel = collectionUnitLabel;
+    this.collectionUnitTypeLabel = collectionUnitTypeLabel;
     addIdentifier("assessmentUnitName", assessmentUnitName);
   }
 
   public AssessmentUnitMetadataJson(Environment env, String assessmentUnitName) {
     this(env.getDomain(), env.getMiddlewareName(), env.getHostname(), assessmentUnitName, env.getAssessmentUnitSingleLabel(),
             env.getAssessmentUnitMultipleLabel(), env.getCollectionUnitType(), env.getCollectionUnitName(),
-            env.getCollectionUnitLabel());
+            env.getCollectionUnitTypeLabel());
   }
 
   public void addIdentifier(String key, Object value) {

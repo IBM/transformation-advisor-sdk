@@ -9,7 +9,7 @@
   "middlewareMetadata": {"feature": "drilling"},
   "collectionUnitName": "Installation1",
   "collectionUnitType": "Installation",
-  "collectionUnitLabel": "Installation",
+  "collectionUnitTypeLabel": "Installation",
   "assessmentUnitSingleLabel": "Assessment unit",
   "assessmentUnitMultipleLabel": "Assessment units",
   "assessmentMetadata": {"test": "value"}

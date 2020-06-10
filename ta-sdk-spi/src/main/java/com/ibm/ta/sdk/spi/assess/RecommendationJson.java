@@ -40,7 +40,7 @@ public class RecommendationJson {
   protected String collectionUnitType;
 
   @Expose
-  protected String collectionUnitLabel;
+  protected String collectionUnitTypeLabel;
 
   @Expose
   protected String collectionUnitName;
@@ -78,7 +78,7 @@ public class RecommendationJson {
     domain = environment.getDomain();
     middleware = environment.getMiddlewareName();
     collectionUnitType = environment.getCollectionUnitType();
-    collectionUnitLabel = environment.getCollectionUnitLabel();
+    collectionUnitTypeLabel = environment.getCollectionUnitTypeLabel();
     collectionUnitName = environment.getCollectionUnitName();
     version = environment.getMiddlewareVersion();
     complexityRules = ComplexityContributionJson.getComplexityContributionJsonList(recommendation.getComplexityContributions());

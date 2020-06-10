@@ -1,7 +1,7 @@
 {
   "domain": "testDomain",
   "collectionUnitType": "Installation",
-  "collectionUnitLabel":"Installation",
+  "collectionUnitTypeLabel":"Installation",
   "collectionUnitName": "TestCollectionUnit2",
   "assessmentUnitSingleLabel":"Assessment unit",
   "assessmentUnitMultipleLabel":"Assessment units",

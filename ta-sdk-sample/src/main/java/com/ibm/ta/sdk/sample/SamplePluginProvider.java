@@ -76,7 +76,7 @@ public class SamplePluginProvider extends GenericPluginProvider {
       envJson.setMiddlewareDataPath(cliInputCommand.getArguments().get(1));
       envJson.setCollectionUnitType("Instance");
       envJson.setCollectionUnitName(instanceName);
-      envJson.setCollectionUnitLabel("Instance");
+      envJson.setCollectionUnitTypeLabel("Instance");
       envJson.setAssessmentUnitSingleLabel("Assessment unit");
       envJson.setAssessmentUnitMultipleLabel("Assessment units");
 
