@@ -1,0 +1,163 @@
+{
+  "metadata_version": "1.0.0.0",
+  "name": "NewYork",
+  "version": "8.0.0.9",
+  "chadexit": "",
+  "clwlexit": "",
+  "connAuth": "SYSTEM.DEFAULT.AUTHINFO.IDPWOS",
+  "clusters": [
+    {
+      "name": "INVENTORY",
+      "fullRepository": true
+    }
+  ],
+  "channels": [
+    {
+      "name": "INVENTORY.LONDON",
+      "type": 9,
+      "conname": [
+        "LONDON.CHSTORE.COM"
+      ],
+      "clusterNames": [
+        "INVENTORY"
+      ],
+      "mcatype": 2,
+      "mcausers": [
+        ""
+      ]
+    },
+    {
+      "name": "INVENTORY.NEWYORK",
+      "type": 8,
+      "clusterNames": [
+        "INVENTORY"
+      ],
+      "mcatype": 2
+    },
+    {
+      "name": "SYSTEM.AUTO.RECEIVER",
+      "type": 3,
+      "mcatype": 0
+    },
+    {
+      "name": "SYSTEM.AUTO.SVRCONN",
+      "type": 7,
+      "mcatype": 0
+    },
+    {
+      "name": "SYSTEM.DEF.CLUSRCVR",
+      "type": 8,
+      "mcatype": 2
+    },
+    {
+      "name": "SYSTEM.DEF.CLUSSDR",
+      "type": 9,
+      "mcatype": 2,
+      "mcausers": [
+        ""
+      ]
+    },
+    {
+      "name": "SYSTEM.DEF.RECEIVER",
+      "type": 3,
+      "mcatype": 0
+    },
+    {
+      "name": "SYSTEM.DEF.REQUESTER",
+      "type": 4,
+      "mcatype": 1,
+      "mcausers": [
+        ""
+      ]
+    },
+    {
+      "name": "SYSTEM.DEF.SENDER",
+      "type": 1,
+      "mcatype": 1,
+      "mcausers": [
+        ""
+      ]
+    },
+    {
+      "name": "SYSTEM.DEF.SERVER",
+      "type": 2,
+      "mcatype": 1,
+      "mcausers": [
+        ""
+      ]
+    },
+    {
+      "name": "SYSTEM.DEF.SVRCONN",
+      "type": 7,
+      "mcatype": 0
+    },
+    {
+      "name": "SYSTEM.DEF.CLNTCONN",
+      "type": 6,
+      "mcatype": 0,
+      "mcausers": [
+        ""
+      ]
+    }
+  ],
+  "security": {
+    "authentication": "IDPWOS",
+    "authRecord": [
+      {
+        "type": "queue",
+        "object": "NewYork",
+        "osGroup": "root"
+      },
+      {
+        "type": "queue",
+        "object": "NewYork",
+        "osGroup": "mqm"
+      }
+    ]
+  },
+  "qmini": {
+    "capabilties": {
+      "ExitPath": [
+        {
+          "name": "ExitPath",
+          "properties": {
+            "ExitsDefaultPath64": "/var/mqm/exits64",
+            "ExitsDefaultPath": "/var/mqm/exits"
+          }
+        }
+      ],
+      "ServiceComponent": [
+        {
+          "name": "ServiceComponent",
+          "properties": {
+            "ComponentDataSize": "0",
+            "Name": "MQSeries.UNIX.auth.service",
+            "Module": "amqzfu",
+            "Service": "AuthorizationService"
+          }
+        }
+      ],
+      "Service": [
+        {
+          "name": "Service",
+          "properties": {
+            "Name": "AuthorizationService",
+            "EntryPoints": "14"
+          }
+        }
+      ]
+    }
+  },
+  "processes": [
+    {
+      "name": "SYSTEM.DEFAULT.PROCESS",
+      "description": ""
+    }
+  ],
+  "services": [
+    {
+      "name": "SYSTEM.DEFAULT.SERVICE",
+      "description": ""
+    }
+  ]
+}

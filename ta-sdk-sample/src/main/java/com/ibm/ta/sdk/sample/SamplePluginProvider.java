@@ -27,14 +27,21 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SamplePluginProvider extends GenericPluginProvider {
   private static Logger logger = LogManager.getLogger(SamplePluginProvider.class.getName());
-  private static final String SAMPLE_DOMAIN = "sampleDomain";
+  private static final String SAMPLE_DOMAIN = "<Domain>";
   private static final String SAMPLE_MIDDLEWARE= "sample";
 
+  private static Map<Object, Object> collectionSets = Stream.of(new Object[][] {
+    { "collection1", Arrays.asList("AssessmentUnit1") },
+    { "collection2", Arrays.asList("AssessmentUnit2", "AssessmentUnit3") }
+  }).collect(Collectors.toMap(data -> (String) data[0], data -> (List<String>) data[1]));
+
   // JSON files
-  private static final String FILE_ASSESS_DATA_JSON = "/sampleData/AssessmentUnit1.json";
+  private static final String FILE_ASSESS_DATA_DIR = "/sampleData/";
   private static final String FILE_ASSESS_CONFIG_FILE_JSON = "/sampleData/SampleConfigFile.json";
   private static final String FILE_ASSESS_CONFIG_FILE2_JSON = "/sampleData/SampleConfigFile2.json";
   private static final String FILE_ASSESS_CONFIG_FILE_XML= "/sampleData/sampleData.xml";
@@ -53,12 +60,12 @@ public class SamplePluginProvider extends GenericPluginProvider {
   @Override
   public CliInputCommand getCollectCommand() {
     // Collect command
-    CliInputOption collectCmdAllOpt = new CliInputOption("a", "all", "Collect everything");
-    CliInputOption collectCmdDataOpt = new CliInputOption("x", "extdata", "Directory containing the external data", true, true, "DIR_NAME", "/opt/test");
-    List<CliInputOption> collectionCmdOpts = new LinkedList<>(Arrays.asList(collectCmdAllOpt, collectCmdDataOpt));
+    CliInputOption collectCmdCollectionOpt = new CliInputOption("c", "collectionUnit", "The name of the collection unit to perform the collection");
+    CliInputOption collectCmdAssessmentOpt = new CliInputOption("a", "assessmentUnit", "The list of the assessment unit", true, false, null, null);
+    List<CliInputOption> collectionCmdOpts = new LinkedList<>(Arrays.asList(collectCmdCollectionOpt, collectCmdAssessmentOpt));
     CliInputCommand collectCmd = new CliInputCommand(CliInputCommand.CMD_COLLECT,
             "Performs data collection",
-            collectionCmdOpts, null, Arrays.asList("INSTALL_PATH", "DATA_DIR"));
+            collectionCmdOpts, null, Arrays.asList("INSTALL_PATH"));
     return collectCmd;
   }
 
@@ -68,26 +75,48 @@ public class SamplePluginProvider extends GenericPluginProvider {
     logger.info("CliInputCommandArguments:" + cliInputCommand.getArguments());
 
     try {
+      List<DataCollection> colls = new ArrayList<>();
+      for (Object collectionUnit: collectionSets.keySet()) {
+        String collectionName = (String)collectionUnit;
+        DataCollection oneCollection = getDataCollection(cliInputCommand.getArguments().get(0), collectionName);
+        colls.add(oneCollection);
+      }
+      return colls;
+    } catch (URISyntaxException e) {
+      throw new TAException(e);
+    } catch (IOException e) {
+      throw new TAException(e);
+    }
+  }
 
+  private DataCollection getDataCollection(String installPath, String collectionUnitName) throws IOException, URISyntaxException {
       // put your logic here to detect the middleware runtime environment and construct the environmentJson object
-      String instanceName = "Installation1";
       EnvironmentJson envJson = new EnvironmentJson(SAMPLE_DOMAIN, SAMPLE_MIDDLEWARE, "1.0.0");
-      envJson.setMiddlewareInstallPath(cliInputCommand.getArguments().get(0));
-      envJson.setMiddlewareDataPath(cliInputCommand.getArguments().get(1));
+      envJson.setMiddlewareInstallPath(installPath);
+      envJson.setMiddlewareDataPath(null);
       envJson.setCollectionUnitType("Instance");
-      envJson.setCollectionUnitName(instanceName);
+      envJson.setCollectionUnitName(collectionUnitName);
 
-      // use the middleware specific technology to generate the assesment unit data json file
-      // in this sample plug-in we assume the /sampleData/AssessmentUnit1.json is the generated file
-      Path assessDataJsonFile = getFileFromUri(SamplePluginProvider.class.getResource(FILE_ASSESS_DATA_JSON).toURI());
+      List<GenericAssessmentUnit> auList = new ArrayList<>();
+      for (String assessmentName: (List<String>)collectionSets.get(collectionUnitName)) {
+        auList.add(getAssessmentUnit(assessmentName));
+      }
+      return new GenericDataCollection(collectionUnitName, envJson, auList);
+  }
 
+  private GenericAssessmentUnit getAssessmentUnit(String assessmentUnitName) throws URISyntaxException, IOException {
+    // use the middleware specific technology to generate the assesment unit data json file
+    // in this sample plug-in we assume the /sampleData/AssessmentUnit1.json is the generated file
+    Path assessDataJsonFile = Paths.get(SamplePluginProvider.class.getResource(FILE_ASSESS_DATA_DIR+assessmentUnitName+".json").toURI());
+    List<Path> assessmentConfigFiles = new ArrayList<Path>();
+
+    if (assessmentUnitName.equals("AssessmentUnit1")) {
       // You can add more middlewware specific configuration files here.
       Path assessConfigJsonFile = Paths.get(SamplePluginProvider.class.getResource(FILE_ASSESS_CONFIG_FILE_JSON).toURI());
       Path assessConfigJsonFile2 = Paths.get(SamplePluginProvider.class.getResource(FILE_ASSESS_CONFIG_FILE2_JSON).toURI());
       Path assessConfigXmlFile = Paths.get(SamplePluginProvider.class.getResource(FILE_ASSESS_CONFIG_FILE_XML).toURI());
       Path assessConfigXmlFile2 = Paths.get(SamplePluginProvider.class.getResource(FILE_ASSESS_CONFIG_FILE_XML2).toURI());
 
-      List<Path> assessmentConfigFiles = new ArrayList<Path>();
       assessmentConfigFiles.add(assessConfigJsonFile);
       assessmentConfigFiles.add(assessConfigJsonFile2);
       assessmentConfigFiles.add(assessConfigXmlFile);
@@ -98,23 +127,8 @@ public class SamplePluginProvider extends GenericPluginProvider {
       if (assessConfigXmlFile3.exists()) {
         assessmentConfigFiles.add(assessConfigXmlFile3.toPath());
       }
-
-      // all these data file and config files for an assessment unit will be copied to out/<assessmentName>/ directory
-      // If the assessment unit name isnot specified,  it will use filename of the data file as the assessment unit name
-      // these filess will be used in the next assess() command to generate the recommandtion
-      // for plug-in developers,  you also need to provide a set of issue json file under <middlewareName> dir
-      // in runtime,  TA SDK will load these issue json files from classpath to detect the issues from the asseesment data file or configure files
-      List<GenericAssessmentUnit> auList = new ArrayList<>();
-      auList.add(super.getAssessmentUnit("Plants.ear", assessDataJsonFile, assessmentConfigFiles));
-
-      GenericDataCollection coll = new GenericDataCollection(instanceName, envJson, auList);
-      List<DataCollection> colls = new ArrayList<>();
-      colls.add(coll);
-      return colls;
-    } catch (URISyntaxException e) {
-      throw new TAException(e);
-    } catch (IOException e) {
-      throw new TAException(e);
     }
+
+    return super.getAssessmentUnit(assessmentUnitName, assessDataJsonFile, assessmentConfigFiles);
   }
 }

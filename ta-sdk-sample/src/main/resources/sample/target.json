@@ -1,5 +1,5 @@
 {
-  "productName": "IIB",
-  "productVersion": "11.0",
-  "runtime": "ACE"
+  "productName": "IBM MQ Advanced for Developers",
+  "productVersion": "9.1.4.0",
+  "runtime": "OpenShift"
 }
