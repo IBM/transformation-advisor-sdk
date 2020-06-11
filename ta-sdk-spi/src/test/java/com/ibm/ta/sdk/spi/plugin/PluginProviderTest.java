@@ -243,7 +243,8 @@ public class PluginProviderTest {
         assertEnvironmentJson("testDomain", "testMiddleware", "10.0",
                 "RedHat Enterprise 7", "iib1.rtp.raleigh.ibm.com",
                 "/opt/test", "/opt/testdata", middlewareMd,
-                collectionUnitName, "Installation", assessmentMd,
+                collectionUnitName, "Installation", "Installation",
+                "Assessment unit", "Assessment units", assessmentMd,
                 auList, "1.0.0");
 
         // Check assessment units
