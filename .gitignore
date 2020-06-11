@@ -20,3 +20,5 @@ target/
 *.rar
 .flattened-pom.xml
 
+# MacOS
+.DS_Store
