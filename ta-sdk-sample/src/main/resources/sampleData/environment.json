@@ -7,7 +7,10 @@
   "middlewareInstallPath": "/opt/iib",
   "middlewareDataPath": "/opt/iibdata",
   "middlewareMetadata": {"feature": "drilling"},
-  "assessmentName": "Installation1",
-  "assessmentType": "Installation",
+  "collectionUnitName": "Installation1",
+  "collectionUnitType": "Installation",
+  "collectionUnitTypeLabel": "Installation",
+  "assessmentUnitSingleLabel": "Integration server",
+  "assessmentUnitMultipleLabel": "Integration servers",
   "assessmentMetadata": {"test": "value"}
 }
