@@ -242,4 +242,14 @@ public abstract class GenericPluginProvider implements PluginProvider {
       }
     }
   }
+
+  protected List<String> getCLIOptionValues(List<CliInputOption> options, String optionShotName) {
+    List<String> values = new ArrayList<>();
+    for (CliInputOption cliOption : options) {
+      if (cliOption.getShortArg().equals(optionShotName)){
+        values.add(cliOption.getValue());
+      }
+    }
+    return values;
+  }
 }

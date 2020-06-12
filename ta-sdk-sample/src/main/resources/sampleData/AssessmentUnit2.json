@@ -1,39 +1,12 @@
 {
-  "metadata_version": "1.0.0.0",
-  "name": "NewYork",
-  "version": "8.0.0.9",
+  "metadata_version": "1.0.0.1",
+  "name": "QM_APPLE",
+  "version": "9.0.2.0",
   "chadexit": "",
   "clwlexit": "",
   "connAuth": "SYSTEM.DEFAULT.AUTHINFO.IDPWOS",
-  "clusters": [
-    {
-      "name": "INVENTORY",
-      "fullRepository": true
-    }
-  ],
+  "clusters": [],
   "channels": [
-    {
-      "name": "INVENTORY.LONDON",
-      "type": 9,
-      "conname": [
-        "LONDON.CHSTORE.COM"
-      ],
-      "clusterNames": [
-        "INVENTORY"
-      ],
-      "mcatype": 2,
-      "mcausers": [
-        ""
-      ]
-    },
-    {
-      "name": "INVENTORY.NEWYORK",
-      "type": 8,
-      "clusterNames": [
-        "INVENTORY"
-      ],
-      "mcatype": 2
-    },
     {
       "name": "SYSTEM.AUTO.RECEIVER",
       "type": 3,
@@ -42,6 +15,11 @@
     {
       "name": "SYSTEM.AUTO.SVRCONN",
       "type": 7,
+      "mcatype": 0
+    },
+    {
+      "name": "SYSTEM.DEF.AMQP",
+      "type": 11,
       "mcatype": 0
     },
     {
@@ -100,29 +78,79 @@
       ]
     }
   ],
+  "queues": [
+    {
+      "name": "AMQ.5E6F65ED23E6AB65",
+      "description": "",
+      "clusterName": "",
+      "clwlPriority": 0,
+      "clwlRank": 0,
+      "defBind": "MQBND_BIND_ON_OPEN",
+      "inhibitPut": "MQQA_PUT_ALLOWED"
+    },
+    {
+      "name": "Q1",
+      "description": "",
+      "clusterName": "",
+      "clwlPriority": 0,
+      "clwlRank": 0,
+      "defBind": "MQBND_BIND_ON_OPEN",
+      "inhibitPut": "MQQA_PUT_ALLOWED"
+    }
+  ],
+  "topics": [],
   "security": {
     "authentication": "IDPWOS",
     "authRecord": [
       {
         "type": "queue",
-        "object": "NewYork",
+        "object": "QM_APPLE",
         "osGroup": "root"
       },
       {
         "type": "queue",
-        "object": "NewYork",
+        "object": "QM_APPLE",
         "osGroup": "mqm"
       }
     ]
   },
   "qmini": {
     "capabilties": {
+      "TCP": [
+        {
+          "name": "TCP",
+          "properties": {
+            "RcvBuffSize": "0",
+            "ClntRcvBuffSize": "0",
+            "RcvRcvBuffSize": "0",
+            "SndBuffSize": "0",
+            "SvrRcvBuffSize": "0",
+            "RcvSndBuffSize": "0",
+            "SvrSndBuffSize": "0",
+            "ClntSndBuffSize": "0"
+          }
+        }
+      ],
       "ExitPath": [
         {
           "name": "ExitPath",
           "properties": {
             "ExitsDefaultPath64": "/var/mqm/exits64",
             "ExitsDefaultPath": "/var/mqm/exits"
+          }
+        }
+      ],
+      "Log": [
+        {
+          "name": "Log",
+          "properties": {
+            "LogFilePages": "4096",
+            "LogPrimaryFiles": "3",
+            "LogPath": "/var/mqm/log/QM_APPLE/",
+            "LogBufferPages": "0",
+            "LogSecondaryFiles": "2",
+            "LogWriteIntegrity": "TripleWrite",
+            "LogType": "CIRCULAR"
           }
         }
       ],
@@ -148,6 +176,64 @@
       ]
     }
   },
+  "mqsini": {
+    "capabilties": {
+      "LogDefaults": [
+        {
+          "name": "LogDefaults",
+          "properties": {
+            "LogDefaultPath": "/var/mqm/log"
+          }
+        }
+      ],
+      "AllQueueManagers": [
+        {
+          "name": "AllQueueManagers",
+          "properties": {
+            "DefaultPrefix": "/var/mqm"
+          }
+        }
+      ],
+      "QueueManager": [
+        {
+          "name": "QueueManager",
+          "properties": {
+            "Name": "C2C_DEFAULT_QUEUE_MANAGER",
+            "Directory": "C2C_DEFAULT_QUEUE_MANAGER",
+            "InstallationName": "Installation1",
+            "Prefix": "/var/mqm"
+          }
+        },
+        {
+          "name": "QueueManager",
+          "properties": {
+            "Name": "sampleQM",
+            "Directory": "sampleQM",
+            "InstallationName": "Installation1",
+            "Prefix": "/var/mqm"
+          }
+        },
+        {
+          "name": "QueueManager",
+          "properties": {
+            "Name": "QM_APPLE",
+            "Directory": "QM_APPLE",
+            "InstallationName": "Installation1",
+            "Prefix": "/var/mqm"
+          }
+        },
+        {
+          "name": "QueueManager",
+          "properties": {
+            "Name": "QM_ORANGE",
+            "Directory": "QM_ORANGE",
+            "InstallationName": "Installation1",
+            "Prefix": "/var/mqm"
+          }
+        }
+      ]
+    }
+  },
   "processes": [
     {
       "name": "SYSTEM.DEFAULT.PROCESS",
@@ -155,6 +241,10 @@
     }
   ],
   "services": [
+    {
+      "name": "SYSTEM.AMQP.SERVICE",
+      "description": "Manages clients that use the AMQP protocol"
+    },
     {
       "name": "SYSTEM.DEFAULT.SERVICE",
       "description": ""

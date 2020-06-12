@@ -32,10 +32,12 @@ import java.util.stream.Stream;
 
 public class SamplePluginProvider extends GenericPluginProvider {
   private static Logger logger = LogManager.getLogger(SamplePluginProvider.class.getName());
-  private static final String SAMPLE_DOMAIN = "<Domain>";
-  private static final String SAMPLE_MIDDLEWARE= "sample";
+  private static final String SAMPLE_DOMAIN = "Domain";
+  private static final String SAMPLE_MIDDLEWARE= "middleware";
 
-  private static Map<Object, Object> collectionSets = Stream.of(new Object[][] {
+  // use the middleware specific technology to detect all the collection units and assessment units for one collection
+  // in this sample we just use this Map to simulate the collection and assessment units discovered by the plug-in
+  private static Map<Object, Object> predefinedCollectionSets = Stream.of(new Object[][] {
     { "collection1", Arrays.asList("AssessmentUnit1") },
     { "collection2", Arrays.asList("AssessmentUnit2", "AssessmentUnit3") }
   }).collect(Collectors.toMap(data -> (String) data[0], data -> (List<String>) data[1]));
@@ -60,7 +62,7 @@ public class SamplePluginProvider extends GenericPluginProvider {
   @Override
   public CliInputCommand getCollectCommand() {
     // Collect command
-    CliInputOption collectCmdCollectionOpt = new CliInputOption("c", "collectionUnit", "The name of the collection unit to perform the collection");
+    CliInputOption collectCmdCollectionOpt = new CliInputOption("c", "collectionUnit", "The name of the collection unit to perform the collection", true, false, null, null);
     CliInputOption collectCmdAssessmentOpt = new CliInputOption("a", "assessmentUnit", "The list of the assessment unit", true, false, null, null);
     List<CliInputOption> collectionCmdOpts = new LinkedList<>(Arrays.asList(collectCmdCollectionOpt, collectCmdAssessmentOpt));
     CliInputCommand collectCmd = new CliInputCommand(CliInputCommand.CMD_COLLECT,
@@ -74,14 +76,22 @@ public class SamplePluginProvider extends GenericPluginProvider {
     logger.info("CliInputCommandOptions:" + cliInputCommand.getOptions());
     logger.info("CliInputCommandArguments:" + cliInputCommand.getArguments());
 
+    List<String> collectionUnitOptionValues = getCLIOptionValues(cliInputCommand.getOptions(), "c");
+    List<String> assessmentUnitOptionValues = getCLIOptionValues(cliInputCommand.getOptions(), "a");
+    logger.debug("pass in option values for collection unit names:" + collectionUnitOptionValues);
+    logger.debug("pass in option values for assessment unit names:" + assessmentUnitOptionValues);
     try {
-      List<DataCollection> colls = new ArrayList<>();
-      for (Object collectionUnit: collectionSets.keySet()) {
+      List<DataCollection> collections = new ArrayList<>();
+      for (Object collectionUnit: predefinedCollectionSets.keySet()) {
         String collectionName = (String)collectionUnit;
-        DataCollection oneCollection = getDataCollection(cliInputCommand.getArguments().get(0), collectionName);
-        colls.add(oneCollection);
+        if (collectionUnitOptionValues==null || collectionUnitOptionValues.size()==0 || collectionUnitOptionValues.contains(collectionName) ) {
+          DataCollection oneCollection = getDataCollection(cliInputCommand.getArguments().get(0), collectionName, assessmentUnitOptionValues);
+          collections.add(oneCollection);
+        } else {
+          logger.warn("collection unit " + collectionName + " is not included in the pass in options, skip it");
+        }
       }
-      return colls;
+      return collections;
     } catch (URISyntaxException e) {
       throw new TAException(e);
     } catch (IOException e) {
@@ -89,17 +99,24 @@ public class SamplePluginProvider extends GenericPluginProvider {
     }
   }
 
-  private DataCollection getDataCollection(String installPath, String collectionUnitName) throws IOException, URISyntaxException {
+  private DataCollection getDataCollection(String installPath, String collectionUnitName, List<String> userDefinedAssessmentUnits) throws IOException, URISyntaxException {
       // put your logic here to detect the middleware runtime environment and construct the environmentJson object
       EnvironmentJson envJson = new EnvironmentJson(SAMPLE_DOMAIN, SAMPLE_MIDDLEWARE, "1.0.0");
       envJson.setMiddlewareInstallPath(installPath);
-      envJson.setMiddlewareDataPath(null);
-      envJson.setCollectionUnitType("Instance");
+      envJson.setMiddlewareDataPath("/opt/instance/configPath");
       envJson.setCollectionUnitName(collectionUnitName);
+      envJson.setCollectionUnitType("Instance");
+      envJson.setCollectionUnitTypeLabel("Instance");
+      envJson.setAssessmentUnitSingleLabel("Assessment unit");
+      envJson.setAssessmentUnitMultipleLabel("Assessment units");
 
       List<GenericAssessmentUnit> auList = new ArrayList<>();
-      for (String assessmentName: (List<String>)collectionSets.get(collectionUnitName)) {
-        auList.add(getAssessmentUnit(assessmentName));
+      for (String assessmentName: (List<String>)predefinedCollectionSets.get(collectionUnitName)) {
+        if (userDefinedAssessmentUnits==null || userDefinedAssessmentUnits.size()==0 || userDefinedAssessmentUnits.contains(assessmentName) ) {
+          auList.add(getAssessmentUnit(assessmentName));
+        } else {
+          logger.warn("assessment unit " + assessmentName + " is not included in the pass in options, skip it");
+        }
       }
       return new GenericDataCollection(collectionUnitName, envJson, auList);
   }
