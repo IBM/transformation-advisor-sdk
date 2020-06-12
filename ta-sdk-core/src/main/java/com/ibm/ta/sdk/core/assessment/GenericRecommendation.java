@@ -13,6 +13,7 @@ import com.ibm.ta.sdk.spi.collect.AssessmentUnit;
 import com.ibm.ta.sdk.spi.assess.ComplexityContributionJson;
 import com.ibm.ta.sdk.spi.assess.IssueCategoryJson;
 import com.ibm.ta.sdk.spi.recommendation.*;
+import com.ibm.ta.sdk.spi.validation.TaJsonFileValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,7 +36,7 @@ public class GenericRecommendation implements Recommendation {
 
 
   public GenericRecommendation(String assessmentName, Path issuesFile, Path issuesCatFile, Path complexityFile,
-                               Path targetFile) throws IOException {
+                               Path targetFile) throws IOException, TAException {
     this.assessmentName = assessmentName;
 
     // Complexity
@@ -43,6 +44,7 @@ public class GenericRecommendation implements Recommendation {
     complexityRules.addAll(ComplexityContributionJson.getComplexityContributionList(ccList));
 
     // Targets
+    TaJsonFileValidator.validateTarget(targetFile.toString());
     GenericTarget target = GenericUtil.getJsonObj(new TypeToken<GenericTarget>(){}, targetFile);
     targets.add(target);
 
