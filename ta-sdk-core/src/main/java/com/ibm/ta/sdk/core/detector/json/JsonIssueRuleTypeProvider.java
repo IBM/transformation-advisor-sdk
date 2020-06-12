@@ -33,7 +33,7 @@ import static com.jayway.jsonpath.JsonPath.using;
 
 public class JsonIssueRuleTypeProvider implements IssueRuleTypeProvider {
   private static final String JSON_RULE_PROVIDER_NAME = "json";
-  private static Logger logger = LogManager.getLogger(IssueRuleProcessor.class.getName());
+  private static Logger logger = LogManager.getLogger(JsonIssueRuleTypeProvider.class.getName());
 
   public static final String QUERYPATHS_KEYNAME = "jsonQueryPath";
   public static final String PATHVAR_NOT_RESOLVE = "@nr.";
@@ -146,6 +146,9 @@ public class JsonIssueRuleTypeProvider implements IssueRuleTypeProvider {
               pathKey = filterPathKey;
             }
 
+            if (filterPath.contains("\\")) {
+              filterPath = filterPath.replace("\\", "\\\\");
+            }
             Object pathObj =  doc.read(filterPath + "['" + pathKey + "']");
             if (pathObj instanceof JSONArray) {
               String[] strValues = new String[((JSONArray) pathObj).size()];
