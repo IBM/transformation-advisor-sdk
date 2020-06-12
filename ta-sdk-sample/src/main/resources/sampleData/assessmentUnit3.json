@@ -1,0 +1,275 @@
+{
+  "metadata_version": "1.0.0.1",
+  "name": "QM_ORANGE",
+  "version": "9.0.2.0",
+  "chadexit": "",
+  "clwlexit": "",
+  "connAuth": "SYSTEM.DEFAULT.AUTHINFO.IDPWOS",
+  "clusters": [],
+  "channels": [
+    {
+      "name": "CLIENT.QM_ORANGE",
+      "type": 7,
+      "mcatype": 0
+    },
+    {
+      "name": "QM_ORANGE.QM_APPLE",
+      "type": 1,
+      "mcatype": 1,
+      "mcausers": [
+        ""
+      ]
+    },
+    {
+      "name": "SYSTEM.AUTO.RECEIVER",
+      "type": 3,
+      "mcatype": 0
+    },
+    {
+      "name": "SYSTEM.AUTO.SVRCONN",
+      "type": 7,
+      "mcatype": 0
+    },
+    {
+      "name": "SYSTEM.DEF.AMQP",
+      "type": 11,
+      "mcatype": 0
+    },
+    {
+      "name": "SYSTEM.DEF.CLUSRCVR",
+      "type": 8,
+      "mcatype": 2
+    },
+    {
+      "name": "SYSTEM.DEF.CLUSSDR",
+      "type": 9,
+      "mcatype": 2,
+      "mcausers": [
+        ""
+      ]
+    },
+    {
+      "name": "SYSTEM.DEF.RECEIVER",
+      "type": 3,
+      "mcatype": 0
+    },
+    {
+      "name": "SYSTEM.DEF.REQUESTER",
+      "type": 4,
+      "mcatype": 1,
+      "mcausers": [
+        ""
+      ]
+    },
+    {
+      "name": "SYSTEM.DEF.SENDER",
+      "type": 1,
+      "mcatype": 1,
+      "mcausers": [
+        ""
+      ]
+    },
+    {
+      "name": "SYSTEM.DEF.SERVER",
+      "type": 2,
+      "mcatype": 1,
+      "mcausers": [
+        ""
+      ]
+    },
+    {
+      "name": "SYSTEM.DEF.SVRCONN",
+      "type": 7,
+      "mcatype": 0
+    },
+    {
+      "name": "SYSTEM.DEF.CLNTCONN",
+      "type": 6,
+      "mcatype": 0,
+      "mcausers": [
+        ""
+      ]
+    }
+  ],
+  "queues": [
+    {
+      "name": "AMQ.5E6F65E321E23699",
+      "description": "",
+      "clusterName": "",
+      "clwlPriority": 0,
+      "clwlRank": 0,
+      "defBind": "MQBND_BIND_ON_OPEN",
+      "inhibitPut": "MQQA_PUT_ALLOWED"
+    },
+    {
+      "name": "Q1",
+      "description": "",
+      "clusterName": "",
+      "clwlPriority": 0,
+      "clwlRank": 0,
+      "defBind": "MQBND_BIND_ON_OPEN",
+      "inhibitPut": "MQQA_PUT_ALLOWED"
+    },
+    {
+      "name": "QM_APPLE",
+      "description": "",
+      "clusterName": "",
+      "clwlPriority": 0,
+      "clwlRank": 0,
+      "defBind": "MQBND_BIND_ON_OPEN",
+      "inhibitPut": "MQQA_PUT_ALLOWED"
+    }
+  ],
+  "topics": [],
+  "security": {
+    "authentication": "IDPWOS",
+    "authRecord": [
+      {
+        "type": "queue",
+        "object": "QM_ORANGE",
+        "osGroup": "root"
+      },
+      {
+        "type": "queue",
+        "object": "QM_ORANGE",
+        "osGroup": "mqm"
+      }
+    ]
+  },
+  "qmini": {
+    "capabilties": {
+      "TCP": [
+        {
+          "name": "TCP",
+          "properties": {
+            "RcvBuffSize": "0",
+            "ClntRcvBuffSize": "0",
+            "RcvRcvBuffSize": "0",
+            "SndBuffSize": "0",
+            "SvrRcvBuffSize": "0",
+            "RcvSndBuffSize": "0",
+            "SvrSndBuffSize": "0",
+            "ClntSndBuffSize": "0"
+          }
+        }
+      ],
+      "ExitPath": [
+        {
+          "name": "ExitPath",
+          "properties": {
+            "ExitsDefaultPath64": "/var/mqm/exits64",
+            "ExitsDefaultPath": "/var/mqm/exits"
+          }
+        }
+      ],
+      "Log": [
+        {
+          "name": "Log",
+          "properties": {
+            "LogFilePages": "4096",
+            "LogPrimaryFiles": "3",
+            "LogPath": "/var/mqm/log/QM_ORANGE/",
+            "LogBufferPages": "0",
+            "LogSecondaryFiles": "2",
+            "LogWriteIntegrity": "TripleWrite",
+            "LogType": "CIRCULAR"
+          }
+        }
+      ],
+      "ServiceComponent": [
+        {
+          "name": "ServiceComponent",
+          "properties": {
+            "ComponentDataSize": "0",
+            "Name": "MQSeries.UNIX.auth.service",
+            "Module": "amqzfu",
+            "Service": "AuthorizationService"
+          }
+        }
+      ],
+      "Service": [
+        {
+          "name": "Service",
+          "properties": {
+            "Name": "AuthorizationService",
+            "EntryPoints": "14"
+          }
+        }
+      ]
+    }
+  },
+  "mqsini": {
+    "capabilties": {
+      "LogDefaults": [
+        {
+          "name": "LogDefaults",
+          "properties": {
+            "LogDefaultPath": "/var/mqm/log"
+          }
+        }
+      ],
+      "AllQueueManagers": [
+        {
+          "name": "AllQueueManagers",
+          "properties": {
+            "DefaultPrefix": "/var/mqm"
+          }
+        }
+      ],
+      "QueueManager": [
+        {
+          "name": "QueueManager",
+          "properties": {
+            "Name": "C2C_DEFAULT_QUEUE_MANAGER",
+            "Directory": "C2C_DEFAULT_QUEUE_MANAGER",
+            "InstallationName": "Installation1",
+            "Prefix": "/var/mqm"
+          }
+        },
+        {
+          "name": "QueueManager",
+          "properties": {
+            "Name": "sampleQM",
+            "Directory": "sampleQM",
+            "InstallationName": "Installation1",
+            "Prefix": "/var/mqm"
+          }
+        },
+        {
+          "name": "QueueManager",
+          "properties": {
+            "Name": "QM_APPLE",
+            "Directory": "QM_APPLE",
+            "InstallationName": "Installation1",
+            "Prefix": "/var/mqm"
+          }
+        },
+        {
+          "name": "QueueManager",
+          "properties": {
+            "Name": "QM_ORANGE",
+            "Directory": "QM_ORANGE",
+            "InstallationName": "Installation1",
+            "Prefix": "/var/mqm"
+          }
+        }
+      ]
+    }
+  },
+  "processes": [
+    {
+      "name": "SYSTEM.DEFAULT.PROCESS",
+      "description": ""
+    }
+  ],
+  "services": [
+    {
+      "name": "SYSTEM.AMQP.SERVICE",
+      "description": "Manages clients that use the AMQP protocol"
+    },
+    {
+      "name": "SYSTEM.DEFAULT.SERVICE",
+      "description": ""
+    }
+  ]
+}

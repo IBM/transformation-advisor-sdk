@@ -114,4 +114,8 @@ public class UTPluginProvider implements PluginProvider {
     public void getMigrationBundle(CliInputCommand migrateCommand) throws TAException {
 
     }
+
+    @Override
+    public void validateJsonFiles() throws TAException {
+    }
 }
