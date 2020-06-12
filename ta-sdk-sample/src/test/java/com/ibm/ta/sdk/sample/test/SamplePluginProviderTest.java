@@ -26,7 +26,7 @@ public class SamplePluginProviderTest {
 
     static final String MIDDLEWARE_NAME = "middleware";
     static final String COLLECTION_UNIT_NAME = "collection1";
-    static final String ASSESS_UNIT_NAME = "AssessmentUnit1";
+    static final String ASSESS_UNIT_NAME = "assessmentUnit1";
     @BeforeEach
     void cleanOutpotDir() throws IOException {
         Path outputDir = Util.getOutputDir().toPath();

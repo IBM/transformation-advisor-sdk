@@ -26,7 +26,7 @@ import java.util.*;
 
 public class IssueRuleProviderTest {
 
-    private static final String FILE_ASSESS_DATA_JSON = "/sampleData/AssessmentUnit1.json";
+    private static final String FILE_ASSESS_DATA_JSON = "/sampleData/assessmentUnit1.json";
     private static final String FILE_ISSUE_JSON = "/middleware/issue.json";
     private static final String FILE_ASSESS_CONFIG_FILE_XML = "/sampleData/sampleData.xml";
     private static final String FILE_ASSESS_CONFIG_FILE_JSON = "/sampleData/SampleConfigFile.json";

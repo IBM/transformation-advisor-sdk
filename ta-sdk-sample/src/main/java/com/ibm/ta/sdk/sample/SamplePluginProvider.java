@@ -32,14 +32,14 @@ import java.util.stream.Stream;
 
 public class SamplePluginProvider extends GenericPluginProvider {
   private static Logger logger = LogManager.getLogger(SamplePluginProvider.class.getName());
-  private static final String SAMPLE_DOMAIN = "Domain";
+  private static final String SAMPLE_DOMAIN = "domain";
   private static final String SAMPLE_MIDDLEWARE= "middleware";
 
   // use the middleware specific technology to detect all the collection units and assessment units for one collection
   // in this sample we just use this Map to simulate the collection and assessment units discovered by the plug-in
   private static Map<Object, Object> predefinedCollectionSets = Stream.of(new Object[][] {
-    { "collection1", Arrays.asList("AssessmentUnit1") },
-    { "collection2", Arrays.asList("AssessmentUnit2", "AssessmentUnit3") }
+    { "collection1", Arrays.asList("assessmentUnit1") },
+    { "collection2", Arrays.asList("assessmentUnit2", "assessmentUnit3") }
   }).collect(Collectors.toMap(data -> (String) data[0], data -> (List<String>) data[1]));
 
   // JSON files
@@ -63,7 +63,7 @@ public class SamplePluginProvider extends GenericPluginProvider {
   public CliInputCommand getCollectCommand() {
     // Collect command
     CliInputOption collectCmdCollectionOpt = new CliInputOption("c", "collectionUnit", "The name of the collection unit to perform the collection", true, false, null, null);
-    CliInputOption collectCmdAssessmentOpt = new CliInputOption("a", "assessmentUnit", "The list of the assessment unit", true, false, null, null);
+    CliInputOption collectCmdAssessmentOpt = new CliInputOption("a", "assessmentUnit", "The name of the assessment unit", true, true, null, null);
     List<CliInputOption> collectionCmdOpts = new LinkedList<>(Arrays.asList(collectCmdCollectionOpt, collectCmdAssessmentOpt));
     CliInputCommand collectCmd = new CliInputCommand(CliInputCommand.CMD_COLLECT,
             "Performs data collection",
@@ -105,7 +105,7 @@ public class SamplePluginProvider extends GenericPluginProvider {
       envJson.setMiddlewareInstallPath(installPath);
       envJson.setMiddlewareDataPath("/opt/instance/configPath");
       envJson.setCollectionUnitName(collectionUnitName);
-      envJson.setCollectionUnitType("Instance");
+      envJson.setCollectionUnitType("instance");
       envJson.setCollectionUnitTypeLabel("Instance");
       envJson.setAssessmentUnitSingleLabel("Assessment unit");
       envJson.setAssessmentUnitMultipleLabel("Assessment units");
@@ -123,11 +123,11 @@ public class SamplePluginProvider extends GenericPluginProvider {
 
   private GenericAssessmentUnit getAssessmentUnit(String assessmentUnitName) throws URISyntaxException, IOException {
     // use the middleware specific technology to generate the assesment unit data json file
-    // in this sample plug-in we assume the /sampleData/AssessmentUnit1.json is the generated file
+    // in this sample plug-in we assume the /sampleData/assessmentUnit1.json is the generated file
     Path assessDataJsonFile = Paths.get(SamplePluginProvider.class.getResource(FILE_ASSESS_DATA_DIR+assessmentUnitName+".json").toURI());
     List<Path> assessmentConfigFiles = new ArrayList<Path>();
 
-    if (assessmentUnitName.equals("AssessmentUnit1")) {
+    if (assessmentUnitName.equals("assessmentUnit1")) {
       // You can add more middlewware specific configuration files here.
       Path assessConfigJsonFile = Paths.get(SamplePluginProvider.class.getResource(FILE_ASSESS_CONFIG_FILE_JSON).toURI());
       Path assessConfigJsonFile2 = Paths.get(SamplePluginProvider.class.getResource(FILE_ASSESS_CONFIG_FILE2_JSON).toURI());
