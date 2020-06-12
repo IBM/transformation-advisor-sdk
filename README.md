@@ -13,7 +13,7 @@ ta-sdk-core | Default implementation of SPI framework
 ta-sdk-sample | Sample plug-in
 
 ### Guide for Plugin Developer
-If you want to develop your own plugins using TA SDK,  See [Getting Started Guide] to get start.
+If you want to develop your own plugins using TA SDK,  See [Getting Started Guide](docs/GettingStarted.md) to get start.
 
 ### Dependency
 Other middleware plug-in project will depend on the ta-sdk-core module.
