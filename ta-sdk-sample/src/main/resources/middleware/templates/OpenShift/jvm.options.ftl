@@ -2,6 +2,8 @@
 -Xmx1024m
 
 # Set a system property.
-[#list SampleConfigFile_json.jvm.properties as prop]
+<#if SampleConfigFile_json??>
+  <#list SampleConfigFile_json.jvm.properties as prop>
 -D[=prop.key]=[=prop.value]
-[/#list]
+  </#list>
+</#if>

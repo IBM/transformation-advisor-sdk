@@ -161,8 +161,14 @@ public class FreeMarkerTemplateResolver {
                     sourceFileName = contents.split("=")[1];
                 }
                 logger.debug("place holder source file name is " + sourceFileName);
-                Files.copy(new File(this.assessmentUnitDir.getAbsolutePath()+File.separator+sourceFileName).toPath(),
-                        targetFile.toPath());
+                File sourceFile = new File(this.assessmentUnitDir.getAbsolutePath()+File.separator+sourceFileName);
+                if (sourceFile.exists()) {
+                    Files.copy(sourceFile.toPath(), targetFile.toPath());
+                } else {
+                    logger.warn("cannot find the source file " + sourceFile.getAbsolutePath() +
+                            " of the placeholder file " + sourceFile + " in the collection.");
+                }
+
             } else {
                 //copy file to migration target dir
                 Path sourceFile = Paths.get(getClass().getClassLoader().getResource(templatesDir+templateFileName).toURI());
