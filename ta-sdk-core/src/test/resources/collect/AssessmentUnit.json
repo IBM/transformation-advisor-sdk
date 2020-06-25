@@ -11,6 +11,16 @@
       "fullRepository": true
     }
   ],
+  "master\\clusters": [
+    {
+      "name": "INVENTORY",
+      "key\\Name": "London"
+    },
+    {
+      "name": "PAYABLE",
+      "key\\Name": "London"
+    }
+  ],
   "channels": [
     {
       "name": "INVENTORY.LONDON",

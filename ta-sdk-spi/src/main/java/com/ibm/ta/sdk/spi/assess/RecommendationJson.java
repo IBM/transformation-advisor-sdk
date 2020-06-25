@@ -19,15 +19,11 @@ import java.util.*;
 public class RecommendationJson {
   private static final String REC_ATTR_QM_NAME = "name";
   private static final String ASS_ATTR_TARGET = "targets";
-  private static final String ASS_ATTR_TARGET_VERSION = "version";
-  private static final String ASS_ATTR_TARGET_PLATFORM = "platform";
-  private static final String ASS_ATTR_TARGET_LOCATION = "location";
+  private static final String ASS_ATTR_TARGET_ID = "id";
   private static final String ASS_ATTR_TARGET_RUNTIME  = "runtime";
-  private static final String ASS_ATTR_TARGET_PRODUCTNAME = "productName";
-  private static final String ASS_ATTR_TARGET_PRODUCTVERSION = "productVersion";
+  private static final String ASS_ATTR_TARGET_DIMENSIONS  = "dimensions";
   private static final String ASS_ATTR_ISSUES = "issues";
   private static final String ASS_ATTR_SUMMARY = "summary";
-  private static final String ASS_ATTR_VALID = "valid";
   private static final String ASS_SUMMARY_COMPLEXITY = "complexity";
   private static final String ASS_SUMMARY_ISSUES = "issues";
   private static final String ASS_SUMMARY_EFFORT = "effort";
@@ -64,7 +60,16 @@ public class RecommendationJson {
     // Read from Json file
   }
 
-  public RecommendationJson(Recommendation recommendation, Environment environment, List<? extends AssessmentUnit> auList) throws TAException {
+  /**
+   * Builds recommendation.json for output
+   * @param recommendation Recommendation object to get issues, issue categories and complexity contributions
+   * @param environment Environment object for additional attributes to include in the recommendations.json
+   * @param auList List of assessment units to include in the recommendations.json
+   * @param filterTargets List of target IDs to include in the recommendations.json. If null or empty list, all targets are included.
+   * @throws TAException Error building recommendations.json
+   */
+  public RecommendationJson(Recommendation recommendation, Environment environment, List<? extends AssessmentUnit> auList,
+                            List<String> filterTargets) throws TAException {
     this.recommendation = recommendation;
     domain = environment.getDomain();
     middleware = environment.getMiddlewareName();
@@ -74,8 +79,15 @@ public class RecommendationJson {
     complexityRules = ComplexityContributionJson.getComplexityContributionJsonList(recommendation.getComplexityContributions());
     issueCategories = IssueCategoryJson.getIssueCategoryJsonMap(recommendation.getIssueCategories());
 
-    for (Target target : recommendation.getTargets()) {
-      for (AssessmentUnit au : auList) {
+    for (AssessmentUnit au : auList) {
+      Map<String, Object> auMap = null;
+      for (Target target : recommendation.getTargets()) {
+        // Check if target is to be included
+        if (!isIncludeTarget(target, filterTargets)) {
+          logger.debug("Skipping target ID:" + target.getId());
+          continue;
+        }
+
         List<Issue> auIssues = recommendation.getIssues(target, au);
 
         // Build map of issues by category
@@ -95,10 +107,33 @@ public class RecommendationJson {
           issuesList.add(issue);
         }
 
-        Map<String, Object> auMap = getAssessmentUnit(target, au,issuesMap);
-        assessmentUnits.add(auMap);
+        Map<String, Object> auTargetMap = getAssessmentUnit(target, au, issuesMap);
+        if (auMap == null) {
+          auMap = auTargetMap;
+        } else {
+          // Add target to existing assessment unit
+          List<Map<String, Object>> auTargetList = (List<Map<String, Object>>) auMap.get(ASS_ATTR_TARGET);
+          auTargetList.addAll((List<Map<String, Object>>) auTargetMap.get(ASS_ATTR_TARGET));
+        }
       }
+
+      // Put minimal info in the assessment unit
+      if (auMap == null) {
+        auMap = new HashMap<>();
+        auMap.put(REC_ATTR_QM_NAME, au.getName());
+      }
+      assessmentUnits.add(auMap);
     }
+  }
+
+  /*
+   * Returns true if the ID of the target is included in the targetIdList
+   */
+  private boolean isIncludeTarget(Target target, List<String> targetIdList) {
+    if (targetIdList == null || targetIdList.isEmpty()) {
+      return true;
+    }
+    return targetIdList.contains(target.getId());
   }
 
   private Map<String, Object> getAssessmentUnit(Target target, AssessmentUnit au, Map<String, List<Issue>>  issuesMap) {
@@ -109,17 +144,13 @@ public class RecommendationJson {
     Map<String, Object> targetMap = new LinkedHashMap<String, Object>();
     targetList.add(targetMap);
 
-    targetMap.put(ASS_ATTR_TARGET_VERSION, target.getProductVersion());
-    targetMap.put(ASS_ATTR_TARGET_PRODUCTNAME, target.getProductName());
-    targetMap.put(ASS_ATTR_TARGET_PRODUCTVERSION, target.getProductVersion());
+    targetMap.put(ASS_ATTR_TARGET_ID, target.getId());
     String targetRuntime = target.getRuntime();
     if (targetRuntime != null && !targetRuntime.equals("")) {
       targetMap.put(ASS_ATTR_TARGET_RUNTIME, target.getRuntime());
     }
-    targetMap.put(ASS_ATTR_TARGET_PLATFORM, target.getPlatform());
-    targetMap.put(ASS_ATTR_TARGET_LOCATION, target.getLocation());
+    targetMap.put(ASS_ATTR_TARGET_DIMENSIONS, target.getDimensions());
 
-    targetMap.put(ASS_ATTR_VALID, "true");
     targetMap.put(ASS_ATTR_ISSUES, issuesMap);
     targetMap.put(ASS_ATTR_SUMMARY, getAssessmentSummary(issuesMap));
     return auMap;

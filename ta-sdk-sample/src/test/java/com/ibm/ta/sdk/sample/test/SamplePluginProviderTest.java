@@ -100,7 +100,7 @@ public class SamplePluginProviderTest {
         assertTrue(recommFile.exists());
         assertTrue(recommFile.isFile());
         assertTrue(recommFile.length() > 2);
-        File reportFile = new File (directories[0]+File.separator+ASSESS_UNIT_NAME+"/recommendations_Private_Docker.html");
+        File reportFile = new File (directories[0]+File.separator+ASSESS_UNIT_NAME+"/recommendations_OPEN_LIBERTY.html");
         assertTrue(reportFile.exists());
         assertTrue(reportFile.isFile());
         assertTrue(reportFile.length() > 2);

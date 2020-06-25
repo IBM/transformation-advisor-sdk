@@ -32,29 +32,14 @@
     "Target": {
       "type": "object",
       "properties": {
-        "version": {
-          "type": "string"
-        },
-        "productName": {
-          "type": "string"
-        },
-        "productVersion": {
+        "id": {
           "type": "string"
         },
         "runtime": {
           "type": "string"
         },
-        "platform": {
-          "type": "string",
-          "enum": ["Docker", "VM"]
-        },
-        "location": {
-          "type": "string",
-          "enum": ["Private", "Public"]
-        },
-        "valid": {
-          "type": "string",
-          "enum": ["true", "false"]
+        "dimensions": {
+          "type": "array"
         },
         "issues": {
           "$ref": "#/definitions/TargetIssues"
@@ -64,15 +49,10 @@
         }
       },
       "required": [
-        "issues",
+        "id",
         "runtime",
-        "platform",
-        "location",
-        "summary",
-        "valid",
-        "version",
-        "productName",
-        "productVersion"
+        "issues",
+        "summary"
       ],
       "title": "Target"
     },

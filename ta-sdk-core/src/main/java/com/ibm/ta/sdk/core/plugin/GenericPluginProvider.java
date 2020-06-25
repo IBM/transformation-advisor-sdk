@@ -14,7 +14,6 @@ import com.ibm.ta.sdk.core.assessment.GenericRecommendation;
 import com.ibm.ta.sdk.core.collect.GenericAssessmentUnit;
 import com.ibm.ta.sdk.core.collect.TextContextMask;
 import com.ibm.ta.sdk.core.report.RecommendationReporter;
-import com.ibm.ta.sdk.core.util.Constants;
 import com.ibm.ta.sdk.core.util.FreeMarkerTemplateResolver;
 import com.ibm.ta.sdk.core.util.GenericUtil;
 import com.ibm.ta.sdk.spi.collect.ContentMask;
@@ -25,7 +24,6 @@ import com.ibm.ta.sdk.spi.plugin.TAException;
 import com.ibm.ta.sdk.spi.recommendation.Recommendation;
 import com.ibm.ta.sdk.spi.report.Report;
 import com.ibm.ta.sdk.spi.util.Util;
-import freemarker.template.TemplateException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,10 +53,10 @@ public abstract class GenericPluginProvider implements PluginProvider {
     try {
 
       String middlewareDir = "/" + getMiddleware() + "/";
-      Path complexityJsonFile = Paths.get(GenericPluginProvider.class.getResource(middlewareDir + FILE_COMPLEXITY_JSON).toURI());
-      Path issueCatJsonFile = Paths.get(GenericPluginProvider.class.getResource(middlewareDir + FILE_ISSUECAT_JSON).toURI());
-      Path issueJsonFile = Paths.get(GenericPluginProvider.class.getResource(middlewareDir + FILE_ISSUE_JSON).toURI());
-      Path targetJsonFile = Paths.get(GenericPluginProvider.class.getResource(middlewareDir + FILE_TARGET_JSON).toURI());
+      Path complexityJsonFile = Paths.get(GenericPluginProvider.class.getResource(middlewareDir + FILE_COMPLEXITIES_JSON).toURI());
+      Path issueCatJsonFile = Paths.get(GenericPluginProvider.class.getResource(middlewareDir + FILE_ISSUECATS_JSON).toURI());
+      Path issueJsonFile = Paths.get(GenericPluginProvider.class.getResource(middlewareDir + FILE_ISSUES_JSON).toURI());
+      Path targetJsonFile = Paths.get(GenericPluginProvider.class.getResource(middlewareDir + FILE_TARGETS_JSON).toURI());
       File outDir = Util.getOutputDir();
       List<Recommendation> recs = new ArrayList<>();
 

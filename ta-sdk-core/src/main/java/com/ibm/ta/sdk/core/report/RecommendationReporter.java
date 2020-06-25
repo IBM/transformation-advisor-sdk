@@ -7,7 +7,9 @@
 package com.ibm.ta.sdk.core.report;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.ibm.ta.sdk.spi.recommendation.ModDimension;
 import com.ibm.ta.sdk.spi.report.ReportGenerator;
 import com.google.gson.JsonObject;
 import com.ibm.ta.sdk.spi.plugin.TAException;
@@ -18,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class RecommendationReporter implements ReportGenerator {
 
@@ -103,12 +106,14 @@ public class RecommendationReporter implements ReportGenerator {
         }
 
         List<Map<String, String>> issueCategories = recommendation.getIssueCategories();
+        String middleware = recommendation.getMiddleware();
+        String version = recommendation.getVersion();
 
         List<AssessmentUnitReport> assessmentUnits = recommendation.getAssessmentUnits();
         for (AssessmentUnitReport assessmentUnit: assessmentUnits){
             List<Report> htmlFiles = null;
 
-            htmlFiles = generateHTMLForOneAssessmentUnit(assessmentUnit, templateStr, issueCategories);
+            htmlFiles = generateHTMLForOneAssessmentUnit(middleware, version, assessmentUnit, templateStr, issueCategories);
 
             generatedHTMLFiles.addAll(htmlFiles);
         }
@@ -116,37 +121,27 @@ public class RecommendationReporter implements ReportGenerator {
         return generatedHTMLFiles;
     }
 
-    private List<Report> generateHTMLForOneAssessmentUnit(AssessmentUnitReport assessmentUnit, String templateStr, List<Map<String, String>> issueCategories) throws TAException {
+    private List<Report> generateHTMLForOneAssessmentUnit(String middleware, String version,
+                AssessmentUnitReport assessmentUnit, String templateStr, List<Map<String, String>> issueCategories) throws TAException {
         List<Report> generatedHTMLs = new ArrayList<Report>();
         List<TargetReport> targets = assessmentUnit.getTargets();
         String assessmentUnitName = assessmentUnit.getName();
         for (TargetReport target : targets){
-            Report reportHTML = generateHTMLForOneTarget(assessmentUnitName, target, templateStr, issueCategories);
+            Report reportHTML = generateHTMLForOneTarget(middleware, version, assessmentUnitName, target, templateStr, issueCategories);
             generatedHTMLs.add(reportHTML);
         }
         return generatedHTMLs;
     }
 
-    private Report generateHTMLForOneTarget(String assessmentUnitName, TargetReport target, String templateStr, List<Map<String, String>> issueCategories) throws TAException {
-        String platform = target.getPlatform();
-        String location = target.getLocation();
-        String targetId = assessmentUnitName + "-" + platform + "-" + location;
+    private Report generateHTMLForOneTarget(String middleware, String version, String assessmentUnitName,
+                TargetReport target, String templateStr, List<Map<String, String>> issueCategories) throws TAException {
+        String id = target.getId();
+        String targetId = assessmentUnitName + "-" + id;
 
         String resultStr = templateStr.replace(ASSESSMENT_UNIT_NAME_VAR, assessmentUnitName);
-        String productName = target.getProductName() != null ? target.getProductName() : "";
-        resultStr = resultStr.replace(PRODUCT_NAME_VAR, productName);
-        String productVersion = target.getProductVersion() != null ? target.getProductVersion() : "";
-        resultStr = resultStr.replace(PRODUCT_VERSION_VAR, productVersion);
-        String runTimeColumnTitle = "";
-        String rumtimeColumn = "";
-        if (target.getRuntime() != null && target.getRuntime().trim().length() > 0){
-            runTimeColumnTitle ="<th class=\"col2thru12\">Runtime</th>";
-            rumtimeColumn = "<td class=\"col2thru12\">" + target.getRuntime() + "</td>";
-        }
-        resultStr = resultStr.replace(RUNTIME_HEADER_VAR, runTimeColumnTitle);
-        resultStr = resultStr.replace(RUNTIME_COLUMN_VAR, rumtimeColumn);
-        resultStr = resultStr.replace(PLATFORM_VAR, target.getPlatform());
-        resultStr = resultStr.replace(LOCATION_VAR, target.getLocation()!= null? target.getLocation(): "" );
+        resultStr = resultStr.replace(PRODUCT_NAME_VAR, middleware);
+        resultStr = resultStr.replace(PRODUCT_VERSION_VAR, version);
+        resultStr = resultStr.replace(RUNTIME_COLUMN_VAR, target.getRuntime());
         resultStr = resultStr.replace(OVERALL_COMPLEXITY_SCORE_VAR, target.getOverallComplexityScore());
         resultStr = resultStr.replace(NUM_OF_RED_ISSUES_VAR, new Integer(target.getNumberOfRedIssues()).toString());
         resultStr = resultStr.replace(NUM_OF_YELLOW_ISSUES_VAR, new Integer(target.getNumberOfYellowIssues()).toString());
@@ -170,28 +165,29 @@ public class RecommendationReporter implements ReportGenerator {
 
         com.ibm.ta.sdk.spi.recommendation.Target targetResult = new com.ibm.ta.sdk.spi.recommendation.Target(){
             @Override
-            public String getProductName(){
-                return productName;
+            public String getId() {
+                return target.getId();
             }
 
             @Override
-            public String getProductVersion(){
-                return productVersion;
-            }
-
-            @Override
-            public String getRuntime(){
+            public String getRuntime() {
                 return target.getRuntime();
             }
 
             @Override
-            public PlatformType getPlatform(){
-                return PlatformType.Docker;
-            }
+            public List<ModDimension> getDimensions() {
+                List<ModDimension> dimensions = new ArrayList<>();
+                for (JsonElement dimJsonE : target.getDimensions()) {
+                    JsonObject dimJson = dimJsonE.getAsJsonObject();
+                    List<JsonElement> values = new ArrayList<>();
+                    dimJson.get("values").getAsJsonArray().forEach( v -> values.add(v));
+                    dimensions.add(new ModDimension(
+                                dimJson.get("name").getAsString(),
+                                values,
+                                dimJson.get("defaultValue")));
 
-            @Override
-            public LocationType getLocation(){
-                return LocationType.Private;
+                }
+                return dimensions;
             }
         };
 
@@ -356,6 +352,10 @@ public class RecommendationReporter implements ReportGenerator {
         String domain = this.recommendationJson.get("domain").getAsString();
         logger.debug("domain is " + domain);
         recommendation.setDomain(domain);
+        recommendation.setMiddleware(recommendationJson.get("middleware").getAsString());
+        recommendation.setVersion(recommendationJson.get("version").getAsString());
+        recommendation.setCollectionUnitName(recommendationJson.get("collectionUnitName").getAsString());
+        recommendation.setCollectionUnitType(recommendationJson.get("collectionUnitType").getAsString());
 
         // issueCategories
         JsonObject issueCategories = this.recommendationJson.getAsJsonObject("issueCategories");
@@ -382,11 +382,9 @@ public class RecommendationReporter implements ReportGenerator {
             JsonArray targetsJA = (JsonArray) assessmentUnitsJO.get("targets");
             for (Object targetObj : targetsJA) {
                 JsonObject targetJO = (JsonObject) targetObj;
-                String productName = targetJO.get("productName")== null? "": targetJO.get("productName").getAsString();
-                String productVersion = targetJO.get("productVersion") == null? "": targetJO.get("productVersion").getAsString();
+                String id = targetJO.get("id")== null? "": targetJO.get("id").getAsString();
                 String runtime = targetJO.get("runtime") == null? "": targetJO.get("runtime").getAsString();
-                String platform = targetJO.get("platform")== null? "": targetJO.get("platform").getAsString();
-                String location = targetJO.get("location")== null? "": targetJO.get("location").getAsString();
+                JsonArray dimensions = targetJO.get("dimensions").isJsonNull() ? null : targetJO.get("dimensions").getAsJsonArray();
                 JsonObject summary = (JsonObject) targetJO.get("summary");
                 JsonObject issuesInSummary = (JsonObject) summary.get("issues");
                 int numOfRedIssues = issuesInSummary.get("severe") == null ? 0 : issuesInSummary.get("severe").getAsInt();
@@ -404,7 +402,7 @@ public class RecommendationReporter implements ReportGenerator {
 
                 JsonObject complexity = (JsonObject) summary.get("complexity");
                 String overallComplexityScore = complexity.get("score").getAsString();
-                TargetReport target = new TargetReport(productName, productVersion, runtime, platform, location, overallComplexityScore, numOfRedIssues, numOfYellowIssues, numOfGreenIssues);
+                TargetReport target = new TargetReport(id, runtime, dimensions, overallComplexityScore, numOfRedIssues, numOfYellowIssues, numOfGreenIssues);
 
                 JsonObject issuesJO = (JsonObject) targetJO.get("issues");
                 Set<String> issuesKeySet = issuesJO.keySet();
@@ -458,7 +456,7 @@ public class RecommendationReporter implements ReportGenerator {
             List<Report> generatedHTMLs = reporter.generateHTMLReports();
             System.out.print("generated HTML files are: ");
             for (Report generatedHTML : generatedHTMLs){
-                String htmlFileName = "/Users/jgao/ta/features/RecommendationConvertingTool/Installation4/unitTestingOutput/" + generatedHTML.getAssessmentUnitName() + "-" + generatedHTML.getAssessmentUnitName() + "-" + generatedHTML.getTarget().getPlatform() + "-" + generatedHTML.getTarget().getRuntime() + ".html";
+                String htmlFileName = "/Users/jgao/ta/features/RecommendationConvertingTool/Installation4/unitTestingOutput/" + generatedHTML.getAssessmentUnitName() + "-" + generatedHTML.getAssessmentUnitName() + "-" + generatedHTML.getTarget().getId() + ".html";
                 System.out.print(htmlFileName + " ");
                 writeUsingOutputStream(generatedHTML.getReport(), htmlFileName);
             }

@@ -1,0 +1,53 @@
+[
+  {
+    "id": "OPEN_LIBERTY",
+    "runtime": "Open Liberty",
+    "dimensions": [
+      {
+        "name": "buildType",
+        "values": [
+          "source",
+          "binary"
+        ],
+        "defaultValue": "binary"
+      },
+      {
+        "name": "mpMetrics",
+        "values": [
+          true
+        ],
+        "defaultValue": true
+      },
+      {
+        "name": "memory",
+        "values": [
+          1024,
+          2048
+        ],
+        "defaultValue": 1024
+      }
+    ],
+    "issues": [
+      "MQEXIT01",
+      "MQCL03",
+      "MQEXIT06"
+    ]
+  },
+  {
+    "id": "WAS_LIBERTY",
+    "runtime": "WebSphere Liberty",
+    "dimensions": [
+      {
+        "name": "buildType",
+        "values": [
+          "source",
+          "binary"
+        ],
+        "defaultValue": "binary"
+      }
+    ],
+    "issueCategories": [
+      "cluster"
+    ]
+  }
+]

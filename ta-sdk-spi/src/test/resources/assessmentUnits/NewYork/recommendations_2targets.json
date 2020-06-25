@@ -245,6 +245,69 @@
               "total": 13.4
             }
           }
+        },
+        {
+          "id": "WAS_LIBERTY",
+          "runtime": "WebSphere Liberty",
+          "dimensions" : [
+            {
+              "name": "buildType",
+              "values": [
+                "source",
+                "binary"
+              ],
+              "defaultValue": "source"
+            }
+          ],
+          "issues": {
+            "exits": [
+              {
+                "id": "MQEXIT06",
+                "title": "Service defined. Analysis of the Service needs to be completed to see if there are custom binaries used",
+                "cost": 3.0,
+                "issueOverhead": 1.0,
+                "occurrencesCost": 1.0,
+                "complexityRule": "exits",
+                "solutionText": [
+                  "Scenarios:",
+                  "(1) Custom binary is redundant.",
+                  "Check if binary has been replaced with Product Capability in MQ 9 and adopt that instead.",
+                  "(2) Binary is connecting to an external system.",
+                  "Examine configuration for your Queue Manager looking for connection parameters (environment variables and/or config files).  If found, consider how you will manage this dependency in your DevOps pipeline. Also ensure that connectivity can be established from new target k8 cluster",
+                  "(3) Binary will be carried forward as-is in your migrated Queue Manager.",
+                  "Embed the binaries into the new Docker container.  Check to see if binaries need to be ported to run in your desired Container Base OS and target cluster architecture."
+                ],
+                "severity": "critical",
+                "occurrencesFields": {
+                  "service": "Service"
+                },
+                "occurrencesCount": 2,
+                "occurrences": [
+                  {
+                    "service": "MQ.SERVICE"
+                  },
+                  {
+                    "service": "MYMQ.SERVICE"
+                  }
+                ]
+              }
+            ]
+          },
+          "summary": {
+            "complexity": {
+              "moderate": {
+                "exits": 1
+              },
+              "score": "moderate"
+            },
+            "issues": {
+              "critical": 1
+            },
+            "effort": {
+              "exits": 3.0,
+              "total": 3.0
+            }
+          }
         }
       ]
     }

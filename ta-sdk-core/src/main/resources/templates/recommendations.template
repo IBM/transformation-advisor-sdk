@@ -331,18 +331,14 @@
         <tr class="results">
           <th class="col2thru12">Product Name</th>
           <th class="col2thru12">Product Version</th>
-          {RUNTIME_HEADER}
-          <th class="col2thru12">platform</th>
-          <th class="col2thru12">Location</th>
+          <th class="col2thru12">Runtime</th>
         </tr>
         </thead>
         <tbody>
           <tr>
             <td class="col2thru12">{PRODUCT_NAME}</td>
             <td class="col2thru12">{PRODUCT_VERSION}</td>
-            {RUNTIME_COLUMN}
-            <td class="col2thru12">{PLATFORM}</td>
-            <td class="col2thru12">{LOCATION}</td>
+            <td class="col2thru12">{RUNTIME_COLUMN}</td>
         </tbody>
       </table>
     </div>

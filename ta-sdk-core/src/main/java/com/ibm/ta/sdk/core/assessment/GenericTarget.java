@@ -7,26 +7,31 @@
 package com.ibm.ta.sdk.core.assessment;
 
 import com.google.gson.annotations.Expose;
+import com.ibm.ta.sdk.spi.recommendation.ModDimension;
 import com.ibm.ta.sdk.spi.recommendation.Target;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GenericTarget implements Target {
-  @Expose(serialize = false)
-  private String productName;
+  @Expose
+  private String id;
 
-  @Expose(serialize = false)
-  private String productVersion;
-
-  @Expose(serialize = false)
+  @Expose
   private String runtime;
 
-  @Override
-  public PlatformType getPlatform() {
-    return PlatformType.Docker;
-  }
+  @Expose
+  private List<ModDimension> dimensions;
+
+  @Expose
+  private List<String> issues;
+
+  @Expose
+  private List<String> issueCategories;
 
   @Override
-  public LocationType getLocation() {
-    return LocationType.Private;
+  public String getId() {
+    return id;
   }
 
   @Override
@@ -35,12 +40,21 @@ public class GenericTarget implements Target {
   }
 
   @Override
-  public String getProductName() {
-    return productName;
+  public List<ModDimension> getDimensions() {
+    return dimensions;
   }
 
-  @Override
-  public String getProductVersion() {
-    return productVersion;
+  public List<String> getIssues() {
+    if (issues == null) {
+      issues = new ArrayList<>();
+    }
+    return issues;
+  }
+
+  public List<String> getIssueCategories() {
+    if (issueCategories == null) {
+      issueCategories = new ArrayList<>();
+    }
+    return issueCategories;
   }
 }

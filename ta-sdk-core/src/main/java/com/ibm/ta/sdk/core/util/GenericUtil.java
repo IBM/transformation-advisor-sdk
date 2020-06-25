@@ -6,9 +6,7 @@
 
 package com.ibm.ta.sdk.core.util;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.ibm.ta.sdk.spi.collect.AssessmentUnit;
 import com.ibm.ta.sdk.core.assessment.JavaClassTypeAdapterFactory;
@@ -46,6 +44,11 @@ public class GenericUtil {
   public static <T> T getJsonObj(TypeToken<T> typeToken, JsonObject jsonObj) {
     Gson gson = getGson();
     return gson.fromJson(jsonObj, typeToken.getType());
+  }
+
+  public static JsonElement getJson(Path resourcePath) throws IOException {
+    String jsonStr = readFileToString(resourcePath);
+    return new JsonParser().parse(jsonStr);
   }
 
   private static Gson getGson() {

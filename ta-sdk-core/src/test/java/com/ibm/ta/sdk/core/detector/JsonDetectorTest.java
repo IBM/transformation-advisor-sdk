@@ -73,6 +73,51 @@ public class JsonDetectorTest {
     }
 
     /*
+     * Simple filter by attribute and checks the values for all the issue attributes are correct.
+     */
+    @Test
+    public void issueKeyNameWithSlashTest() {
+        try {
+            Path assessmentUnitFile = new File(TEST_RESOURCES_DIR, "collect/AssessmentUnit.json").toPath();
+            GenericAssessmentUnit au = new GenericAssessmentUnit(assessmentUnitFile, null);
+
+            Path issueJsonFile = new File(TEST_RESOURCES_DIR, "issue/issue_keyname_with_slash.json").toPath();
+            GenericRecommendation rec = getRecommendation(issueJsonFile);
+            List<Target> targets = rec.getTargets();
+            assertEquals(1, targets.size());
+
+            Target target = targets.get(0);
+            List<Issue> issues = rec.getIssues(target, au);
+            assertEquals(1, issues.size());
+
+            Issue issue = issues.get(0);
+            assertEquals("MQCL03", issue.getId());
+            assertEquals("Contains a Full Repository.  Assess impact to other cluster members.", issue.getTitle());
+            assertEquals(1.5f, issue.getCost());
+            assertEquals(0.5f, issue.getOverheadCost());
+            assertEquals(0.5f, issue.getOccurrenceCost());
+            assertEquals(Arrays.asList("Update other Cluster members using IPAddresses to use the new IPAddress after migrating"),
+                    issue.getSolutionText());
+            assertEquals(Severity.potential, issue.getSeverity());
+            assertEquals("cluster", issue.getCategory().getId());
+            assertEquals(2, issue.getOccurrencesCount());
+
+            // Check occurrences
+            Occurrence occurrence = issue.getOccurrence();
+            Map<String, String> expectedFieldKeys = new HashMap<>();
+            expectedFieldKeys.put("masterCluster", "Master Cluster");
+            assertEquals(expectedFieldKeys, occurrence.getFieldKeys());
+            Map<String, String> expectedOcInstance = new HashMap<>();
+            expectedOcInstance.put("masterCluster", "INVENTORY");
+            Map<String, String> expectedOcInstance2 = new HashMap<>();
+            expectedOcInstance2.put("masterCluster", "PAYABLE");
+            assertEquals(Arrays.asList(expectedOcInstance, expectedOcInstance2), occurrence.getOccurrencesInstances());
+        } catch (IOException | TAException e) {
+            throw new AssertionFailedError("Error generating recommendations", e);
+        }
+    }
+
+    /*
      * Test no matching issue found
      */
     @Test
@@ -325,9 +370,9 @@ public class JsonDetectorTest {
     }
 
     private GenericRecommendation getRecommendation(Path issueJsonFile) throws IOException, TAException {
-        Path complexityJsonFile = new File(TEST_RESOURCES_DIR, "assess" + File.separator + FILE_COMPLEXITY_JSON).toPath();
-        Path issueCatJsonFile = new File(TEST_RESOURCES_DIR, "assess" + File.separator + FILE_ISSUECAT_JSON).toPath();
-        Path targetJsonFile = new File(TEST_RESOURCES_DIR, "target" + File.separator + FILE_TARGET_JSON).toPath();
+        Path complexityJsonFile = new File(TEST_RESOURCES_DIR, "assess" + File.separator + FILE_COMPLEXITIES_JSON).toPath();
+        Path issueCatJsonFile = new File(TEST_RESOURCES_DIR, "assess" + File.separator + FILE_ISSUECATS_JSON).toPath();
+        Path targetJsonFile = new File(TEST_RESOURCES_DIR, "target" + File.separator + "targets_one.json").toPath();
 
         return new GenericRecommendation("assessment1", issueJsonFile,
                 issueCatJsonFile, complexityJsonFile, targetJsonFile);

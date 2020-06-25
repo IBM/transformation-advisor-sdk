@@ -5,6 +5,8 @@
  */
 package com.ibm.ta.sdk.spi.plugin;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.ibm.ta.sdk.spi.assess.UTRecommendation;
 import com.ibm.ta.sdk.spi.collect.EnvironmentJson;
@@ -12,6 +14,7 @@ import com.ibm.ta.sdk.spi.collect.UTAssessmentUnit;
 import com.ibm.ta.sdk.spi.collect.UTDataCollection;
 import com.ibm.ta.sdk.spi.test.TestUtils;
 import com.ibm.ta.sdk.spi.validation.TaCollectionZipValidator;
+import com.ibm.ta.sdk.spi.validation.TaJsonFileValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -25,7 +28,7 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.zip.ZipInputStream;
 
-import static com.ibm.ta.sdk.spi.test.TestUtils.TEST_OUTPUT_DIR;
+import static com.ibm.ta.sdk.spi.test.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static com.ibm.ta.sdk.spi.test.ValidationUtils.*;
 
@@ -410,6 +413,130 @@ public class PluginProviderTest {
             File collectectionZip2 = new File(TEST_OUTPUT_DIR, collectionUnitName2 + ".zip");
             assertTrue(collectectionZip2.exists());
             TaCollectionZipValidator.validateArchive(new ZipInputStream(new FileInputStream(collectectionZip2)));
+        } catch (Exception e) {
+            throw new AssertionFailedError("Error with assess command for multiple DataCollections:", e);
+        }
+    }
+
+    /*
+     * Test assessment with the target option to select targets in the recommendations.json
+     */
+    @Test
+    public void targetOptionTest() {
+        final String collectionUnitName1 = "TestCollectionUnit";
+        final String collectionUnitName2 = "TestCollectionUnit2";
+
+        try {
+            UTPluginProvider provider = new UTPluginProvider();
+            // Collect command
+            CliInputOption assessCmdAllOpt = new CliInputOption("a", "all", "Collect everything");
+            List<CliInputOption> collectionCmdOpts = new LinkedList<>(Arrays.asList(assessCmdAllOpt));
+            CliInputCommand assessCmd = CliInputCommand.buildAssessCommand(
+                    collectionCmdOpts, null, Arrays.asList("dataPath"));
+            provider.setAssessCommand(assessCmd);
+
+            // 2 data collections
+            UTDataCollection dc = new UTDataCollection(collectionUnitName1, "environment.json", Arrays.asList("assessmentUnits/NewYork/NewYork.json"));
+            dc.getEnvironmentJson().setCollectionUnitName(collectionUnitName1);
+            UTDataCollection dc2 = new UTDataCollection(collectionUnitName2, "environment.json", Arrays.asList("assessmentUnits/London/London.json"));
+            dc2.getEnvironmentJson().setCollectionUnitName(collectionUnitName2);
+            provider.setDataCollection(Arrays.asList(dc, dc2));
+
+            // Recommendations
+            Path recommendationsJsonFile = new File(TestUtils.TEST_RESOURCES_DIR,
+                    "assessmentUnits/NewYork/recommendations_2targets.json").toPath();
+            UTRecommendation recommendation = TestUtils.buildRecommendationsJsonObj(recommendationsJsonFile);
+            Path recommendationsJsonFile2 = new File(TestUtils.TEST_RESOURCES_DIR,
+                    "assessmentUnits/London/recommendations_2targets.json").toPath();
+            UTRecommendation recommendation2 = TestUtils.buildRecommendationsJsonObj(recommendationsJsonFile2);
+            provider.setRecommendations(Arrays.asList(recommendation, recommendation2));
+
+            /************************************
+             * target option specified in CLI with multiple targets
+             ************************************/
+            List<String> cliCommands = new LinkedList<>(Arrays.asList(CliInputCommand.CMD_ASSESS, "--target", "OPEN_LIBERTY;WAS_LIBERTY", "dataPath"));
+            TestUtils.runPluginCommand(provider, cliCommands);
+
+            // Assert collection unit 1 output
+            assertCollection(collectionUnitName1, Arrays.asList("NewYork"), new HashMap<>());
+
+            // Assert collection unit 2 output
+            assertCollection(collectionUnitName2, Arrays.asList("London"), new HashMap<>());
+
+            // Assert recommendations.json for collection unit 1
+            assertRecommendationsJson(collectionUnitName1, recommendationsJsonFile);
+
+            // Assert recommendations.json for collection unit 2
+            assertRecommendationsJson(collectionUnitName2, recommendationsJsonFile2);
+
+            /************************************
+             * No target option specified in CLI
+             ************************************/
+            cleanUp();
+            cliCommands = new LinkedList<>(Arrays.asList(CliInputCommand.CMD_ASSESS, "dataPath"));
+            TestUtils.runPluginCommand(provider, cliCommands);
+
+            // Assert recommendations.json for collection unit 1
+            assertRecommendationsJson(collectionUnitName1, recommendationsJsonFile);
+
+            // Assert recommendations.json for collection unit 2
+            assertRecommendationsJson(collectionUnitName2, recommendationsJsonFile2);
+
+            /************************************
+             * target option specified in CLI with null value
+             ************************************/
+            cleanUp();
+            cliCommands = new LinkedList<>(Arrays.asList(CliInputCommand.CMD_ASSESS, "--target", "", "dataPath"));
+            TestUtils.runPluginCommand(provider, cliCommands);
+
+            // Assert recommendations.json for collection unit 1
+            assertRecommendationsJson(collectionUnitName1, recommendationsJsonFile);
+
+            // Assert recommendations.json for collection unit 2
+            assertRecommendationsJson(collectionUnitName2, recommendationsJsonFile2);
+
+            /************************************
+             * target option specified in CLI with single target
+             ************************************/
+            cliCommands = new LinkedList<>(Arrays.asList(CliInputCommand.CMD_ASSESS, "--target", "WAS_LIBERTY", "dataPath"));
+            TestUtils.runPluginCommand(provider, cliCommands);
+
+            // Assert recommendations.json for collection unit 1
+            File recommendations1File = new File(TEST_OUTPUT_DIR, collectionUnitName1 + File.separator + RECOMMENDATIONS_JSON);
+            JsonObject rec1Json = getJson(recommendations1File.toPath()).getAsJsonObject();
+            JsonArray rec1Aus = rec1Json.get("assessmentUnits").getAsJsonArray();
+            assertEquals(1, rec1Aus.size());
+            JsonArray rec1Targets = rec1Aus.get(0).getAsJsonObject().get("targets").getAsJsonArray();
+            assertEquals(1, rec1Targets.size());
+            assertEquals("WAS_LIBERTY", rec1Targets.get(0).getAsJsonObject().get("id").getAsString());
+
+            // Assert recommendations.json for collection unit 1
+            File recommendations2File = new File(TEST_OUTPUT_DIR, collectionUnitName2 + File.separator + RECOMMENDATIONS_JSON);
+            JsonObject rec2Json = getJson(recommendations2File.toPath()).getAsJsonObject();
+            JsonArray rec2Aus = rec2Json.get("assessmentUnits").getAsJsonArray();
+            assertEquals(1, rec2Aus.size());
+            JsonArray rec2Targets = rec2Aus.get(0).getAsJsonObject().get("targets").getAsJsonArray();
+            assertEquals(1, rec2Targets.size());
+            assertEquals("WAS_LIBERTY", rec2Targets.get(0).getAsJsonObject().get("id").getAsString());
+
+
+            /************************************
+             * target option specified in CLI with no matching target
+             ************************************/
+            cliCommands = new LinkedList<>(Arrays.asList(CliInputCommand.CMD_ASSESS, "--target", "TARGET_NOT_FOUND", "dataPath"));
+            TestUtils.runPluginCommand(provider, cliCommands);
+
+            // Assert recommendations.json for collection unit 1
+            rec1Json = getJson(recommendations1File.toPath()).getAsJsonObject();
+            rec1Aus = rec1Json.get("assessmentUnits").getAsJsonArray();
+            assertEquals(1, rec1Aus.size());
+            assertNull(rec1Aus.get(0).getAsJsonObject().get("targets"));
+
+            // Assert recommendations.json for collection unit 2
+            rec2Json = getJson(recommendations2File.toPath()).getAsJsonObject();
+            rec2Aus = rec2Json.get("assessmentUnits").getAsJsonArray();
+            assertEquals(1, rec2Aus.size());
+            assertNull(rec2Aus.get(0).getAsJsonObject().get("targets"));
         } catch (Exception e) {
             throw new AssertionFailedError("Error with assess command for multiple DataCollections:", e);
         }

@@ -6,16 +6,16 @@
 
 package com.ibm.ta.sdk.core.report;
 
+import com.google.gson.JsonArray;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class TargetReport {
 
-    private String productName;
-    private String productVersion;
+    private String id;
     private String runtime;
-    private String platform;
-    private String location;
+    private JsonArray dimensions;
     private String overallComplexityScore;
     private int numberOfRedIssues = 0;
     private int numberOfYellowIssues = 0;
@@ -23,12 +23,10 @@ public class TargetReport {
 
     private List<IssuesSameCategory> issuesSameCategories = new ArrayList<>();
 
-    public TargetReport(String productName, String productVersion, String runtime, String platform, String location, String overallComplexityScore, int numberOfRedIssues, int numberOfYellowIssues, int numberOfGreenIssues){
-        this.productName = productName;
-        this.productVersion =productVersion;
+    public TargetReport(String id, String runtime, JsonArray dimensions, String overallComplexityScore, int numberOfRedIssues, int numberOfYellowIssues, int numberOfGreenIssues){
+        this.id = id;
         this.runtime = runtime;
-        this.platform = platform;
-        this.location = location;
+        this.dimensions = dimensions;
         this.numberOfRedIssues = numberOfRedIssues;
         this.numberOfYellowIssues = numberOfYellowIssues;
         this.numberOfGreenIssues = numberOfGreenIssues;
@@ -39,25 +37,18 @@ public class TargetReport {
         issuesSameCategories.add(issueSameCategory);
     }
 
-    public String getProductName() {
-        return productName;
+    public String getId() {
+        return id;
     }
 
-    public String getProductVersion() {
-        return productVersion;
-    }
 
     public String getRuntime() {
         return runtime;
     }
 
-    public String getPlatform() {
-            return platform;
+    public JsonArray getDimensions() {
+            return dimensions;
         }
-
-    public String getLocation() {
-        return location;
-    }
 
     public int getNumberOfRedIssues() {
         return numberOfRedIssues;
