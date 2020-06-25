@@ -1,7 +1,10 @@
 {
   "domain": "testDomain",
   "collectionUnitType": "Installation",
+  "collectionUnitTypeLabel":"Installation",
   "collectionUnitName": "TestCollectionUnit",
+  "assessmentUnitSingleLabel":"Assessment unit",
+  "assessmentUnitMultipleLabel":"Assessment units",
   "middleware": "testMiddleware",
   "version": "10.0",
   "complexityRules": [
