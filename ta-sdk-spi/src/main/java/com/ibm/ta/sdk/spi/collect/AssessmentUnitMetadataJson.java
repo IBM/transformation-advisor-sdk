@@ -27,16 +27,7 @@ public class AssessmentUnitMetadataJson {
   private String assessmentUnitName;
 
   @Expose
-  private String assessmentUnitSingleLabel;
-
-  @Expose
-  private String assessmentUnitMultipleLabel;
-
-  @Expose
   private String collectionUnitType;
-
-  @Expose
-  private String collectionUnitTypeLabel;
 
   @Expose
   private String collectionUnitName;
@@ -45,24 +36,19 @@ public class AssessmentUnitMetadataJson {
   private Properties identifier;
 
   public AssessmentUnitMetadataJson(String domain, String middleWare, String hostname, String assessmentUnitName,
-                                    String assessmentUnitSingleLabel, String assessmentUnitMultipleLabel,
-                                    String collectionUnitType, String collectionUnitName, String collectionUnitTypeLabel) {
+                                    String collectionUnitType, String collectionUnitName) {
     this.domain = domain;
     this.middleware = middleWare;
     this.host = hostname;
     this.assessmentUnitName = assessmentUnitName;
-    this.assessmentUnitSingleLabel = assessmentUnitSingleLabel;
-    this.assessmentUnitMultipleLabel = assessmentUnitMultipleLabel;
     this.collectionUnitType = collectionUnitType;
     this.collectionUnitName = collectionUnitName;
-    this.collectionUnitTypeLabel = collectionUnitTypeLabel;
     addIdentifier("assessmentUnitName", assessmentUnitName);
   }
 
   public AssessmentUnitMetadataJson(Environment env, String assessmentUnitName) {
-    this(env.getDomain(), env.getMiddlewareName(), env.getHostname(), assessmentUnitName, env.getAssessmentUnitSingleLabel(),
-            env.getAssessmentUnitMultipleLabel(), env.getCollectionUnitType(), env.getCollectionUnitName(),
-            env.getCollectionUnitTypeLabel());
+    this(env.getDomain(), env.getMiddlewareName(), env.getHostname(), assessmentUnitName,
+            env.getCollectionUnitType(), env.getCollectionUnitName());
   }
 
   public void addIdentifier(String key, Object value) {
