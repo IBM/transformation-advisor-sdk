@@ -14,6 +14,7 @@ import com.ibm.ta.sdk.core.assessment.GenericRecommendation;
 import com.ibm.ta.sdk.core.collect.GenericAssessmentUnit;
 import com.ibm.ta.sdk.core.collect.TextContextMask;
 import com.ibm.ta.sdk.core.report.RecommendationReporter;
+import com.ibm.ta.sdk.core.util.Constants;
 import com.ibm.ta.sdk.core.util.FreeMarkerTemplateResolver;
 import com.ibm.ta.sdk.core.util.GenericUtil;
 import com.ibm.ta.sdk.spi.collect.ContentMask;
@@ -24,6 +25,7 @@ import com.ibm.ta.sdk.spi.plugin.TAException;
 import com.ibm.ta.sdk.spi.recommendation.Recommendation;
 import com.ibm.ta.sdk.spi.report.Report;
 import com.ibm.ta.sdk.spi.util.Util;
+import com.ibm.ta.sdk.spi.validation.TaJsonFileValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,6 +44,20 @@ import static com.ibm.ta.sdk.core.util.Constants.*;
 
 public abstract class GenericPluginProvider implements PluginProvider {
   private static Logger logger = LogManager.getLogger(GenericPluginProvider.class.getName());
+
+  @Override
+  public void validateJsonFiles() throws TAException {
+    try {
+       getFileFromUri(getClass().getClassLoader().getResource(getMiddleware()).toURI());
+    } catch (Exception e) {
+      logger.error("cannot find middleware in class path. exception is: ", e);
+      throw new TAException("Command assess is not supported for plugin provider "+this.getClass()+
+              "\n        No middleware specific issue json files found in plugin provider ");
+    }
+    TaJsonFileValidator.validateIssue(getMiddleware() + File.separator + FILE_ISSUES_JSON);
+    TaJsonFileValidator.validateComplexity(getMiddleware() + File.separator + FILE_COMPLEXITIES_JSON);
+    TaJsonFileValidator.validateTarget(getMiddleware() + File.separator + FILE_TARGETS_JSON);
+  }
 
   @Override
   public String getVersion() {
@@ -211,13 +227,6 @@ public abstract class GenericPluginProvider implements PluginProvider {
     }
 
     JsonArray assessments = envJson.getAsJsonArray("assessmentUnits");
-    try {
-      getFileFromUri(getClass().getClassLoader()
-              .getResource(getMiddleware()+"/templates").toURI());
-    } catch (Exception e) {
-      throw new TAException("Command migrate is not supported for plugin provider "+this.getClass()+
-              "\n        No target template files found in plugin provider ");
-    }
     List<CliInputOption> assessNameOpts = migrateCommand.getOptions();
     List<String> assessNames = new ArrayList<>();
     if (assessNameOpts!=null && assessNameOpts.size()>0) {
@@ -234,5 +243,15 @@ public abstract class GenericPluginProvider implements PluginProvider {
           logger.warn("skip generate migration bundle for assessment unit " + assessName);
       }
     }
+  }
+
+  protected List<String> getCLIOptionValues(List<CliInputOption> options, String optionShotName) {
+    List<String> values = new ArrayList<>();
+    for (CliInputOption cliOption : options) {
+      if (cliOption.getShortArg().equals(optionShotName)){
+        values.add(cliOption.getValue());
+      }
+    }
+    return values;
   }
 }

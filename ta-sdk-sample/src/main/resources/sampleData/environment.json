@@ -1,16 +1,2 @@
 {
-  "domain": "IIB",
-  "operatingSystem": "RedHat Enterprise 7",
-  "hostName": "iib1.rtp.raleigh.ibm.com",
-  "middlewareName": "IIB",
-  "middlewareVersion": "10.0",
-  "middlewareInstallPath": "/opt/iib",
-  "middlewareDataPath": "/opt/iibdata",
-  "middlewareMetadata": {"feature": "drilling"},
-  "collectionUnitName": "Installation1",
-  "collectionUnitType": "Installation",
-  "collectionUnitTypeLabel": "Installation",
-  "assessmentUnitSingleLabel": "Integration server",
-  "assessmentUnitMultipleLabel": "Integration servers",
-  "assessmentMetadata": {"test": "value"}
 }

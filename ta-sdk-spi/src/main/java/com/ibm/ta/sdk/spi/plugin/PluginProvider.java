@@ -150,9 +150,5 @@ public interface PluginProvider {
    */
   void getMigrationBundle(CliInputCommand migrateCommand) throws TAException;
 
-  default void validateJsonFiles() throws TAException {
-    TaJsonFileValidator.validateIssue(getMiddleware()+"/issues.json");
-    TaJsonFileValidator.validateComplexity(getMiddleware()+"/complexities.json");
-    TaJsonFileValidator.validateTarget(getMiddleware()+"/targets.json");
-  }
+  void validateJsonFiles() throws TAException;
 }

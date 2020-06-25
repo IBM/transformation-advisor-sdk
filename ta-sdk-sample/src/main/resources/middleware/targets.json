@@ -1,0 +1,40 @@
+[
+  {
+    "id": "OPEN_LIBERTY",
+    "runtime": "openLiberty",
+    "dimensions": [
+      {
+        "name": "buildType",
+        "values": [
+          "source",
+          "binary"
+        ],
+        "defaultValue": "binary"
+      }
+    ],
+    "issueCategories": [
+      "exit",
+      "cluster",
+      "security"
+    ]
+  },
+  {
+    "id": "WAS_LIBERTY",
+    "runtime": "webSphereLiberty",
+    "dimensions": [
+      {
+        "name": "buildType",
+        "values": [
+          "source",
+          "binary"
+        ],
+        "defaultValue": "binary"
+      }
+    ],
+    "issues": [
+      "MQCL03",
+      "MQEXIT01"
+    ]
+  }
+]
+

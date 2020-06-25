@@ -78,7 +78,7 @@ public class FreeMarkerTemplateResolver {
                             new TypeToken<JsonObject>(){},
                             new File(assessmentUnitDir.getAbsolutePath()+File.separator+sFileName).toPath());
                     this.data.put(key,new Gson().fromJson(jsonContent, HashMap.class));
-                    logger.debug("insert to json file to data mode with key="+key);
+                    logger.debug("insert json file to data mode with key="+key);
                 } catch (IOException e) {
                     logger.error("error to load json file: "+sFileName, e);
                 }
@@ -136,7 +136,10 @@ public class FreeMarkerTemplateResolver {
         }
         for (String templateFileName : templateFiles) {
             logger.debug("template file is " + templateFileName);
-            String targetFileName = templateFileName.substring(0, templateFileName.lastIndexOf('.'));
+            String targetFileName = templateFileName;
+            if ( templateFileName.contains(".")) {
+                targetFileName = templateFileName.substring(0, templateFileName.lastIndexOf('.'));
+            }
             String targetFileType = templateFileName.substring(templateFileName.lastIndexOf('.')+1);
             File targetFile = new File (targetDir.getAbsolutePath()+File.separator+targetFileName);
             logger.debug("targetFileName type is " + targetFileType);
@@ -158,8 +161,14 @@ public class FreeMarkerTemplateResolver {
                     sourceFileName = contents.split("=")[1];
                 }
                 logger.debug("place holder source file name is " + sourceFileName);
-                Files.copy(new File(this.assessmentUnitDir.getAbsolutePath()+File.separator+sourceFileName).toPath(),
-                        targetFile.toPath());
+                File sourceFile = new File(this.assessmentUnitDir.getAbsolutePath()+File.separator+sourceFileName);
+                if (sourceFile.exists()) {
+                    Files.copy(sourceFile.toPath(), targetFile.toPath());
+                } else {
+                    logger.warn("cannot find the source file " + sourceFile.getAbsolutePath() +
+                            " of the placeholder file " + sourceFile + " in the collection.");
+                }
+
             } else {
                 //copy file to migration target dir
                 Path sourceFile = Paths.get(getClass().getClassLoader().getResource(templatesDir+templateFileName).toURI());

@@ -30,7 +30,7 @@
                                 <dependency>com.ibm.ta.sdk:ta-sdk-core</dependency>
                             </dependenciesToScan>
                             <systemPropertyVariables>
-                                <ta.sdk.middleware>sample</ta.sdk.middleware>
+                                <ta.sdk.middleware>middleware</ta.sdk.middleware>
                             </systemPropertyVariables>
                             <testFailureIgnore>true</testFailureIgnore>
                         </configuration>

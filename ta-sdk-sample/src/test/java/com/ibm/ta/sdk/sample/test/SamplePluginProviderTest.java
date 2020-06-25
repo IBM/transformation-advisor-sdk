@@ -24,9 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SamplePluginProviderTest {
 
-    static final String MIDDLEWARE_NAME = "sample";
-    static final String COLLECTION_UNIT_NAME = "Installation1";
-    static final String ASSESS_UNIT_NAME = "Plants.ear";
+    static final String MIDDLEWARE_NAME = "middleware";
+    static final String COLLECTION_UNIT_NAME = "collection1";
+    static final String ASSESS_UNIT_NAME = "assessmentUnit1";
     @BeforeEach
     void cleanOutpotDir() throws IOException {
         Path outputDir = Util.getOutputDir().toPath();
@@ -43,13 +43,13 @@ public class SamplePluginProviderTest {
         List<String> argus = new ArrayList<>();
         argus.add("collect");
         argus.add("test");
-        argus.add("test");
+        //argus.add("test");
         TADataCollector tadc = new TADataCollector();
         tadc.runCommand(MIDDLEWARE_NAME, argus);
         File outputDir = Util.getOutputDir();
         File[] directories = outputDir.listFiles(File::isDirectory);
-        assertEquals(directories.length, 1);
-        assertEquals(directories[0].getName(), COLLECTION_UNIT_NAME);
+        assertEquals(directories.length, 2);
+        //assertEquals(directories[0].getName(), COLLECTION_UNIT_NAME);
         File envFile = new File (directories[0]+File.separator+ Constants.ENVIRONMENT_JSON);
         assertTrue(envFile.exists());
         assertTrue(envFile.isFile());
@@ -63,13 +63,13 @@ public class SamplePluginProviderTest {
         List<String> argus = new ArrayList<>();
         argus.add("assess");
         argus.add("test");
-        argus.add("test");
+        //argus.add("test");
         TADataCollector tadc = new TADataCollector();
         tadc.runCommand(MIDDLEWARE_NAME, argus);
         File outputDir = Util.getOutputDir();
         File[] directories = outputDir.listFiles(File::isDirectory);
-        assertEquals(directories.length, 1);
-        assertEquals(directories[0].getName(), COLLECTION_UNIT_NAME);
+        assertEquals(directories.length, 2);
+        //assertEquals(directories[0].getName(), COLLECTION_UNIT_NAME);
         File envFile = new File (directories[0]+File.separator+ Constants.ENVIRONMENT_JSON);
         assertTrue(envFile.exists());
         assertTrue(envFile.isFile());
@@ -85,13 +85,13 @@ public class SamplePluginProviderTest {
         List<String> argus = new ArrayList<>();
         argus.add("run");
         argus.add("test");
-        argus.add("test");
+        //argus.add("test");
         TADataCollector tadc = new TADataCollector();
         tadc.runCommand(MIDDLEWARE_NAME, argus);
         File outputDir = Util.getOutputDir();
         File[] directories = outputDir.listFiles(File::isDirectory);
-        assertEquals(directories.length, 1);
-        assertEquals(directories[0].getName(), COLLECTION_UNIT_NAME);
+        assertEquals(directories.length, 2);
+        //assertEquals(directories[0].getName(), COLLECTION_UNIT_NAME);
         File envFile = new File (directories[0]+File.separator+ Constants.ENVIRONMENT_JSON);
         assertTrue(envFile.exists());
         assertTrue(envFile.isFile());
@@ -100,11 +100,11 @@ public class SamplePluginProviderTest {
         assertTrue(recommFile.exists());
         assertTrue(recommFile.isFile());
         assertTrue(recommFile.length() > 2);
-        File reportFile = new File (directories[0]+File.separator+ASSESS_UNIT_NAME+"/recommendations_OPEN_LIBERTY.html");
+        File reportFile = new File (outputDir+File.separator+COLLECTION_UNIT_NAME+File.separator+ASSESS_UNIT_NAME+"/recommendations_OPEN_LIBERTY.html");
         assertTrue(reportFile.exists());
         assertTrue(reportFile.isFile());
         assertTrue(reportFile.length() > 2);
-        File collectionFile = new File (outputDir+"/Installation1.zip");
+        File collectionFile = new File (outputDir+File.separator+COLLECTION_UNIT_NAME+".zip");
         assertTrue(collectionFile.exists());
         assertTrue(collectionFile.isFile());
         assertTrue(collectionFile.length() > 2);
@@ -115,7 +115,7 @@ public class SamplePluginProviderTest {
         List<String> argus = new ArrayList<>();
         argus.add("run");
         argus.add("test");
-        argus.add("test");
+        //argus.add("test");
         TADataCollector tadc = new TADataCollector();
         tadc.runCommand(MIDDLEWARE_NAME, argus);
         List<String> migrateArgus = new ArrayList<>();
@@ -124,11 +124,11 @@ public class SamplePluginProviderTest {
         tadc.runCommand(MIDDLEWARE_NAME, migrateArgus);
         File outputDir = Util.getOutputDir();
         String migrationBundleDir = outputDir+File.separator+COLLECTION_UNIT_NAME+File.separator+ASSESS_UNIT_NAME+"/migrationBundle/";
-        File bundleZipFile = new File (migrationBundleDir+"Plants.ear_ACE.zip");
+        File bundleZipFile = new File (migrationBundleDir+ASSESS_UNIT_NAME+"_OpenShift.zip");
         assertTrue(bundleZipFile.exists());
         assertTrue(bundleZipFile.isFile());
         assertTrue(bundleZipFile.length() > 2);
-        File bundleDir = new File (migrationBundleDir+"ACE/");
+        File bundleDir = new File (migrationBundleDir+"OpenShift/");
         assertTrue(bundleDir.exists());
         assertTrue(bundleDir.isDirectory());
         File pomFile = new File(bundleDir.getAbsolutePath()+File.separator+"pom.xml");
@@ -138,7 +138,7 @@ public class SamplePluginProviderTest {
         String pomFileContent = GenericUtil.readFileToString(pomFile.toPath());
         assertFalse(pomFileContent.contains("[="));
         assertTrue(pomFileContent.contains("project.artifactId"));
-        assertTrue(pomFileContent.contains("Plants.ear"));
+        assertTrue(pomFileContent.contains(ASSESS_UNIT_NAME));
         File dockerFile = new File(bundleDir.getAbsolutePath()+File.separator+"Dockerfile");
         assertTrue(dockerFile.exists());
         assertTrue(dockerFile.isFile());
@@ -146,7 +146,7 @@ public class SamplePluginProviderTest {
         String dockerFileContent = GenericUtil.readFileToString(dockerFile.toPath());
         assertFalse(dockerFileContent.contains("[="));
         assertTrue(dockerFileContent.contains("2.1"));
-        assertTrue(dockerFileContent.contains("Plants.ear"));
+        assertTrue(dockerFileContent.contains(ASSESS_UNIT_NAME));
         File jvmFile = new File(bundleDir.getAbsolutePath()+File.separator+"jvm.options");
         assertTrue(jvmFile.exists());
         assertTrue(jvmFile.isFile());
