@@ -4,7 +4,7 @@
   "title": "Targets",
   "description": "Migration targets used in the recommandation",
   "definitions": {
-    "ModDimensions": {
+    "ModDimension": {
       "type": "object",
       "properties": {
         "name": {
@@ -24,27 +24,38 @@
         "values",
         "defaultValue"
       ]
+    },
+    "Target": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "description": "Identifier for the target",
+          "type": "string"
+        },
+        "dimensions": {
+          "description": "Mod dimensions for the target",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ModDimension"
+          }
+        }
+      },
+      "required": [
+        "target"
+      ]
     }
   },
-  "type": "array",
-  "minItems": 1,
-  "items": {
-    "type": "object",
-    "properties": {
-      "target": {
-        "description": "Identifier for the target",
-        "type": "string"
-      },
-      "dimensions": {
-        "description": "Mod dimensions for the target",
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/ModDimensions"
-        }
+  "type": "object",
+  "properties": {
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/Target"
       }
-    },
-    "required": [
-      "target"
-    ]
-  }
+    }
+  },
+  "required": [
+    "targets"
+  ]
 }

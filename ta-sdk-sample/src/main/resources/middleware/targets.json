@@ -1,38 +1,40 @@
-[
-  {
-    "target": "OPEN_LIBERTY",
-    "dimensions": [
-      {
-        "name": "buildType",
-        "values": [
-          "source",
-          "binary"
-        ],
-        "defaultValue": "binary"
-      }
-    ],
-    "issueCategories": [
-      "exit",
-      "cluster",
-      "security"
-    ]
-  },
-  {
-    "target": "WAS_LIBERTY",
-    "dimensions": [
-      {
-        "name": "buildType",
-        "values": [
-          "source",
-          "binary"
-        ],
-        "defaultValue": "binary"
-      }
-    ],
-    "issues": [
-      "MQCL03",
-      "MQEXIT01"
-    ]
-  }
-]
+{
+  "targets": [
+    {
+      "target": "MQ_A",
+      "dimensions": [
+        {
+          "name": "buildType",
+          "values": [
+            "source",
+            "binary"
+          ],
+          "defaultValue": "binary"
+        }
+      ],
+      "issueCategories": [
+        "exit",
+        "cluster",
+        "security"
+      ]
+    },
+    {
+      "target": "MQ_B",
+      "dimensions": [
+        {
+          "name": "buildType",
+          "values": [
+            "source",
+            "binary"
+          ],
+          "defaultValue": "binary"
+        }
+      ],
+      "issues": [
+        "MQCL03",
+        "MQEXIT01"
+      ]
+    }
+  ]
+}
 

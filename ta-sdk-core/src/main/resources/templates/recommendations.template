@@ -331,12 +331,14 @@
         <tr class="results">
           <th class="col2thru12">Product Name</th>
           <th class="col2thru12">Product Version</th>
+          <th class="col2thru12">Target</th>
         </tr>
         </thead>
         <tbody>
           <tr>
             <td class="col2thru12">{PRODUCT_NAME}</td>
             <td class="col2thru12">{PRODUCT_VERSION}</td>
+            <td class="col2thru12">{TARGET_COLUMN}</td>
         </tbody>
       </table>
     </div>

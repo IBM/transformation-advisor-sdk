@@ -1,6 +1,8 @@
-[
-  {
-    "id": "OPEN_LIBERTY",
-    "runtime": "Open Liberty"
-  }
-]
+{
+  "targets": [
+    {
+      "id": "OPEN_LIBERTY",
+      "runtime": "Open Liberty"
+    }
+  ]
+}

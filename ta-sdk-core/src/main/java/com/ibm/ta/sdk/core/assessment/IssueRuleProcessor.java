@@ -41,8 +41,8 @@ public class IssueRuleProcessor {
     // Build a map of the list of issues in each issue category
     issueRulesMap = new HashMap<>();
     issueCatIssueRulesMap = new HashMap<>();
-    JsonArray issueRulesJson = new JsonParser().parse(issuesJson).getAsJsonArray();
-    for (Iterator it = issueRulesJson.iterator(); it.hasNext(); ) {
+    JsonObject issueRulesJson = new JsonParser().parse(issuesJson).getAsJsonObject();
+    for (Iterator it = issueRulesJson.get("issues").getAsJsonArray().iterator(); it.hasNext(); ) {
       JsonObject issueRule = (JsonObject) it.next();
       String issueRuleId = issueRule.get("id").getAsString();
       String issueRuleCat = issueRule.get("category").getAsString();

@@ -7,6 +7,8 @@
 package com.ibm.ta.sdk.core.assessment;
 
 import com.google.gson.reflect.TypeToken;
+import com.ibm.ta.sdk.core.assessment.json.ComplexitiesJson;
+import com.ibm.ta.sdk.core.assessment.json.TargetsJson;
 import com.ibm.ta.sdk.core.util.GenericUtil;
 import com.ibm.ta.sdk.spi.plugin.TAException;
 import com.ibm.ta.sdk.spi.collect.AssessmentUnit;
@@ -41,13 +43,13 @@ public class GenericRecommendation implements Recommendation {
     this.assessmentName = assessmentName;
 
     // Complexity
-    List<ComplexityContributionJson> ccList = GenericUtil.getJsonObj(new TypeToken<List<ComplexityContributionJson>>(){}, complexityFile);
-    complexityRules.addAll(ComplexityContributionJson.getComplexityContributionList(ccList));
+    ComplexitiesJson ccList = GenericUtil.getJsonObj(new TypeToken<ComplexitiesJson>(){}, complexityFile);
+    complexityRules.addAll(ComplexityContributionJson.getComplexityContributionList(ccList.getComplexities()));
 
     // Targets
     TaJsonFileValidator.validateTarget(Files.newInputStream(targetsFile));
-    List<GenericTarget> _targets = GenericUtil.getJsonObj(new TypeToken<List<GenericTarget>>(){}, targetsFile);
-    targets.addAll(_targets);
+    TargetsJson _targets = GenericUtil.getJsonObj(new TypeToken<TargetsJson>(){}, targetsFile);
+    targets.addAll(_targets.getTargets());
 
     // Issue Categories
     Map<String, IssueCategoryJson> icMap = GenericUtil.getJsonObj(new TypeToken<Map<String, IssueCategoryJson>>(){}, issuesCatFile);

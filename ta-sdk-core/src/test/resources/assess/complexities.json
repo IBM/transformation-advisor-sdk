@@ -1,20 +1,22 @@
-[
-  {
-    "id": "dns",
-    "name": "DNS Reconfiguration",
-    "description": "Issues that require DNS reconfiguration",
-    "complexityContribution": "simple",
-    "issues": [
-      "MQCL01"
-    ]
-  },
-  {
-    "id": "cluster",
-    "name": "Cluster Reconfiguration",
-    "description": "Issues that require cluster reconfiguration",
-    "complexityContribution": "moderate",
-    "issuesCategory": [
-      "cluster"
-    ]
-  }
-]
+{
+  "complexities": [
+    {
+      "id": "dns",
+      "name": "DNS Reconfiguration",
+      "description": "Issues that require DNS reconfiguration",
+      "complexityContribution": "simple",
+      "issues": [
+        "MQCL01"
+      ]
+    },
+    {
+      "id": "cluster",
+      "name": "Cluster Reconfiguration",
+      "description": "Issues that require cluster reconfiguration",
+      "complexityContribution": "moderate",
+      "issuesCategory": [
+        "cluster"
+      ]
+    }
+  ]
+}

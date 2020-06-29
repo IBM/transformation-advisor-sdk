@@ -35,10 +35,7 @@ public class RecommendationReporter implements ReportGenerator {
     private static final String ASSESSMENT_UNIT_NAME_VAR = "{ASSESSMENT_UNIT_NAME}";
     private static final String PRODUCT_NAME_VAR = "{PRODUCT_NAME}";
     private static final String PRODUCT_VERSION_VAR = "{PRODUCT_VERSION}";
-    private static final String RUNTIME_COLUMN_VAR = "{RUNTIME_COLUMN}";
-    private static final String RUNTIME_HEADER_VAR = "{RUNTIME_HEADER}";
-    private static final String PLATFORM_VAR = "{PLATFORM}";
-    private static final String LOCATION_VAR = "{LOCATION}";
+    private static final String TARGET_COLUMN_VAR = "{TARGET_COLUMN}";
     private static final String OVERALL_COMPLEXITY_SCORE_VAR = "{OVERALL_COMPLEXITY_SCORE}";
     private static final String NUM_OF_RED_ISSUES_VAR = "{NUM_OF_RED_ISSUES}";
     private static final String NUM_OF_YELLOW_ISSUES_VAR = "{NUM_OF_YELLOW_ISSUES}";
@@ -141,6 +138,7 @@ public class RecommendationReporter implements ReportGenerator {
         String resultStr = templateStr.replace(ASSESSMENT_UNIT_NAME_VAR, assessmentUnitName);
         resultStr = resultStr.replace(PRODUCT_NAME_VAR, middleware);
         resultStr = resultStr.replace(PRODUCT_VERSION_VAR, version);
+        resultStr = resultStr.replace(TARGET_COLUMN_VAR, target.getTargetId());
         resultStr = resultStr.replace(OVERALL_COMPLEXITY_SCORE_VAR, target.getOverallComplexityScore());
         resultStr = resultStr.replace(NUM_OF_RED_ISSUES_VAR, new Integer(target.getNumberOfRedIssues()).toString());
         resultStr = resultStr.replace(NUM_OF_YELLOW_ISSUES_VAR, new Integer(target.getNumberOfYellowIssues()).toString());
