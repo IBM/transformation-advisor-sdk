@@ -135,13 +135,12 @@ public class RecommendationReporter implements ReportGenerator {
 
     private Report generateHTMLForOneTarget(String middleware, String version, String assessmentUnitName,
                 TargetReport target, String templateStr, List<Map<String, String>> issueCategories) throws TAException {
-        String id = target.getId();
+        String id = target.getTargetId();
         String targetId = assessmentUnitName + "-" + id;
 
         String resultStr = templateStr.replace(ASSESSMENT_UNIT_NAME_VAR, assessmentUnitName);
         resultStr = resultStr.replace(PRODUCT_NAME_VAR, middleware);
         resultStr = resultStr.replace(PRODUCT_VERSION_VAR, version);
-        resultStr = resultStr.replace(RUNTIME_COLUMN_VAR, target.getRuntime());
         resultStr = resultStr.replace(OVERALL_COMPLEXITY_SCORE_VAR, target.getOverallComplexityScore());
         resultStr = resultStr.replace(NUM_OF_RED_ISSUES_VAR, new Integer(target.getNumberOfRedIssues()).toString());
         resultStr = resultStr.replace(NUM_OF_YELLOW_ISSUES_VAR, new Integer(target.getNumberOfYellowIssues()).toString());
@@ -165,13 +164,8 @@ public class RecommendationReporter implements ReportGenerator {
 
         com.ibm.ta.sdk.spi.recommendation.Target targetResult = new com.ibm.ta.sdk.spi.recommendation.Target(){
             @Override
-            public String getId() {
-                return target.getId();
-            }
-
-            @Override
-            public String getRuntime() {
-                return target.getRuntime();
+            public String getTargetId() {
+                return target.getTargetId();
             }
 
             @Override
@@ -382,9 +376,7 @@ public class RecommendationReporter implements ReportGenerator {
             JsonArray targetsJA = (JsonArray) assessmentUnitsJO.get("targets");
             for (Object targetObj : targetsJA) {
                 JsonObject targetJO = (JsonObject) targetObj;
-                String id = targetJO.get("id")== null? "": targetJO.get("id").getAsString();
-                String runtime = targetJO.get("runtime") == null? "": targetJO.get("runtime").getAsString();
-                JsonArray dimensions = targetJO.get("dimensions").isJsonNull() ? null : targetJO.get("dimensions").getAsJsonArray();
+                String id = targetJO.get("target")== null? "": targetJO.get("target").getAsString();
                 JsonObject summary = (JsonObject) targetJO.get("summary");
                 JsonObject issuesInSummary = (JsonObject) summary.get("issues");
                 int numOfRedIssues = issuesInSummary.get("severe") == null ? 0 : issuesInSummary.get("severe").getAsInt();
@@ -402,7 +394,7 @@ public class RecommendationReporter implements ReportGenerator {
 
                 JsonObject complexity = (JsonObject) summary.get("complexity");
                 String overallComplexityScore = complexity.get("score").getAsString();
-                TargetReport target = new TargetReport(id, runtime, dimensions, overallComplexityScore, numOfRedIssues, numOfYellowIssues, numOfGreenIssues);
+                TargetReport target = new TargetReport(id, new JsonArray(), overallComplexityScore, numOfRedIssues, numOfYellowIssues, numOfGreenIssues);
 
                 JsonObject issuesJO = (JsonObject) targetJO.get("issues");
                 Set<String> issuesKeySet = issuesJO.keySet();
@@ -456,7 +448,7 @@ public class RecommendationReporter implements ReportGenerator {
             List<Report> generatedHTMLs = reporter.generateHTMLReports();
             System.out.print("generated HTML files are: ");
             for (Report generatedHTML : generatedHTMLs){
-                String htmlFileName = "/Users/jgao/ta/features/RecommendationConvertingTool/Installation4/unitTestingOutput/" + generatedHTML.getAssessmentUnitName() + "-" + generatedHTML.getAssessmentUnitName() + "-" + generatedHTML.getTarget().getId() + ".html";
+                String htmlFileName = "/Users/jgao/ta/features/RecommendationConvertingTool/Installation4/unitTestingOutput/" + generatedHTML.getAssessmentUnitName() + "-" + generatedHTML.getAssessmentUnitName() + "-" + generatedHTML.getTarget().getTargetId() + ".html";
                 System.out.print(htmlFileName + " ");
                 writeUsingOutputStream(generatedHTML.getReport(), htmlFileName);
             }

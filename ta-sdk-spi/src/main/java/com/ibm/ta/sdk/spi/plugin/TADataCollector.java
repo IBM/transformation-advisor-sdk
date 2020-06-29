@@ -341,8 +341,7 @@ public class TADataCollector {
       List<Report> reports = provider.getReport(assessmentName, cliInputCommand);
       for (Report report : reports) {
         Target target = report.getTarget();
-        List<ModDimension> dims = target.getDimensions();
-        String reportName = "recommendations_" + target.getId() +
+        String reportName = "recommendations_" + target.getTargetId() +
                 "." + report.getReportType().toString().toLowerCase();
 
         // Report path

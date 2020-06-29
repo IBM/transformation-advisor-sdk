@@ -15,7 +15,7 @@ import java.util.List;
 
 public class GenericTarget implements Target {
   @Expose
-  private String id;
+  private String target;
 
   @Expose
   private String runtime;
@@ -30,13 +30,8 @@ public class GenericTarget implements Target {
   private List<String> issueCategories;
 
   @Override
-  public String getId() {
-    return id;
-  }
-
-  @Override
-  public String getRuntime() {
-    return runtime;
+  public String getTargetId() {
+    return target;
   }
 
   @Override

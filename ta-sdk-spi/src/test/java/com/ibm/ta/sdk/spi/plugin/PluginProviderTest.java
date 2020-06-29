@@ -509,7 +509,7 @@ public class PluginProviderTest {
             assertEquals(1, rec1Aus.size());
             JsonArray rec1Targets = rec1Aus.get(0).getAsJsonObject().get("targets").getAsJsonArray();
             assertEquals(1, rec1Targets.size());
-            assertEquals("WAS_LIBERTY", rec1Targets.get(0).getAsJsonObject().get("id").getAsString());
+            assertEquals("WAS_LIBERTY", rec1Targets.get(0).getAsJsonObject().get("target").getAsString());
 
             // Assert recommendations.json for collection unit 1
             File recommendations2File = new File(TEST_OUTPUT_DIR, collectionUnitName2 + File.separator + RECOMMENDATIONS_JSON);
@@ -518,7 +518,7 @@ public class PluginProviderTest {
             assertEquals(1, rec2Aus.size());
             JsonArray rec2Targets = rec2Aus.get(0).getAsJsonObject().get("targets").getAsJsonArray();
             assertEquals(1, rec2Targets.size());
-            assertEquals("WAS_LIBERTY", rec2Targets.get(0).getAsJsonObject().get("id").getAsString());
+            assertEquals("WAS_LIBERTY", rec2Targets.get(0).getAsJsonObject().get("target").getAsString());
 
 
             /************************************

@@ -50,10 +50,10 @@ public class TargetTest {
             assertEquals(2, targets.size());
 
             Target target1 = targets.get(0);
-            assertEquals("OPEN_LIBERTY", target1.getId());
+            assertEquals("OPEN_LIBERTY", target1.getTargetId());
 
             Target target2 = targets.get(1);
-            assertEquals("WAS_LIBERTY", target2.getId());
+            assertEquals("WAS_LIBERTY", target2.getTargetId());
         } catch (IOException | TAException e) {
             throw new AssertionFailedError("Error generating recommendations", e);
         }

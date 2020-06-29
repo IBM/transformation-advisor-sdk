@@ -19,9 +19,7 @@ import java.util.*;
 public class RecommendationJson {
   private static final String REC_ATTR_QM_NAME = "name";
   private static final String ASS_ATTR_TARGET = "targets";
-  private static final String ASS_ATTR_TARGET_ID = "id";
-  private static final String ASS_ATTR_TARGET_RUNTIME  = "runtime";
-  private static final String ASS_ATTR_TARGET_DIMENSIONS  = "dimensions";
+  private static final String ASS_ATTR_TARGET_ID = "target";
   private static final String ASS_ATTR_ISSUES = "issues";
   private static final String ASS_ATTR_SUMMARY = "summary";
   private static final String ASS_SUMMARY_COMPLEXITY = "complexity";
@@ -96,7 +94,7 @@ public class RecommendationJson {
       for (Target target : recommendation.getTargets()) {
         // Check if target is to be included
         if (!isIncludeTarget(target, filterTargets)) {
-          logger.debug("Skipping target ID:" + target.getId());
+          logger.debug("Skipping target ID:" + target.getTargetId());
           continue;
         }
 
@@ -145,7 +143,7 @@ public class RecommendationJson {
     if (targetIdList == null || targetIdList.isEmpty()) {
       return true;
     }
-    return targetIdList.contains(target.getId());
+    return targetIdList.contains(target.getTargetId());
   }
 
   private Map<String, Object> getAssessmentUnit(Target target, AssessmentUnit au, Map<String, List<Issue>>  issuesMap) {
@@ -156,12 +154,7 @@ public class RecommendationJson {
     Map<String, Object> targetMap = new LinkedHashMap<String, Object>();
     targetList.add(targetMap);
 
-    targetMap.put(ASS_ATTR_TARGET_ID, target.getId());
-    String targetRuntime = target.getRuntime();
-    if (targetRuntime != null && !targetRuntime.equals("")) {
-      targetMap.put(ASS_ATTR_TARGET_RUNTIME, target.getRuntime());
-    }
-    targetMap.put(ASS_ATTR_TARGET_DIMENSIONS, target.getDimensions());
+    targetMap.put(ASS_ATTR_TARGET_ID, target.getTargetId());
 
     targetMap.put(ASS_ATTR_ISSUES, issuesMap);
     targetMap.put(ASS_ATTR_SUMMARY, getAssessmentSummary(issuesMap));

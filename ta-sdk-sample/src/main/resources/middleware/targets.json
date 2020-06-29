@@ -1,7 +1,6 @@
 [
   {
-    "id": "OPEN_LIBERTY",
-    "runtime": "openLiberty",
+    "target": "OPEN_LIBERTY",
     "dimensions": [
       {
         "name": "buildType",
@@ -19,8 +18,7 @@
     ]
   },
   {
-    "id": "WAS_LIBERTY",
-    "runtime": "webSphereLiberty",
+    "target": "WAS_LIBERTY",
     "dimensions": [
       {
         "name": "buildType",

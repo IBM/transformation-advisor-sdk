@@ -45,13 +45,8 @@ public class UTRecommendation extends RecommendationJson implements Recommendati
         return targetMapList.stream()
                 .map(targetMap -> new Target() {
                     @Override
-                    public String getId() {
-                       return (String) targetMap.get("id");
-                    }
-
-                    @Override
-                    public String getRuntime() {
-                        return (String) targetMap.get("runtime");
+                    public String getTargetId() {
+                       return (String) targetMap.get("target");
                     }
 
                     @Override
@@ -76,8 +71,7 @@ public class UTRecommendation extends RecommendationJson implements Recommendati
         if (au != null) {
             List<Map<String, Object>> targetMapList = (List<Map<String, Object>> ) au.get("targets");
             for (Map<String, Object> targetMap : targetMapList) {
-                if (target.getId().equals(targetMap.get("id")) &&
-                        target.getRuntime().equals(targetMap.get("runtime"))) {
+                if (target.getTargetId().equals(targetMap.get("target"))) {
                     Map<String, List<Map>> issues  = (Map<String, List<Map>>) targetMap.get("issues");
                     for (String key: issues.keySet()) {
                         for (Map issue : issues.get(key)) {

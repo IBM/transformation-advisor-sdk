@@ -13,8 +13,7 @@ import java.util.List;
 
 public class TargetReport {
 
-    private String id;
-    private String runtime;
+    private String target;
     private JsonArray dimensions;
     private String overallComplexityScore;
     private int numberOfRedIssues = 0;
@@ -23,9 +22,9 @@ public class TargetReport {
 
     private List<IssuesSameCategory> issuesSameCategories = new ArrayList<>();
 
-    public TargetReport(String id, String runtime, JsonArray dimensions, String overallComplexityScore, int numberOfRedIssues, int numberOfYellowIssues, int numberOfGreenIssues){
-        this.id = id;
-        this.runtime = runtime;
+    public TargetReport(String targetId, JsonArray dimensions, String overallComplexityScore, int numberOfRedIssues,
+                        int numberOfYellowIssues, int numberOfGreenIssues){
+        this.target = targetId;
         this.dimensions = dimensions;
         this.numberOfRedIssues = numberOfRedIssues;
         this.numberOfYellowIssues = numberOfYellowIssues;
@@ -37,18 +36,13 @@ public class TargetReport {
         issuesSameCategories.add(issueSameCategory);
     }
 
-    public String getId() {
-        return id;
-    }
-
-
-    public String getRuntime() {
-        return runtime;
+    public String getTargetId() {
+        return target;
     }
 
     public JsonArray getDimensions() {
-            return dimensions;
-        }
+        return dimensions;
+    }
 
     public int getNumberOfRedIssues() {
         return numberOfRedIssues;

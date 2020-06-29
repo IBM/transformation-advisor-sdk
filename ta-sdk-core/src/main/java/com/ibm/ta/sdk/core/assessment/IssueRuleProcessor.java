@@ -86,7 +86,7 @@ public class IssueRuleProcessor {
       if (issueRuleJson != null) {
         issueRulesJson.add(issueRuleJson);
       } else {
-        logger.warn("Issue " + issueRuleJson + " in target " + target.getId() + " not found.");
+        logger.warn("Issue " + issueRuleJson + " in target " + target.getTargetId() + " not found.");
       }
     }
 

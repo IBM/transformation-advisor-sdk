@@ -9,9 +9,7 @@ package com.ibm.ta.sdk.spi.recommendation;
 import java.util.List;
 
 public interface Target {
-  String getId();
-
-  String getRuntime();
+  String getTargetId();
 
   List<ModDimension> getDimensions();
 }

@@ -31,12 +31,8 @@
   "items": {
     "type": "object",
     "properties": {
-      "id": {
+      "target": {
         "description": "Identifier for the target",
-        "type": "string"
-      },
-      "runtime": {
-        "description": "Runtime for the target",
         "type": "string"
       },
       "dimensions": {
@@ -48,8 +44,7 @@
       }
     },
     "required": [
-      "id",
-      "runtime"
+      "target"
     ]
   }
 }

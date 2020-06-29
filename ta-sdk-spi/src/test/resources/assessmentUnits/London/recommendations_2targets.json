@@ -1,7 +1,10 @@
 {
   "domain": "testDomain",
   "collectionUnitType": "Installation",
+  "collectionUnitTypeLabel":"Installation",
   "collectionUnitName": "TestCollectionUnit2",
+  "assessmentUnitSingleLabel":"Assessment unit",
+  "assessmentUnitMultipleLabel":"Assessment units",
   "middleware": "testMiddleware",
   "version": "10.0",
   "complexityRules": [
@@ -58,18 +61,7 @@
       "name": "London",
       "targets": [
         {
-          "id": "OPEN_LIBERTY",
-          "runtime": "Open Liberty",
-          "dimensions" : [
-            {
-              "name": "buildType",
-              "values": [
-                "source",
-                "binary"
-              ],
-              "defaultValue": "binary"
-            }
-            ],
+          "target": "OPEN_LIBERTY",
           "issues": {
             "cluster": [
               {
@@ -247,18 +239,7 @@
           }
         },
         {
-          "id": "WAS_LIBERTY",
-          "runtime": "WebSphere Liberty",
-          "dimensions" : [
-            {
-              "name": "buildType",
-              "values": [
-                "source",
-                "binary"
-              ],
-              "defaultValue": "source"
-            }
-          ],
+          "target": "WAS_LIBERTY",
           "issues": {
             "cluster": [
               {

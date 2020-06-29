@@ -32,14 +32,8 @@
     "Target": {
       "type": "object",
       "properties": {
-        "id": {
+        "target": {
           "type": "string"
-        },
-        "runtime": {
-          "type": "string"
-        },
-        "dimensions": {
-          "type": "array"
         },
         "issues": {
           "$ref": "#/definitions/TargetIssues"
@@ -49,8 +43,7 @@
         }
       },
       "required": [
-        "id",
-        "runtime",
+        "target",
         "issues",
         "summary"
       ],
