@@ -1,7 +1,7 @@
 {
   "targets": [
     {
-      "target": "MQ_A",
+      "target": "Target_A",
       "dimensions": [
         {
           "name": "buildType",
@@ -19,7 +19,7 @@
       ]
     },
     {
-      "target": "MQ_B",
+      "target": "Target_B",
       "dimensions": [
         {
           "name": "buildType",

@@ -100,7 +100,7 @@ public class SamplePluginProviderTest {
         assertTrue(recommFile.exists());
         assertTrue(recommFile.isFile());
         assertTrue(recommFile.length() > 2);
-        File reportFile = new File (outputDir+File.separator+COLLECTION_UNIT_NAME+File.separator+ASSESS_UNIT_NAME+"/recommendations_MQ_A.html");
+        File reportFile = new File (outputDir+File.separator+COLLECTION_UNIT_NAME+File.separator+ASSESS_UNIT_NAME+"/recommendations_Target_A.html");
         assertTrue(reportFile.exists());
         assertTrue(reportFile.isFile());
         assertTrue(reportFile.length() > 2);
@@ -124,11 +124,15 @@ public class SamplePluginProviderTest {
         tadc.runCommand(MIDDLEWARE_NAME, migrateArgus);
         File outputDir = Util.getOutputDir();
         String migrationBundleDir = outputDir+File.separator+COLLECTION_UNIT_NAME+File.separator+ASSESS_UNIT_NAME+"/migrationBundle/";
-        File bundleZipFile = new File (migrationBundleDir+ASSESS_UNIT_NAME+"_OpenShift.zip");
+        File bundleZipFile = new File (migrationBundleDir+ASSESS_UNIT_NAME+"_Target_A.zip");
         assertTrue(bundleZipFile.exists());
         assertTrue(bundleZipFile.isFile());
         assertTrue(bundleZipFile.length() > 2);
-        File bundleDir = new File (migrationBundleDir+"OpenShift/");
+        bundleZipFile = new File (migrationBundleDir+ASSESS_UNIT_NAME+"_Target_B.zip");
+        assertTrue(bundleZipFile.exists());
+        assertTrue(bundleZipFile.isFile());
+        assertTrue(bundleZipFile.length() > 2);
+        File bundleDir = new File (migrationBundleDir+"Target_A/");
         assertTrue(bundleDir.exists());
         assertTrue(bundleDir.isDirectory());
         File pomFile = new File(bundleDir.getAbsolutePath()+File.separator+"pom.xml");

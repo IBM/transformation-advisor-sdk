@@ -14,7 +14,6 @@ import com.ibm.ta.sdk.core.assessment.GenericRecommendation;
 import com.ibm.ta.sdk.core.collect.GenericAssessmentUnit;
 import com.ibm.ta.sdk.core.collect.TextContextMask;
 import com.ibm.ta.sdk.core.report.RecommendationReporter;
-import com.ibm.ta.sdk.core.util.Constants;
 import com.ibm.ta.sdk.core.util.FreeMarkerTemplateResolver;
 import com.ibm.ta.sdk.core.util.GenericUtil;
 import com.ibm.ta.sdk.spi.collect.ContentMask;
