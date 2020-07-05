@@ -40,16 +40,7 @@ public class RecommendationJson {
   protected String collectionUnitType;
 
   @Expose
-  protected String collectionUnitTypeLabel;
-
-  @Expose
   protected String collectionUnitName;
-
-  @Expose
-  protected String assessmentUnitSingleLabel;
-
-  @Expose
-  protected String assessmentUnitMultipleLabel;
 
   @Expose
   protected String middleware;
@@ -78,13 +69,10 @@ public class RecommendationJson {
     domain = environment.getDomain();
     middleware = environment.getMiddlewareName();
     collectionUnitType = environment.getCollectionUnitType();
-    collectionUnitTypeLabel = environment.getCollectionUnitTypeLabel();
     collectionUnitName = environment.getCollectionUnitName();
     version = environment.getMiddlewareVersion();
     complexityRules = ComplexityContributionJson.getComplexityContributionJsonList(recommendation.getComplexityContributions());
     issueCategories = IssueCategoryJson.getIssueCategoryJsonMap(recommendation.getIssueCategories());
-    assessmentUnitSingleLabel = environment.getAssessmentUnitSingleLabel();
-    assessmentUnitMultipleLabel = environment.getAssessmentUnitMultipleLabel();
 
     for (Target target : recommendation.getTargets()) {
       for (AssessmentUnit au : auList) {

@@ -94,28 +94,6 @@ public interface Environment {
   String getCollectionUnitType();
 
   /**
-   * As with the {@link #getCollectionUnitName()}, the collection unit type will generally be different for different
-   * middleware. Examples of assessment type my be "Installation", or "Node".
-   *
-   * @return Type of the collection unit
-   */
-  String getCollectionUnitTypeLabel();
-
-  /**
-   * Label to be used to describe the assessment unit (for a single assessment unit, e.g. MyAssessmentUnit: MyAssessmentUnitName)
-   *
-   * @return Assessment unit label for single
-   */
-  String getAssessmentUnitSingleLabel();
-
-  /**
-   * Label to be used to describe assessment units (for multiple assessment units, e.g. MyAssessmentUnits: MyAssessmentUnitName1, MyAssessmentUnitName2...)
-   *
-   * @return Assessment unit label for multiple
-   */
-  String getAssessmentUnitMultipleLabel();
-
-  /**
    * Additional metadata about the assessment, in addition to the name and type. This information is available
    * during assessment to help identify issues. The information is stored in JSON format. It is expected that the
    * plug-in provider who constructed this information also knows how to parse and use it during assessment.

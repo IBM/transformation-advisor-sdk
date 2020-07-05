@@ -49,18 +49,6 @@
       "description": "Type of the collection unit",
       "type": "string"
     },
-    "collectionUnitTypeLabel": {
-      "description": "Label for the collection unit",
-      "type": "string"
-    },
-    "assessmentUnitSingleLabel": {
-      "description": "Label for assessment units (singular)",
-      "type": "string"
-    },
-    "assessmentUnitMultipleLabel": {
-      "description": "Label for assessment units (plural)",
-      "type": "string"
-    },
     "assessmentMetadata": {
       "description": "Additional metadata for the assessment",
       "type": "object"
@@ -80,9 +68,6 @@
     "middlewareInstallPath",
     "collectionUnitName",
     "collectionUnitType",
-    "collectionUnitTypeLabel",
-    "assessmentUnitSingleLabel",
-    "assessmentUnitMultipleLabel",
     "assessmentUnits"
   ]
 }
