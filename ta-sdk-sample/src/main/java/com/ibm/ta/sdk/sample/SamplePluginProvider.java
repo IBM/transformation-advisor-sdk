@@ -76,8 +76,8 @@ public class SamplePluginProvider extends GenericPluginProvider {
     logger.info("CliInputCommandOptions:" + cliInputCommand.getOptions());
     logger.info("CliInputCommandArguments:" + cliInputCommand.getArguments());
 
-    List<String> collectionUnitOptionValues = getCLIOptionValues(cliInputCommand.getOptions(), "c");
-    List<String> assessmentUnitOptionValues = getCLIOptionValues(cliInputCommand.getOptions(), "a");
+    List<String> collectionUnitOptionValues = CliInputOption.getCliOptionValuesByShortName(cliInputCommand.getOptions(), "c");
+    List<String> assessmentUnitOptionValues = CliInputOption.getCliOptionValuesByShortName(cliInputCommand.getOptions(), "a");
     logger.debug("pass in option values for collection unit names:" + collectionUnitOptionValues);
     logger.debug("pass in option values for assessment unit names:" + assessmentUnitOptionValues);
     try {

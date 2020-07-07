@@ -1,15 +1,21 @@
 package com.ibm.ta.sdk.core.validation;
 
+import com.google.gson.reflect.TypeToken;
+import com.ibm.ta.sdk.core.assessment.json.TargetsJson;
 import com.ibm.ta.sdk.core.util.Constants;
+import com.ibm.ta.sdk.core.util.GenericUtil;
 import com.ibm.ta.sdk.spi.plugin.TAException;
 import com.ibm.ta.sdk.spi.validation.TaJsonFileValidator;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * This class contains a set of validation tests for the plugins. These tests should be executed during the test
@@ -76,6 +82,43 @@ public class PluginProviderValidationTest {
             TaJsonFileValidator.validateComplexity(complexitiesJson.getAbsolutePath());
         } catch (TAException e) {
             throw new AssertionFailedError("Validation of " + Constants.FILE_COMPLEXITIES_JSON + " failed.", e);
+        }
+    }
+
+
+    /**
+     * Retrieves the list of targets from targets.json and checks that this list matches
+     * the list of targets for the templates.
+     */
+    @Test
+    public void validateTemplateTargetsTest() {
+        String middlewareName = getMiddlewareName();
+        assertNotNull(middlewareName, "No system property for middleware('" + MIDDLEWARE_NAME_PROP + "' defined.");
+
+        File targetJson = new File(PLUGIN_RESOURCES_DIR + File.separator + middlewareName, Constants.FILE_TARGETS_JSON);
+        assertTrue(targetJson.exists(), Constants.FILE_TARGETS_JSON + " file not found in:" + targetJson.getAbsolutePath());
+
+        try {
+            String templatesDir = middlewareName + File.separator + "templates";
+            File templatesPath = new File(PLUGIN_RESOURCES_DIR, templatesDir);
+            if (templatesPath.exists()) {
+                String[] templateTargets = GenericUtil.getResourceListing(getClass(), templatesDir);
+
+                // Not every target may have a template target
+                // For every template target the name must match with a target
+                TargetsJson targetsJson = GenericUtil.getJsonObj(new TypeToken<TargetsJson>(){}, targetJson.toPath());
+                List<String> targets = targetsJson.getTargets().stream()
+                        .map(t -> t.getTargetId())
+                        .collect(Collectors.toList());
+                for (String templateTarget : templateTargets) {
+                    assertTrue(targets.contains(templateTarget), "Found template target with name '" + templateTarget +
+                            "' but no matching name found in " + Constants.FILE_TARGETS_JSON);
+                }
+            }
+        } catch (IOException e) {
+            throw new AssertionFailedError("Failed to get targets from targets.json", e);
+        } catch (URISyntaxException e) {
+            throw new AssertionFailedError("Failed to get targets for the FreeMarker templates", e);
         }
     }
 

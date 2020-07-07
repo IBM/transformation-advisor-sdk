@@ -16,7 +16,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class FreeMarkerTemplateResolver {
     private Logger logger = LogManager.getLogger(getClass().getName());
@@ -100,20 +103,33 @@ public class FreeMarkerTemplateResolver {
         }
     }
 
-    public void resolveTemplatesForAllTargets() throws TAException {
-        String[] targets = new String[0];
+    public void resolveTemplatesForTargets(List<String> selectedTargets) throws TAException {
+        List<String> targets = new ArrayList<>();
         try {
-            targets = GenericUtil.getResourceListing(getClass(),this.middleware+"/templates/");
+            targets = Arrays.asList(GenericUtil.getResourceListing(getClass(),this.middleware+"/templates/"));
+            // Remove any targets in not in the selectedTargets list. Include all targets if
+            // selectedGTargets is null or empty
+            if (selectedTargets != null && selectedTargets.size() > 0) {
+                for (String selectedTarget : selectedTargets) {
+                    if (!targets.contains(selectedTarget)) {
+                        throw new TAException("No template found with target name:" + selectedTarget);
+                    }
+                }
+
+                // All selected targets found. Only resolve template for these targets
+                targets = selectedTargets;
+            }
         } catch (URISyntaxException e) {
             throw new TAException("Failed to load target template files in plugin provider "+this.pluginProvider.getClass(),e);
         } catch (IOException e) {
             throw new TAException("Failed to load target template files in plugin provider "+this.pluginProvider.getClass(),e);
         }
         // no template for targets find in the plugin provide,  throw exception
-        if (targets==null || targets.length==0) {
+        if (targets==null || targets.size()==0) {
             throw new TAException("Command migrate is not supported for plugin provider "+this.pluginProvider.getClass()+
                     "\n        No target template files found in plugin provider ");
         }
+
         for (String target : targets) {
             try {
                 resolveTemplates(target);

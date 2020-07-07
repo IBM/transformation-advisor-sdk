@@ -66,14 +66,12 @@ public class TADataCollector {
       providerCommands.add(assessCommand);
 
       // Add target option
-      CliInputOption targetOption = new CliInputOption(null, "target", "Filter by Target ID",
-              true, false, null, null);
       List<CliInputOption> assessOptions = assessCommand.getOptions();
       if (assessOptions == null) {
         assessOptions = new LinkedList<>();
         assessCommand.setOptions(assessOptions);
       }
-      assessOptions.add(targetOption);
+      assessOptions.add(CliInputOption.buildTargetOption());
     }
     CliInputCommand reportCommand = provider.getReportCommand();
     if (reportCommand != null) {
@@ -86,6 +84,14 @@ public class TADataCollector {
       migrateCommand.setName(CliInputCommand.CMD_MIGRATE);
       migrateCommand.setDescription(CliInputCommand.CMD_MIGRATE_DESC);
       providerCommands.add(migrateCommand);
+
+      // Add target option to migrate command
+      List<CliInputOption> migrateOptions = migrateCommand.getOptions();
+      if (migrateOptions == null) {
+        migrateOptions = new LinkedList<>();
+        migrateCommand.setOptions(migrateOptions);
+      }
+      migrateOptions.add(CliInputOption.buildTargetOption());
     }
 
     // Add 'run' command which performs collect, assess, and report
@@ -290,15 +296,7 @@ public class TADataCollector {
     }
 
     // Get target commandline option to filter out targets
-    List<String> filterTargets = null;
-    List<CliInputOption> options = cliInputCommand.getOptions();
-    Optional<CliInputOption> targetOption = options.stream().filter(op -> "target".equals(op.getLongArg())).findFirst();
-    if (targetOption.isPresent()) {
-      String targetValues = targetOption.get().getValue();
-      if (targetValues != null && !"".equals(targetValues.trim())) {
-        filterTargets = Arrays.asList(targetValues.split(";"));
-      }
-    }
+    List<String> filterTargets = CliInputOption.getCliOptionValuesByLongName(cliInputCommand.getOptions(), CliInputOption.OPT_TARGET);
 
     for (Recommendation rec : recs) {
       String assessmentName = rec.getCollectionUnitName();
@@ -362,7 +360,9 @@ public class TADataCollector {
   }
 
   public void runMigrate(PluginProvider provider, CliInputCommand cliInputCommand) throws TAException, IOException {
-    provider.getMigrationBundle(cliInputCommand);
+    // Get target commandline option to filter out targets
+    List<String> filterTargets = CliInputOption.getCliOptionValuesByLongName(cliInputCommand.getOptions(), CliInputOption.OPT_TARGET);
+    provider.getMigrationBundle(cliInputCommand, filterTargets);
   }
 
   public void runRun(PluginProvider provider, CliInputCommand cliInputCommand) throws TAException, IOException {

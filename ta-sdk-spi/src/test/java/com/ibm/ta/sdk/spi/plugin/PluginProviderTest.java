@@ -423,13 +423,13 @@ public class PluginProviderTest {
      * Test assessment with the target option to select targets in the recommendations.json
      */
     @Test
-    public void targetOptionTest() {
+    public void assessTargetOptionTest() {
         final String collectionUnitName1 = "TestCollectionUnit";
         final String collectionUnitName2 = "TestCollectionUnit2";
 
         try {
             UTPluginProvider provider = new UTPluginProvider();
-            // Collect command
+            // Assess command
             CliInputOption assessCmdAllOpt = new CliInputOption("a", "all", "Collect everything");
             List<CliInputOption> collectionCmdOpts = new LinkedList<>(Arrays.asList(assessCmdAllOpt));
             CliInputCommand assessCmd = CliInputCommand.buildAssessCommand(
@@ -542,6 +542,7 @@ public class PluginProviderTest {
             throw new AssertionFailedError("Error with assess command for multiple DataCollections:", e);
         }
     }
+
 
     @BeforeEach
     @AfterEach

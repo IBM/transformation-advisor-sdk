@@ -202,20 +202,20 @@ public abstract class GenericPluginProvider implements PluginProvider {
   }
 
   @Override
-  public void getMigrationBundle(CliInputCommand migrateCommand) throws TAException {
+  public void getMigrationBundle(CliInputCommand migrateCommand, List<String> targets) throws TAException {
     List<String> migrateArgu = migrateCommand.getArguments();
 
     // check the passin collection directory is a directory
     JsonObject envJson = null;
     File collectionDir = new File(migrateArgu.get(0));
     if (!collectionDir.isDirectory()) {
-      throw new TAException("The value for collectionDir isnot a directory.");
+      throw new TAException("The value for collectionDir is not a directory.");
     }
 
     // check the environment.json file is in the collection directory.
     File envJsonFile = new File(collectionDir.getAbsolutePath()+File.separator+ ENVIRONMENT_JSON);
     if (!envJsonFile.exists()) {
-      throw new TAException("The value for collectionDir isnot valid collection directory,  cannot find the environment.json file in that directory");
+      throw new TAException("The value for collectionDir is not valid collection directory,  cannot find the environment.json file in that directory");
     }
 
     // load the environment.json file from the collection directory.
@@ -226,31 +226,16 @@ public abstract class GenericPluginProvider implements PluginProvider {
     }
 
     JsonArray assessments = envJson.getAsJsonArray("assessmentUnits");
-    List<CliInputOption> assessNameOpts = migrateCommand.getOptions();
-    List<String> assessNames = new ArrayList<>();
-    if (assessNameOpts!=null && assessNameOpts.size()>0) {
-      for (CliInputOption cliOption : assessNameOpts) {
-        assessNames.add(cliOption.getValue());
-      }
-    }
+    List<String> assessNames = CliInputOption.getCliOptionValuesByShortName(migrateCommand.getOptions(), "n");
+
     for (JsonElement assess:assessments) {
       String assessName = assess.getAsString();
       if (assessNames.size()==0 || assessNames.contains(assessName)) {
           FreeMarkerTemplateResolver fmtr = new FreeMarkerTemplateResolver(this, new File(collectionDir.getAbsolutePath()+File.separator+assessName), envJson);
-          fmtr.resolveTemplatesForAllTargets();
+          fmtr.resolveTemplatesForTargets(targets);
       } else {
           logger.warn("skip generate migration bundle for assessment unit " + assessName);
       }
     }
-  }
-
-  protected List<String> getCLIOptionValues(List<CliInputOption> options, String optionShotName) {
-    List<String> values = new ArrayList<>();
-    for (CliInputOption cliOption : options) {
-      if (cliOption.getShortArg().equals(optionShotName)){
-        values.add(cliOption.getValue());
-      }
-    }
-    return values;
   }
 }

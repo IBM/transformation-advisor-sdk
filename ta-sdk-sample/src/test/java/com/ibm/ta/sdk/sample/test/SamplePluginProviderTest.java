@@ -100,7 +100,7 @@ public class SamplePluginProviderTest {
         assertTrue(recommFile.exists());
         assertTrue(recommFile.isFile());
         assertTrue(recommFile.length() > 2);
-        File reportFile = new File (outputDir+File.separator+COLLECTION_UNIT_NAME+File.separator+ASSESS_UNIT_NAME+"/recommendations_Target_A.html");
+        File reportFile = new File (outputDir+File.separator+COLLECTION_UNIT_NAME+File.separator+ASSESS_UNIT_NAME+"/recommendations_targetA.html");
         assertTrue(reportFile.exists());
         assertTrue(reportFile.isFile());
         assertTrue(reportFile.length() > 2);
@@ -124,15 +124,15 @@ public class SamplePluginProviderTest {
         tadc.runCommand(MIDDLEWARE_NAME, migrateArgus);
         File outputDir = Util.getOutputDir();
         String migrationBundleDir = outputDir+File.separator+COLLECTION_UNIT_NAME+File.separator+ASSESS_UNIT_NAME+"/migrationBundle/";
-        File bundleZipFile = new File (migrationBundleDir+ASSESS_UNIT_NAME+"_Target_A.zip");
+        File bundleZipFile = new File (migrationBundleDir+ASSESS_UNIT_NAME+"_targetA.zip");
         assertTrue(bundleZipFile.exists());
         assertTrue(bundleZipFile.isFile());
         assertTrue(bundleZipFile.length() > 2);
-        bundleZipFile = new File (migrationBundleDir+ASSESS_UNIT_NAME+"_Target_B.zip");
+        bundleZipFile = new File (migrationBundleDir+ASSESS_UNIT_NAME+"_targetB.zip");
         assertTrue(bundleZipFile.exists());
         assertTrue(bundleZipFile.isFile());
         assertTrue(bundleZipFile.length() > 2);
-        File bundleDir = new File (migrationBundleDir+"Target_A/");
+        File bundleDir = new File (migrationBundleDir+"targetA/");
         assertTrue(bundleDir.exists());
         assertTrue(bundleDir.isDirectory());
         File pomFile = new File(bundleDir.getAbsolutePath()+File.separator+"pom.xml");
@@ -177,7 +177,7 @@ public class SamplePluginProviderTest {
         Exception exception = assertThrows(TAException.class, () -> {
             tadc.runCommand(MIDDLEWARE_NAME, nodirArgus);
         });
-        assertTrue(exception.getMessage().contains("collectionDir isnot a directory"));
+        assertTrue(exception.getMessage().contains("collectionDir is not a directory"));
         List<String> noEnvArgus = new ArrayList<>();
         noEnvArgus.add("migrate");
         noEnvArgus.add("/tmp");
@@ -185,5 +185,31 @@ public class SamplePluginProviderTest {
             tadc.runCommand(MIDDLEWARE_NAME, noEnvArgus);
         });
         assertTrue(exception.getMessage().contains("cannot find the environment.json file"));
+    }
+
+    /**
+     * Run migrate command with target option for 'targetA' only.
+     * Verify only migration bundle for 'targetA' is created.
+     */
+    @Test
+    public void migrateCommandTargetOptionTest() throws TAException, IOException {
+        List<String> argus = new ArrayList<>();
+        argus.add("run");
+        argus.add("test");
+        //argus.add("test");
+        TADataCollector tadc = new TADataCollector();
+        tadc.runCommand(MIDDLEWARE_NAME, argus);
+        List<String> migrateArgus = new ArrayList<>();
+        migrateArgus.add("migrate");
+        migrateArgus.add("--target");
+        migrateArgus.add("targetA");
+        migrateArgus.add("./output/"+COLLECTION_UNIT_NAME);
+        tadc.runCommand(MIDDLEWARE_NAME, migrateArgus);
+        File outputDir = Util.getOutputDir();
+        String migrationBundleDir = outputDir+File.separator+COLLECTION_UNIT_NAME+File.separator+ASSESS_UNIT_NAME+"/migrationBundle/";
+        File bundleZipFile = new File (migrationBundleDir+ASSESS_UNIT_NAME+"_targetA.zip");
+        assertTrue(bundleZipFile.exists());
+        bundleZipFile = new File (migrationBundleDir+ASSESS_UNIT_NAME+"_targetB.zip");
+        assertTrue(!bundleZipFile.exists());
     }
 }

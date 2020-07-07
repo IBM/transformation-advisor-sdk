@@ -1,7 +1,7 @@
 {
   "targets": [
     {
-      "target": "Target_A",
+      "target": "targetA",
       "dimensions": [
         {
           "name": "buildType",
@@ -19,7 +19,7 @@
       ]
     },
     {
-      "target": "Target_B",
+      "target": "targetB",
       "dimensions": [
         {
           "name": "buildType",
