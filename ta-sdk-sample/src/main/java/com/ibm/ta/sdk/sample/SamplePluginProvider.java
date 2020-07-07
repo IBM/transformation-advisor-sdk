@@ -106,9 +106,7 @@ public class SamplePluginProvider extends GenericPluginProvider {
       envJson.setMiddlewareDataPath("/opt/instance/configPath");
       envJson.setCollectionUnitName(collectionUnitName);
       envJson.setCollectionUnitType("instance");
-      envJson.setCollectionUnitTypeLabel("Instance");
-      envJson.setAssessmentUnitSingleLabel("Assessment unit");
-      envJson.setAssessmentUnitMultipleLabel("Assessment units");
+
 
       List<GenericAssessmentUnit> auList = new ArrayList<>();
       for (String assessmentName: (List<String>)predefinedCollectionSets.get(collectionUnitName)) {

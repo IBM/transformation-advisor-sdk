@@ -18,6 +18,11 @@ In this document we use IntelliJ as the Java development tool.
             <artifactId>ta-sdk-core</artifactId>
             <version>0.6.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>1.7.30</version>
+        </dependency>
     </dependencies>
 ```
 ![Image2](https://github.com/IBM/transformation-advisor-sdk/wiki/images/image2.png)
