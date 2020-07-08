@@ -58,13 +58,7 @@
       "name": "London",
       "targets": [
         {
-          "version": "11.0",
-          "productName": "IIB",
-          "productVersion": "11.0",
-          "runtime": "ACE",
-          "platform": "Docker",
-          "location": "Private",
-          "valid": "true",
+          "target": "OPEN_LIBERTY",
           "issues": {
             "cluster": [
               {

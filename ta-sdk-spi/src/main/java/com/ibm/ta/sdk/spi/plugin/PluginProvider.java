@@ -132,7 +132,7 @@ public interface PluginProvider {
   /**
    * The Migrate command is a command with the name {@link CliInputCommand#CMD_MIGRATE}. It contains the options and
    * arguments that is required by the plug-in to run the migrate command. The user input values for the options
-   * and arguments is passed to the {@link #getMigrationBundle(CliInputCommand)} method when it is invoked.
+   * and arguments is passed to the {@link #getMigrationBundle(CliInputCommand, List)} method when it is invoked.
    *
    * @return Migrate command including required options and arguments.
    */
@@ -146,9 +146,11 @@ public interface PluginProvider {
    * The generated migration bundle zip files will be found in the {collectionUintDir}/{assessmentUnitDir}/migrationBundle/ directory.
    *
    * @param migrateCommand Migrate command containing user input options and arguments
+   * @param targets List of target IDs to generate a migration bundle for. If null or empty list, migration bundles
+   *                are generated for all targets.
    * @throws TAException TAException If an error occurs when generating the reports
    */
-  void getMigrationBundle(CliInputCommand migrateCommand) throws TAException;
+  void getMigrationBundle(CliInputCommand migrateCommand, List<String> targets) throws TAException;
 
   void validateJsonFiles() throws TAException;
 }

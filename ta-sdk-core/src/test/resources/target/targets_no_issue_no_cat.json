@@ -1,0 +1,32 @@
+{
+  "targets": [
+    {
+      "target": "OPEN_LIBERTY",
+      "dimensions": [
+        {
+          "name": "buildType",
+          "values": [
+            "source",
+            "binary"
+          ],
+          "defaultValue": "binary"
+        },
+        {
+          "name": "mpMetrics",
+          "values": [
+            true
+          ],
+          "defaultValue": true
+        },
+        {
+          "name": "memory",
+          "values": [
+            1024,
+            2048
+          ],
+          "defaultValue": 1024
+        }
+      ]
+    }
+  ]
+}

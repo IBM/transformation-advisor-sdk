@@ -66,6 +66,10 @@ public class CliInputCommand {
     return new CliInputCommand(CMD_REPORT, CMD_REPORT_DESC, options, commands, argumentDisplayNames);
   }
 
+  public static CliInputCommand buildMigrateCommand(List<CliInputOption> options, List<CliInputCommand> commands, List<String> argumentDisplayNames) {
+    return new CliInputCommand(CMD_MIGRATE, CMD_MIGRATE_DESC, options, commands, argumentDisplayNames);
+  }
+
   public String getName() {
     return name;
   }

@@ -126,6 +126,7 @@ public class TaJsonFileValidator {
                     problemList.forEach(System.out::println);
                 }
             } else {
+                isValid = false;
                 logger.error("Cannot find file " + jrIs + " to validate");
             }
         } catch (Exception e) {
@@ -145,7 +146,13 @@ public class TaJsonFileValidator {
 
     public static void validateTarget(String targetJsonFile) throws TAException {
         if (!validateJsonBySchema(TARGET_SCHEMA, targetJsonFile)) {
-            throw new TAException("Anomalies found. The resource " + targetJsonFile + " is not a valid target json file.");
+            throw new TAException("Anomalies found. The resource " + targetJsonFile + " is not a valid targets json file.");
+        }
+    }
+
+    public static void validateTarget(InputStream targetJsonIs) throws TAException {
+        if (!validateJsonBySchema(TARGET_SCHEMA, targetJsonIs)) {
+            throw new TAException("Anomalies found. The resource is not a valid targets json file.");
         }
     }
 

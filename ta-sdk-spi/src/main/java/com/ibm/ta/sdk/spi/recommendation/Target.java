@@ -6,25 +6,10 @@
 
 package com.ibm.ta.sdk.spi.recommendation;
 
+import java.util.List;
+
 public interface Target {
-  enum PlatformType {
-    Docker,
-    VM;
-  }
+  String getTargetId();
 
-  enum LocationType {
-    Private,
-    Public;
-  }
-
-  String getProductName();  // Liberty, WAS, MQ, IIB
-
-  String getProductVersion();
-
-  String getRuntime();  // Optional - ACE
-
-  PlatformType getPlatform();
-
-  LocationType getLocation();
-
+  List<ModDimension> getDimensions();
 }

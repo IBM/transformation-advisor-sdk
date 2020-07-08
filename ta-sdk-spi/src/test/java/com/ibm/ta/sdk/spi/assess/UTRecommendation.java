@@ -45,29 +45,22 @@ public class UTRecommendation extends RecommendationJson implements Recommendati
         return targetMapList.stream()
                 .map(targetMap -> new Target() {
                     @Override
-                    public String getProductName() {
-                       return (String) targetMap.get("productName");
+                    public String getTargetId() {
+                       return (String) targetMap.get("target");
                     }
 
                     @Override
-                    public String getProductVersion() {
-                        return (String) targetMap.get("productVersion");
+                    public List<ModDimension> getDimensions() {
+                        List<Map<String, Object>> dimensions = (List<Map<String, Object>>) targetMap.get("dimensions");
+                        return dimensions.stream()
+                                .map(d -> new ModDimension(
+                                       (String) d.get("name"),
+                                       (List) d.get("values"),
+                                       d.get("defaultValue")
+                                ))
+                                .collect(Collectors.toList());
                     }
 
-                    @Override
-                    public String getRuntime() {
-                        return (String) targetMap.get("runtime");
-                    }
-
-                    @Override
-                    public PlatformType getPlatform() {
-                        return PlatformType.valueOf((String) targetMap.get("platform"));
-                    }
-
-                    @Override
-                    public LocationType getLocation() {
-                        return LocationType.valueOf((String) targetMap.get("location"));
-                    }
                 })
                 .collect(Collectors.toList());
     }
@@ -78,8 +71,7 @@ public class UTRecommendation extends RecommendationJson implements Recommendati
         if (au != null) {
             List<Map<String, Object>> targetMapList = (List<Map<String, Object>> ) au.get("targets");
             for (Map<String, Object> targetMap : targetMapList) {
-                if (target.getLocation().name().equals(targetMap.get("location")) &&
-                        target.getPlatform().name().equals(targetMap.get("platform"))) {
+                if (target.getTargetId().equals(targetMap.get("target"))) {
                     Map<String, List<Map>> issues  = (Map<String, List<Map>>) targetMap.get("issues");
                     for (String key: issues.keySet()) {
                         for (Map issue : issues.get(key)) {

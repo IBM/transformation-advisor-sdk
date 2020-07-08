@@ -19,6 +19,7 @@ public class UTPluginProvider implements PluginProvider {
     private CliInputCommand collectCommand;
     private CliInputCommand assessCommand;
     private CliInputCommand reportCommand;
+    private CliInputCommand migrateCommand;
 
     private List<DataCollection> dataCollection;
     private List<Recommendation> recommendations;
@@ -107,11 +108,15 @@ public class UTPluginProvider implements PluginProvider {
 
     @Override
     public CliInputCommand getMigrateCommand() {
-        return null;
+        return migrateCommand;
+    }
+
+    public void setMigrateCommand(CliInputCommand migrateCommand) {
+        this.migrateCommand = migrateCommand;
     }
 
     @Override
-    public void getMigrationBundle(CliInputCommand migrateCommand) throws TAException {
+    public void getMigrationBundle(CliInputCommand migrateCommand, List<String> targets) throws TAException {
 
     }
 

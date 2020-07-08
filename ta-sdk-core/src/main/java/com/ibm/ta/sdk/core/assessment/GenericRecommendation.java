@@ -7,6 +7,8 @@
 package com.ibm.ta.sdk.core.assessment;
 
 import com.google.gson.reflect.TypeToken;
+import com.ibm.ta.sdk.core.assessment.json.ComplexitiesJson;
+import com.ibm.ta.sdk.core.assessment.json.TargetsJson;
 import com.ibm.ta.sdk.core.util.GenericUtil;
 import com.ibm.ta.sdk.spi.plugin.TAException;
 import com.ibm.ta.sdk.spi.collect.AssessmentUnit;
@@ -18,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,17 +39,17 @@ public class GenericRecommendation implements Recommendation {
 
 
   public GenericRecommendation(String assessmentName, Path issuesFile, Path issuesCatFile, Path complexityFile,
-                               Path targetFile) throws IOException, TAException {
+                               Path targetsFile) throws IOException, TAException {
     this.assessmentName = assessmentName;
 
     // Complexity
-    List<ComplexityContributionJson> ccList = GenericUtil.getJsonObj(new TypeToken<List<ComplexityContributionJson>>(){}, complexityFile);
-    complexityRules.addAll(ComplexityContributionJson.getComplexityContributionList(ccList));
+    ComplexitiesJson ccList = GenericUtil.getJsonObj(new TypeToken<ComplexitiesJson>(){}, complexityFile);
+    complexityRules.addAll(ComplexityContributionJson.getComplexityContributionList(ccList.getComplexities()));
 
     // Targets
-    TaJsonFileValidator.validateTarget(targetFile.toString());
-    GenericTarget target = GenericUtil.getJsonObj(new TypeToken<GenericTarget>(){}, targetFile);
-    targets.add(target);
+    TaJsonFileValidator.validateTarget(Files.newInputStream(targetsFile));
+    TargetsJson _targets = GenericUtil.getJsonObj(new TypeToken<TargetsJson>(){}, targetsFile);
+    targets.addAll(_targets.getTargets());
 
     // Issue Categories
     Map<String, IssueCategoryJson> icMap = GenericUtil.getJsonObj(new TypeToken<Map<String, IssueCategoryJson>>(){}, issuesCatFile);
@@ -86,6 +89,6 @@ public class GenericRecommendation implements Recommendation {
   @Override
   public List<Issue> getIssues(Target target, AssessmentUnit assessmentUnit) throws TAException {
 
-    return rcm.processIssues(target, assessmentUnit);
+    return rcm.processIssues((GenericTarget) target, assessmentUnit);
   }
 }

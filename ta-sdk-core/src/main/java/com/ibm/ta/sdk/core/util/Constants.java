@@ -14,8 +14,8 @@ public final class Constants {
     public static final String ENVIRONMENT_JSON = "environment.json";
     public static final String RECOMMENDATIONS_JSON = "recommendations.json";
 
-    public static final String FILE_COMPLEXITY_JSON = "complexity.json";
-    public static final String FILE_ISSUECAT_JSON = "issue-category.json";
-    public static final String FILE_ISSUE_JSON = "issue.json";
-    public static final String FILE_TARGET_JSON = "target.json";
+    public static final String FILE_COMPLEXITIES_JSON = "complexities.json";
+    public static final String FILE_ISSUECATS_JSON = "issue-categories.json";
+    public static final String FILE_ISSUES_JSON = "issues.json";
+    public static final String FILE_TARGETS_JSON = "targets.json";
 }
