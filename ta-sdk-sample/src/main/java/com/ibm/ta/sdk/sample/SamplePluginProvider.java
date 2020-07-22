@@ -42,7 +42,7 @@ public class SamplePluginProvider extends GenericPluginProvider {
 
   @Override
   public String getVersion() {
-    return "0.5.4";
+    return "0.5.5";
   }
 
   @Override
