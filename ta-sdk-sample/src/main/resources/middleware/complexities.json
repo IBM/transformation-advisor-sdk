@@ -34,6 +34,9 @@
       "complexityContribution": "complex",
       "issues": [
         "MQSEC01"
+      ],
+      "issuesCategory": [
+        "security"
       ]
     }
   ]

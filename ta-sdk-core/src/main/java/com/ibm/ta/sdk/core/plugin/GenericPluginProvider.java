@@ -66,12 +66,6 @@ public abstract class GenericPluginProvider implements PluginProvider {
   @Override
   public List<Recommendation> getRecommendation(CliInputCommand cliInputCommand) throws TAException {
     try {
-
-      String middlewareDir = "/" + getMiddleware() + "/";
-      Path complexityJsonFile = Paths.get(GenericPluginProvider.class.getResource(middlewareDir + FILE_COMPLEXITIES_JSON).toURI());
-      Path issueCatJsonFile = Paths.get(GenericPluginProvider.class.getResource(middlewareDir + FILE_ISSUECATS_JSON).toURI());
-      Path issueJsonFile = Paths.get(GenericPluginProvider.class.getResource(middlewareDir + FILE_ISSUES_JSON).toURI());
-      Path targetJsonFile = Paths.get(GenericPluginProvider.class.getResource(middlewareDir + FILE_TARGETS_JSON).toURI());
       File outDir = Util.getOutputDir();
       List<Recommendation> recs = new ArrayList<>();
 
@@ -79,14 +73,12 @@ public abstract class GenericPluginProvider implements PluginProvider {
       for (File file: fileList) {
         if (file.isDirectory()) {
           String dirName = file.getName();
-          GenericRecommendation rec = new GenericRecommendation(dirName, issueJsonFile, issueCatJsonFile, complexityJsonFile, targetJsonFile);
+          GenericRecommendation rec = GenericRecommendation.createGenericRecommemndation(dirName, getMiddleware());
           recs.add(rec);
         }
       }
 
       return recs;
-    } catch (URISyntaxException e) {
-      throw new TAException(e);
     } catch (IOException e) {
       throw new TAException(e);
     }
