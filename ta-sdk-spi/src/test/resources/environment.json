@@ -9,5 +9,6 @@
   "middlewareMetadata": {"feature": "drilling"},
   "collectionUnitName": "Installation1",
   "collectionUnitType": "Installation",
-  "assessmentMetadata": {"test": "value"}
+  "assessmentMetadata": {"test": "value"},
+  "hasSensitiveData": false
 }

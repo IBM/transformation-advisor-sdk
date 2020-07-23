@@ -32,7 +32,7 @@ public class ValidationUtils {
                                              String operatingSystem, String hostName, String middlewareInstallPath,
                                              String middlewareDataPath, JsonElement middlewareMetadata, String collectionUnitName,
                                              String collectionUnitType, JsonElement assessmentMetadata,
-                                             List<String> assessmentUnits, String pluginVersion) {
+                                             List<String> assessmentUnits, String pluginVersion, boolean hasSensitiveData) {
         File envFile = new File(TEST_OUTPUT_DIR, collectionUnitName + File.separator + ENVIRONMENT_JSON);
         assertTrue(envFile.exists());
 
@@ -51,6 +51,7 @@ public class ValidationUtils {
         expectedEnvJson.setAssessmentMetadata(assessmentMetadata);
         expectedEnvJson.setAssessmentUnits(assessmentUnits);
         expectedEnvJson.setPluginVersion(pluginVersion);
+        expectedEnvJson.setHasSensitiveData(hasSensitiveData);
         JsonElement expectedJson = getJsonTree(expectedEnvJson).getAsJsonObject();
 
         // Read env.json and verify attributes
@@ -115,5 +116,15 @@ public class ValidationUtils {
         } catch (IOException e) {
             throw new AssertionFailedError("Error reading recommendations json:" + recommendationsFile.getAbsolutePath(), e);
         }
+    }
+
+    /**
+     * Checks if the collection zip archive exists or not
+     * @param collectionUnitName Name of the collection unit
+     * @param zipExists True if the collection zip archive is expected to exist
+     */
+    public static void assertCollectionZipArchive(String collectionUnitName, boolean zipExists) {
+        File zipFile = new File(TEST_OUTPUT_DIR, collectionUnitName + ".zip");
+        assertEquals(zipExists, zipFile.exists());
     }
 }

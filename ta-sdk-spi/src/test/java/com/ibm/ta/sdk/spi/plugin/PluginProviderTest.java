@@ -6,7 +6,6 @@
 package com.ibm.ta.sdk.spi.plugin;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.ibm.ta.sdk.spi.assess.UTRecommendation;
 import com.ibm.ta.sdk.spi.collect.EnvironmentJson;
@@ -14,7 +13,6 @@ import com.ibm.ta.sdk.spi.collect.UTAssessmentUnit;
 import com.ibm.ta.sdk.spi.collect.UTDataCollection;
 import com.ibm.ta.sdk.spi.test.TestUtils;
 import com.ibm.ta.sdk.spi.validation.TaCollectionZipValidator;
-import com.ibm.ta.sdk.spi.validation.TaJsonFileValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -247,7 +245,7 @@ public class PluginProviderTest {
                 "RedHat Enterprise 7", "iib1.rtp.raleigh.ibm.com",
                 "/opt/test", "/opt/testdata", middlewareMd,
                 collectionUnitName, "Installation", assessmentMd,
-                auList, "1.0.0");
+                auList, "1.0.0", false);
 
         // Check assessment units
         assertAssessmemntUnits(collectionUnitName, auList);
@@ -351,6 +349,7 @@ public class PluginProviderTest {
 
             // Assert recommendations.json
             assertRecommendationsJson(collectionUnitName, recommendationsJsonFile);
+            assertCollectionZipArchive(collectionUnitName, true);
         } catch (Exception e) {
             throw new AssertionFailedError("Error with assess command", e);
         }
@@ -542,6 +541,44 @@ public class PluginProviderTest {
         }
     }
 
+
+    /*
+     * Check that if env json has "hasSensitiveData" attribute set to true then no collection zip archive is created
+     */
+    @Test
+    public void hasSensitiveDataTest() {
+        final String collectionUnitName = "TestCollectionUnit";
+        try {
+            // Assess command
+            UTPluginProvider provider = new UTPluginProvider();
+            CliInputOption assessCmdAllOpt = new CliInputOption("a", "all", "Collect everything");
+            List<CliInputOption> assessCmdOpts = new LinkedList<>(Arrays.asList(assessCmdAllOpt));
+            CliInputCommand assessCmd = CliInputCommand.buildAssessCommand(assessCmdOpts, null,
+                    Arrays.asList("dataPath"));
+            provider.setAssessCommand(assessCmd);
+
+            // Data collection
+            UTDataCollection dc = new UTDataCollection(collectionUnitName, "environment.json", Arrays.asList("assessmentUnits/NewYork/NewYork.json"));
+            EnvironmentJson envJson = dc.getEnvironmentJson();
+            envJson.setCollectionUnitName(collectionUnitName);
+            envJson.setHasSensitiveData(true);
+            provider.setDataCollection(Arrays.asList(dc));
+
+            // Recommendations
+            Path recommendationsJsonFile = new File(TestUtils.TEST_RESOURCES_DIR,
+                    "assessmentUnits/NewYork/recommendations.json").toPath();
+            UTRecommendation recommendation = TestUtils.buildRecommendationsJsonObj(recommendationsJsonFile);
+            provider.setRecommendations(Arrays.asList(recommendation));
+
+            List<String> cliCommands = new LinkedList<>(Arrays.asList(CliInputCommand.CMD_ASSESS, "-a", "hello"));
+            TestUtils.runPluginCommand(provider, cliCommands);
+
+            // Check zip archive is not created
+            assertCollectionZipArchive(collectionUnitName, false);
+        } catch (Exception e) {
+            throw new AssertionFailedError("Error with assess command", e);
+        }
+    }
 
     @BeforeEach
     @AfterEach
