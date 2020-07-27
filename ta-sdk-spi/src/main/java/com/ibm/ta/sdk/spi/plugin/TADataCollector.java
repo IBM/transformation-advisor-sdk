@@ -316,6 +316,11 @@ public class TADataCollector {
       File outputDir = Util.getAssessmentOutputDir(assessmentName);
       writeRecommendationsJson(recJson, outputDir);
 
+      // Add log message to indicate zip does not contain data because plugin collects sensitive data
+      if (environment.hasSensitiveData()) {
+        logger.info("The enivrnoment.json file indicates that the collection contains sensitive data. The collection zip archive created will not include any of the collected data files.");
+      }
+
       // zip output dir
       String zipFileName = environment.getCollectionUnitName() + ".zip";
       File zipFile = new File(outputDir.getParentFile(), zipFileName);
