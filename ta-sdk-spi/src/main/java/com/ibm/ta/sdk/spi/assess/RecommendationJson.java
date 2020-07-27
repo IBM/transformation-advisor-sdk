@@ -64,8 +64,8 @@ public class RecommendationJson {
     this.recommendation = recommendation;
     domain = environment.getDomain();
     middleware = environment.getMiddlewareName();
-    collectionUnitType = environment.getConnectionUnitType();
-    collectionUnitName = environment.getConnectionUnitName();
+    collectionUnitType = environment.getCollectionUnitType();
+    collectionUnitName = environment.getCollectionUnitName();
     version = environment.getMiddlewareVersion();
     complexityRules = ComplexityContributionJson.getComplexityContributionJsonList(recommendation.getComplexityContributions());
     issueCategories = IssueCategoryJson.getIssueCategoryJsonMap(recommendation.getIssueCategories());
