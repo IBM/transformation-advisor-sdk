@@ -101,4 +101,12 @@ public interface Environment {
    * @return Additional metadata information about the assessment
    */
   JsonObject getAssessmentMetadata();
+
+  /**
+   * Indicate if the data collection contains sensitive data. If there is sensitive data, no zip archive is created
+   * during the assess command execution.
+   *
+   * @return True if the data collection contains sensitive data
+   */
+  boolean hasSensitiveData();
 }

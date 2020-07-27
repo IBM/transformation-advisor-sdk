@@ -250,9 +250,14 @@ public class TADataCollector {
       writeRecommendationsJson(recJson, outputDir);
 
       // zip output dir
-      String zipFileName = environment.getConnectionUnitName() + ".zip";
-      File zipFile = new File(outputDir.getParentFile(), zipFileName);
-      Util.zipDir(zipFile.toPath(), outputDir);
+      // Only create zip if the data collection does not contain sensitive data
+      if (!environment.hasSensitiveData()) {
+        String zipFileName = environment.getConnectionUnitName() + ".zip";
+        File zipFile = new File(outputDir.getParentFile(), zipFileName);
+        Util.zipDir(zipFile.toPath(), outputDir);
+      } else {
+        logger.info("The enivrnoment.json file indicates that the collection contains sensitive data. No data collection zip archive will be created for collections with sensitive data.");
+      }
     }
   }
 
@@ -288,7 +293,10 @@ public class TADataCollector {
         // Update assessment unit zip
         String zipFileName = assessmentName + ".zip";
         File zipFile = new File(aOutputDir.getParentFile(), zipFileName);
-        Util.zipDir(zipFile.toPath(), aOutputDir);
+        if (zipFile.exists()) {
+          logger.debug("Updating collection zip archive to include report: " + zipFile.getAbsolutePath());
+          Util.zipDir(zipFile.toPath(), aOutputDir);
+        }
       }
     }
   }

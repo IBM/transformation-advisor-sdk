@@ -59,6 +59,9 @@ public class EnvironmentJson {
   @Expose
   private List<String> assessmentUnits;
 
+  @Expose
+  private boolean hasSensitiveData = true;
+
   public EnvironmentJson() {
     // For read json from file
   }
@@ -91,6 +94,7 @@ public class EnvironmentJson {
     if (environment.getAssessmentMetadata() != null) {
       assessmentMetadata = environment.getAssessmentMetadata();
     }
+    hasSensitiveData = environment.hasSensitiveData();
   }
 
   public Environment getEnvironment() {
@@ -155,6 +159,11 @@ public class EnvironmentJson {
         }
         return null;
       }
+
+      @Override
+      public boolean hasSensitiveData() {
+        return hasSensitiveData;
+      }
     };
     return environment;
   }
@@ -201,5 +210,9 @@ public class EnvironmentJson {
 
   public void setAssessmentUnits(List<String> auNamesList) {
     this.assessmentUnits = auNamesList;
+  }
+
+  public void setHasSensitiveData(boolean hasSensitiveData) {
+    this.hasSensitiveData = hasSensitiveData;
   }
 }
