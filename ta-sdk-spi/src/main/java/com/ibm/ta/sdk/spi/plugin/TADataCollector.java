@@ -6,10 +6,9 @@
 
 package com.ibm.ta.sdk.spi.plugin;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import com.ibm.ta.sdk.spi.collect.*;
-import com.ibm.ta.sdk.spi.recommendation.ModDimension;
 import com.ibm.ta.sdk.spi.recommendation.Recommendation;
 import com.ibm.ta.sdk.spi.assess.RecommendationJson;
 import com.ibm.ta.sdk.spi.recommendation.Target;
@@ -17,8 +16,10 @@ import com.ibm.ta.sdk.spi.report.Report;
 import com.ibm.ta.sdk.spi.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.util.FileUtils;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,7 +33,7 @@ public class TADataCollector {
   private static final String TADATACOLLECTOR_BASE_HELP_USAGE = TADATACOLLECTOR_HELP_USAGE_PREFIX + " MIDDLEWARE COMMAND [OPTIONS]";
   public static final String ENVIRONMENT_JSON_FILE = "environment.json";
   public static final String RECOMMENDATIONS_JSON_FILE = "recommendations.json";
-  public static final String ASSESSMENTUNIT_META_JSON_FILE = ".assessmentUnit.json";
+  public static final String ASSESSMENTUNIT_META_JSON_FILE = "metadata.assessmentUnit.json";
 
   private static Logger logger = LogManager.getLogger(TADataCollector.class.getName());
 
@@ -318,7 +319,7 @@ public class TADataCollector {
       // zip output dir
       String zipFileName = environment.getCollectionUnitName() + ".zip";
       File zipFile = new File(outputDir.getParentFile(), zipFileName);
-      Util.zipDir(zipFile.toPath(), outputDir);
+      Util.zipCollection(zipFile.toPath(), outputDir, environment.hasSensitiveData());
     }
   }
 
@@ -336,6 +337,13 @@ public class TADataCollector {
 
     // Get report for each assessment
     for (String assessmentName : assessmentNames) {
+      // Read env.json for assessment
+      File aOutputDir = Util.getAssessmentOutputDir(assessmentName);
+      File envFile = new File(aOutputDir, ENVIRONMENT_JSON_FILE);
+      JsonElement envJsonEle = new JsonParser().parse(new FileReader(envFile));
+      EnvironmentJson envJson =  new Gson().fromJson(envJsonEle, new TypeToken<EnvironmentJson>(){}.getType());
+      Environment env = envJson.getEnvironment();
+
       List<Report> reports = provider.getReport(assessmentName, cliInputCommand);
       for (Report report : reports) {
         Target target = report.getTarget();
@@ -343,7 +351,6 @@ public class TADataCollector {
                 "." + report.getReportType().toString().toLowerCase();
 
         // Report path
-        File aOutputDir = Util.getAssessmentOutputDir(assessmentName);
         File auOutputDir = new File(aOutputDir, report.getAssessmentUnitName());
         File recFile = new File(auOutputDir, reportName);
 
@@ -354,7 +361,7 @@ public class TADataCollector {
         // Update assessment unit zip
         String zipFileName = assessmentName + ".zip";
         File zipFile = new File(aOutputDir.getParentFile(), zipFileName);
-        Util.zipDir(zipFile.toPath(), aOutputDir);
+        Util.zipCollection(zipFile.toPath(), aOutputDir, env.hasSensitiveData());
       }
     }
   }
@@ -550,7 +557,7 @@ public class TADataCollector {
   }
 
   private void writeAssessmentUnitMetaJson(AssessmentUnit au, Environment environment, File outputDir) throws TAException {
-    File auMetaFile = new File(outputDir, "metadata" + ASSESSMENTUNIT_META_JSON_FILE);
+    File auMetaFile = new File(outputDir, ASSESSMENTUNIT_META_JSON_FILE);
     if (auMetaFile.exists()) {
       auMetaFile.delete();
     }
