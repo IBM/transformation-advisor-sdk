@@ -322,7 +322,7 @@ public class TADataCollector {
         File zipFile = new File(outputDir.getParentFile(), zipFileName);
         Util.zipDir(zipFile.toPath(), outputDir);
       } else {
-        logger.info("Data collection may contain sensitive data. No data collection zip archive will be created.");
+        logger.info("The enivrnoment.json file indicates that the collection contains sensitive data. No data collection zip archive will be created for collections with sensitive data.");
       }
     }
   }
