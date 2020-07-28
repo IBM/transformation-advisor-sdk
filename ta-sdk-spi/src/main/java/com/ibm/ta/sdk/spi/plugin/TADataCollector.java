@@ -318,7 +318,7 @@ public class TADataCollector {
 
       // Add log message to indicate zip does not contain data because plugin collects sensitive data
       if (environment.hasSensitiveData()) {
-        logger.info("The enivrnoment.json file indicates that the collection contains sensitive data. The collection zip archive created will not include any of the collected data files.");
+        logger.info("The environment.json file indicates that the collection contains sensitive data. The collection zip archive created will not include any of the collected data files.");
       }
 
       // zip output dir
