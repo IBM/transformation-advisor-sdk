@@ -19,13 +19,19 @@ import com.ibm.ta.sdk.spi.validation.TaJsonFileValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.ibm.ta.sdk.core.util.Constants.*;
+import static com.ibm.ta.sdk.core.util.Constants.FILE_TARGETS_JSON;
 
 public class GenericRecommendation implements Recommendation {
   private IssueRuleProcessor rcm;
@@ -36,7 +42,6 @@ public class GenericRecommendation implements Recommendation {
   private List<Target> targets = new ArrayList<Target>();
 
   private static Logger logger = LogManager.getLogger(GenericRecommendation.class.getName());
-
 
   public GenericRecommendation(String assessmentName, Path issuesFile, Path issuesCatFile, Path complexityFile,
                                Path targetsFile) throws IOException, TAException {
@@ -64,6 +69,19 @@ public class GenericRecommendation implements Recommendation {
     String issueRulesJson = GenericUtil.readFileToString(issuesFile);
     rcm = new IssueRuleProcessor(issueRulesJson, issueCategoryMap);
 
+  }
+
+  public static GenericRecommendation createGenericRecommemndation(String assessmentName, String middlewareName) throws TAException, IOException {
+    String middlewareDir = File.separator + middlewareName + File.separator;
+    try {
+        return new GenericRecommendation(assessmentName,
+                Paths.get(GenericRecommendation.class.getResource(middlewareDir + FILE_ISSUES_JSON).toURI()),
+                Paths.get(GenericRecommendation.class.getResource(middlewareDir + FILE_ISSUECATS_JSON).toURI()),
+                Paths.get(GenericRecommendation.class.getResource(middlewareDir + FILE_COMPLEXITIES_JSON).toURI()),
+                Paths.get(GenericRecommendation.class.getResource(middlewareDir + FILE_TARGETS_JSON).toURI()));
+      } catch (URISyntaxException e) {
+        throw new TAException(e);
+      }
   }
 
   @Override

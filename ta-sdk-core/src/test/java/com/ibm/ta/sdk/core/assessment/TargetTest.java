@@ -69,7 +69,7 @@ public class TargetTest {
             // No issue and no issue category
             Path targetJsonFile = new File(TEST_RESOURCES_DIR, "target/targets_no_issue_no_cat.json").toPath();
             List<Issue> issues = getIssue(targetJsonFile);
-            assertEquals(0, issues.size());
+            assertEquals(1, issues.size());
         } catch (IOException | TAException e) {
             throw new AssertionFailedError("Error generating recommendations", e);
         }

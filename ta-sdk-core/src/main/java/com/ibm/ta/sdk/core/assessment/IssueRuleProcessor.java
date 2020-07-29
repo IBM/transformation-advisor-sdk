@@ -79,6 +79,11 @@ public class IssueRuleProcessor {
       }
     }
 
+    // If no issues or issue categories in target, add all issues to target
+    if (target.getIssues().isEmpty() && target.getIssueCategories().isEmpty()) {
+      issueRulesSet.addAll(issueRulesMap.keySet());
+    }
+
     // Create issue rule array with only issues listed in the target
     JsonArray issueRulesJson = new JsonArray();
     for (String targetIssue : issueRulesSet.toArray(new String[]{})) {
