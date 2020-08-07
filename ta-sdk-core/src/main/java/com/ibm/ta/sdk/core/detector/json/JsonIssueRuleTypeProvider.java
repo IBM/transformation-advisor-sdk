@@ -85,15 +85,15 @@ public class JsonIssueRuleTypeProvider implements IssueRuleTypeProvider {
 
         List<String> pathList = null;
 
-        logger.info("queryInput:" + querytInputJsonStr);
-        logger.info("path:" + pathValue);
+        //logger.trace("queryInput:" + querytInputJsonStr);
+        //logger.trace("path:" + pathValue);
 
         Configuration conf = Configuration.builder()
                 .options(Option.AS_PATH_LIST).build();
         try {
           pathList = using(conf).parse(querytInputJsonStr).read(pathValue);
         } catch (PathNotFoundException e) {
-          logger.info("No issues found in path:" + pathValue);
+          logger.error("No issues found in path:" + pathValue);
         }
 
         if (pathList != null && !pathList.isEmpty()) {
@@ -105,14 +105,14 @@ public class JsonIssueRuleTypeProvider implements IssueRuleTypeProvider {
         List<String> pathList = pathListMap.get(pathKey);
 
         for (String path : pathList) {
-          logger.info("recommendation path:" + path);
+          logger.trace("recommendation path:" + path);
 
           DocumentContext doc = JsonPath.parse(querytInputJsonStr);
           if (!issueRule.customFilter(doc, path)) {
             continue;
           }
           List<Map<String, String>> occurrences = getOccurrence(doc, pathKey, path, issueRule.getMatchCriteria().getOccurrenceAttr());
-          logger.info("occurrence:" + occurrences);
+          logger.trace("occurrence:" + occurrences);
           issue.addOccurences(occurrences);
         }
       }
@@ -160,7 +160,7 @@ public class JsonIssueRuleTypeProvider implements IssueRuleTypeProvider {
             }
           }
         } catch (PathNotFoundException e) {
-          logger.info("Attribute not found in JSON, filterPath:" + filterPath + " key:" + pathKey);
+          logger.error("Attribute not found in JSON, filterPath:" + filterPath + " key:" + pathKey);
         }
 
         // Clone ocMap for each value in pathValues
