@@ -8,12 +8,15 @@ package com.ibm.ta.sdk.spi.util;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.ibm.ta.sdk.spi.plugin.TADataCollector;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -34,14 +37,38 @@ public class Util {
     }
     return version;
   }
-  public static void zipDir(Path zipOutFile, File zipInDir) throws IOException {
+
+  public static void zipCollection(Path zipOutFile, File zipInDir, boolean excludeData) throws IOException  {
     ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipOutFile.toFile()));
-    addZipEntry(zipInDir, null, zos);
+    zos.putNextEntry(new ZipEntry(zipInDir.getName() + ZIP_FILE_SEPARATOR));
+    zos.closeEntry();
+
+    // Add subdir files
+    String parentDir = zipInDir.getName();
+    for (File dirFile : zipInDir.listFiles()) {
+      if (excludeData) {
+        // If plugin has sensitive data, include only the metadata.assessmentunit.json and reports HTML files in
+        // each assessment unit dir
+        addZipEntry(dirFile, parentDir, zos, Arrays.asList(new String[]{
+                TADataCollector.ASSESSMENTUNIT_META_JSON_FILE,
+                "recommendations_.*.html"}));
+      } else {
+        addZipEntry(dirFile, parentDir, zos, null);
+      }
+    }
+
     zos.finish();
     zos.close();
   }
 
-  private static void addZipEntry(File file, String parentDir, ZipOutputStream zos) throws IOException {
+  public static void zipDir(Path zipOutFile, File zipInDir) throws IOException {
+    ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipOutFile.toFile()));
+    addZipEntry(zipInDir, null, zos, null);
+    zos.finish();
+    zos.close();
+  }
+
+  private static void addZipEntry(File file, String parentDir, ZipOutputStream zos, List<String> includeFileList) throws IOException {
     // Add current file/dir
     zos.putNextEntry(new ZipEntry(
             (parentDir != null ? parentDir + ZIP_FILE_SEPARATOR : "")  // Do not start with leading /
@@ -57,9 +84,20 @@ public class Util {
     if (file.isDirectory()) {
       parentDir = (parentDir != null ? parentDir + ZIP_FILE_SEPARATOR : "") + file.getName();
       for (File dirFile : file.listFiles()) {
-        addZipEntry(dirFile, parentDir, zos);
+        if (includeFileList == null || hasMatchingFileName(includeFileList, dirFile.getName())) {
+          addZipEntry(dirFile, parentDir, zos, includeFileList);
+        }
       }
     }
+  }
+
+  private static boolean hasMatchingFileName(List<String> files, String fileName) {
+    for (String file : files) {
+      if (fileName.matches(file)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public static File getOutputDir() {
