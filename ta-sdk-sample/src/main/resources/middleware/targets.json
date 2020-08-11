@@ -1,0 +1,40 @@
+{
+  "targets": [
+    {
+      "target": "targetA",
+      "dimensions": [
+        {
+          "name": "buildType",
+          "values": [
+            "source",
+            "binary"
+          ],
+          "defaultValue": "binary"
+        }
+      ],
+      "issueCategories": [
+        "exit",
+        "cluster",
+        "security"
+      ]
+    },
+    {
+      "target": "targetB",
+      "dimensions": [
+        {
+          "name": "buildType",
+          "values": [
+            "source",
+            "binary"
+          ],
+          "defaultValue": "binary"
+        }
+      ],
+      "issues": [
+        "MQCL03",
+        "MQEXIT01"
+      ]
+    }
+  ]
+}
+

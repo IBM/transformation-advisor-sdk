@@ -6,7 +6,14 @@
 
 package com.ibm.ta.sdk.spi.plugin;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CliInputOption {
+
+  // Built in options
+  public static final String OPT_TARGET      = "target";
+  public static final String OPT_TARGET_DESC = "Select by Target ID";
 
   private String shortArg;
   private String longArg;
@@ -41,6 +48,11 @@ public class CliInputOption {
     this.value = option.value;
   }
 
+  public static CliInputOption buildTargetOption() {
+    return new CliInputOption(null, OPT_TARGET, OPT_TARGET_DESC,
+            true, false, null, null);
+  }
+
   public String getShortArg() {
     return shortArg;
   }
@@ -73,6 +85,38 @@ public class CliInputOption {
     return String.format("%1$-" + 4 + "s", "".equals(shortArg) ? "" : "-" + shortArg + ", ")  +
             String.format("%1$-" + 25 + "s", ("".equals(longArg) ? "" : "--" + longArg) + " " + (acceptsValue ? valueDisplayName : "")) +
             description + (value == null ? "" : "(Default:" + value +")");
+  }
+
+  /**
+   * Iterates through all CliInputOptions and retrieves values for options with the matching short name
+   * @param options List of CliInputOption to retrieve values from
+   * @param optionShotName Short name of the option to retrieve values for
+   * @return List of values for the option
+   */
+  public static List<String> getCliOptionValuesByShortName(List<CliInputOption> options, String optionShotName) {
+    List<String> values = new ArrayList<>();
+    for (CliInputOption cliOption : options) {
+      if (cliOption.getShortArg().equals(optionShotName)) {
+        values.add(cliOption.getValue());
+      }
+    }
+    return values;
+  }
+
+  /**
+   * terates through all CliInputOptions and retrieves values for options with the matching long name
+   * @param options List of CliInputOption to retrieve values from
+   * @param optionLongName Long name of the option to retrieve values for
+   * @return List of values for the option
+   */
+  public static List<String> getCliOptionValuesByLongName(List<CliInputOption> options, String optionLongName) {
+    List<String> values = new ArrayList<>();
+    for (CliInputOption cliOption : options) {
+      if (cliOption.getLongArg().equals(optionLongName)) {
+        values.add(cliOption.getValue());
+      }
+    }
+    return values;
   }
 
   @Override

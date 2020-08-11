@@ -22,6 +22,8 @@ public class CliInputCommand {
   public static final String CMD_ASSESS_DESC  = "Performs data collection and assessment";
   public static final String CMD_REPORT       = "report";
   public static final String CMD_REPORT_DESC  = "Generates reports";
+  public static final String CMD_MIGRATE       = "migrate";
+  public static final String CMD_MIGRATE_DESC  = "Generates migration bundle for assessment";
   public static final String CMD_RUN          = "run";
   public static final String CMD_RUN_DESC     = "Performs data collection, assessment, and generate reports";
 
@@ -52,12 +54,36 @@ public class CliInputCommand {
     this(cmd.name, cmd.description, null, null, cmd.argumentDisplayNames);
   }
 
+  public static CliInputCommand buildCollectCommand(List<CliInputOption> options, List<CliInputCommand> commands, List<String> argumentDisplayNames) {
+    return new CliInputCommand(CMD_COLLECT, CMD_COLLECT_DESC, options, commands, argumentDisplayNames);
+  }
+
+  public static CliInputCommand buildAssessCommand(List<CliInputOption> options, List<CliInputCommand> commands, List<String> argumentDisplayNames) {
+    return new CliInputCommand(CMD_ASSESS, CMD_ASSESS_DESC, options, commands, argumentDisplayNames);
+  }
+
+  public static CliInputCommand buildReportCommand(List<CliInputOption> options, List<CliInputCommand> commands, List<String> argumentDisplayNames) {
+    return new CliInputCommand(CMD_REPORT, CMD_REPORT_DESC, options, commands, argumentDisplayNames);
+  }
+
+  public static CliInputCommand buildMigrateCommand(List<CliInputOption> options, List<CliInputCommand> commands, List<String> argumentDisplayNames) {
+    return new CliInputCommand(CMD_MIGRATE, CMD_MIGRATE_DESC, options, commands, argumentDisplayNames);
+  }
+
   public String getName() {
     return name;
   }
 
+  public void setName(String name) {
+    this.name = name;
+  }
+
   public String getDescription() {
     return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public List<CliInputOption> getOptions() {
@@ -111,7 +137,7 @@ public class CliInputCommand {
 
     String usageCommands = null;
     if (!commands.isEmpty()) {
-      usage += " COMMMAND";
+      usage += " COMMAND";
 
       usageCommands = "\nCommands:\n";
       for (CliInputCommand c : commands) {

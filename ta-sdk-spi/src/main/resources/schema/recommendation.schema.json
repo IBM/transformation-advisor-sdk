@@ -6,6 +6,7 @@
     "domain",
     "collectionUnitType",
     "collectionUnitName",
+    "middleware",
     "version",
     "complexityRules",
     "issueCategories",

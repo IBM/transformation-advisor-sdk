@@ -1,0 +1,11 @@
+{
+  "security": {
+    "title": "Authentication considerations"
+  },
+  "exits": {
+    "title": "Exit and custom binary considerations"
+  },
+  "cluster": {
+    "title": "Cluster considerations"
+  }
+}

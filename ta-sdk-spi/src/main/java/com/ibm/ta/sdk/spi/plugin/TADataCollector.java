@@ -6,10 +6,7 @@
 
 package com.ibm.ta.sdk.spi.plugin;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.ibm.ta.sdk.spi.collect.*;
 import com.ibm.ta.sdk.spi.recommendation.Recommendation;
@@ -19,6 +16,7 @@ import com.ibm.ta.sdk.spi.report.Report;
 import com.ibm.ta.sdk.spi.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.util.FileUtils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -35,7 +33,7 @@ public class TADataCollector {
   private static final String TADATACOLLECTOR_BASE_HELP_USAGE = TADATACOLLECTOR_HELP_USAGE_PREFIX + " MIDDLEWARE COMMAND [OPTIONS]";
   public static final String ENVIRONMENT_JSON_FILE = "environment.json";
   public static final String RECOMMENDATIONS_JSON_FILE = "recommendations.json";
-  public static final String ASSESSMENTUNIT_META_JSON_FILE = ".assessmentUnit.json";
+  public static final String ASSESSMENTUNIT_META_JSON_FILE = "metadata.assessmentUnit.json";
 
   private static Logger logger = LogManager.getLogger(TADataCollector.class.getName());
 
@@ -56,20 +54,65 @@ public class TADataCollector {
     }
 
     List<CliInputCommand> providerCommands = new LinkedList<>();
-    providerCommands.add(provider.getCollectCommand());
+    CliInputCommand collectCommand = provider.getCollectCommand();
+    if (collectCommand != null) {
+      collectCommand.setName(CliInputCommand.CMD_COLLECT);
+      collectCommand.setDescription(CliInputCommand.CMD_COLLECT_DESC);
+      providerCommands.add(collectCommand);
+    }
     CliInputCommand assessCommand = provider.getAssessCommand();
-    providerCommands.add(assessCommand);
-    providerCommands.add(provider.getReportCommand());
+    if (assessCommand != null) {
+      assessCommand.setName(CliInputCommand.CMD_ASSESS);
+      assessCommand.setDescription(CliInputCommand.CMD_ASSESS_DESC);
+      providerCommands.add(assessCommand);
+
+      // Add target option
+      List<CliInputOption> assessOptions = assessCommand.getOptions();
+      if (assessOptions == null) {
+        assessOptions = new LinkedList<>();
+        assessCommand.setOptions(assessOptions);
+      }
+      assessOptions.add(CliInputOption.buildTargetOption());
+    }
+    CliInputCommand reportCommand = provider.getReportCommand();
+    if (reportCommand != null) {
+      reportCommand.setName(CliInputCommand.CMD_REPORT);
+      reportCommand.setDescription(CliInputCommand.CMD_REPORT_DESC);
+      providerCommands.add(reportCommand);
+    }
+    CliInputCommand migrateCommand = provider.getMigrateCommand();
+    if (migrateCommand != null) {
+      migrateCommand.setName(CliInputCommand.CMD_MIGRATE);
+      migrateCommand.setDescription(CliInputCommand.CMD_MIGRATE_DESC);
+      providerCommands.add(migrateCommand);
+
+      // Add target option to migrate command
+      List<CliInputOption> migrateOptions = migrateCommand.getOptions();
+      if (migrateOptions == null) {
+        migrateOptions = new LinkedList<>();
+        migrateCommand.setOptions(migrateOptions);
+      }
+      migrateOptions.add(CliInputOption.buildTargetOption());
+    }
 
     // Add 'run' command which performs collect, assess, and report
     // The command does not be be provided by the provided, we could re-use the 'assess' command
-    CliInputCommand runCommand = new CliInputCommand(CliInputCommand.CMD_RUN, CliInputCommand.CMD_RUN_DESC,
-            assessCommand.getOptions(), assessCommand.getCommands(), assessCommand.getArgumentDisplayNames());
-    providerCommands.add(runCommand);
+    if (assessCommand != null) {
+      CliInputCommand runCommand = new CliInputCommand(CliInputCommand.CMD_RUN, CliInputCommand.CMD_RUN_DESC,
+              assessCommand.getOptions(), assessCommand.getCommands(), assessCommand.getArgumentDisplayNames());
+      providerCommands.add(runCommand);
+    }
 
     // Help command - lists all top level commands available for middleware
     if (cliArguments.get(0).equals("help")) {
       System.out.println("\n" + getBaseMiddlewareHelp(middleware, providerCommands) + "\n");
+      return;
+    }
+
+    // version command - lists the version for SDK and the provider
+    if (cliArguments.get(0).contains("version")||cliArguments.get(0).equals("-v") ) {
+      System.out.println("\n  Transformation Advisor SDK version: "+Util.getSDKVersion());
+      System.out.println("    - Plugin provider "+provider.getClass()+" version: "+provider.getVersion()+"\n");
       return;
     }
 
@@ -98,6 +141,8 @@ public class TADataCollector {
       runAssess(provider, matchedCommand);
     } else if (CliInputCommand.CMD_REPORT.equals(matchedCommand.getName())) {
       runReport(provider, matchedCommand);
+    } else if (CliInputCommand.CMD_MIGRATE.equals(matchedCommand.getName())) {
+      runMigrate(provider, matchedCommand);
     } else if (CliInputCommand.CMD_RUN.equals(matchedCommand.getName())) {
       runRun(provider, matchedCommand);
     } else {
@@ -113,13 +158,21 @@ public class TADataCollector {
 
   private List<DataCollection> collectData(PluginProvider provider, CliInputCommand cliInputCommand) throws TAException, IOException {
     List<DataCollection> dataCollections = provider.getCollection(cliInputCommand);
+    if (dataCollections == null || dataCollections.size() == 0) {
+      throw new TAException("Collect failed. No recommendations generated by plugin provider.");
+    }
     for (DataCollection dataCollection : dataCollections) {
       // Get environment
       Environment environment = dataCollection.getEnvironment();
 
       // Create output dir
-      String assessmentName = environment.getCollectionUnitName();
-      File outputDir = Util.getAssessmentOutputDir(assessmentName);
+      String collectionName = environment.getCollectionUnitName();
+      // collectionName need to be set in the env.json,  otherwise cannot find the output dir,
+      // throw exception here
+      if (collectionName==null || collectionName.length()==0) {
+        throw new TAException("Collection unit name isnot set in the environment by the plug-in provider "+provider.getClass());
+      }
+      File outputDir = Util.getAssessmentOutputDir(collectionName);
       if (!outputDir.exists()) {
         outputDir.mkdirs();
       }
@@ -233,11 +286,21 @@ public class TADataCollector {
   public void runAssess(PluginProvider provider, CliInputCommand cliInputCommand) throws TAException, IOException {
     // Run collections
     List<DataCollection> dataCollections = collectData(provider, cliInputCommand);
+    if (dataCollections == null || dataCollections.size() == 0) {
+      throw new TAException("Collect failed. No recommendations generated by plugin provider.");
+    }
 
     // Generate and write recommendations
     List<Recommendation> recs = provider.getRecommendation(cliInputCommand);
+    if (recs == null || recs.size() == 0) {
+      throw new TAException("Assessment failed. No recommendations generated by plugin provider.");
+    }
+
+    // Get target commandline option to filter out targets
+    List<String> filterTargets = CliInputOption.getCliOptionValuesByLongName(cliInputCommand.getOptions(), CliInputOption.OPT_TARGET);
+
     for (Recommendation rec : recs) {
-      String assessmentName = rec.getAssessmentName();
+      String assessmentName = rec.getCollectionUnitName();
 
       Optional<DataCollection> dcOp = dataCollections.stream()
               .filter(d -> d.getAssessmentName().equals(assessmentName))
@@ -249,7 +312,7 @@ public class TADataCollector {
       DataCollection dc = dcOp.get();
       Environment environment =  dc.getEnvironment();
       List<? extends AssessmentUnit> assessUnits = dc.getAssessmentUnits();
-      RecommendationJson recJson = new RecommendationJson(rec, environment, assessUnits);
+      RecommendationJson recJson = new RecommendationJson(rec, environment, assessUnits, filterTargets);
       File outputDir = Util.getAssessmentOutputDir(assessmentName);
       writeRecommendationsJson(recJson, outputDir);
 
@@ -289,7 +352,7 @@ public class TADataCollector {
       List<Report> reports = provider.getReport(assessmentName, cliInputCommand);
       for (Report report : reports) {
         Target target = report.getTarget();
-        String reportName = "recommendations_" + target.getLocation() + "_" + target.getPlatform() +
+        String reportName = "recommendations_" + target.getTargetId() +
                 "." + report.getReportType().toString().toLowerCase();
 
         // Report path
@@ -303,10 +366,15 @@ public class TADataCollector {
         // Update assessment unit zip
         String zipFileName = assessmentName + ".zip";
         File zipFile = new File(aOutputDir.getParentFile(), zipFileName);
-        logger.debug("Updating collection zip archive to include report: " + zipFile.getAbsolutePath());
         Util.zipCollection(zipFile.toPath(), aOutputDir, env.hasSensitiveData());
       }
     }
+  }
+
+  public void runMigrate(PluginProvider provider, CliInputCommand cliInputCommand) throws TAException, IOException {
+    // Get target commandline option to filter out targets
+    List<String> filterTargets = CliInputOption.getCliOptionValuesByLongName(cliInputCommand.getOptions(), CliInputOption.OPT_TARGET);
+    provider.getMigrationBundle(cliInputCommand, filterTargets);
   }
 
   public void runRun(PluginProvider provider, CliInputCommand cliInputCommand) throws TAException, IOException {
@@ -467,7 +535,7 @@ public class TADataCollector {
   }
 
   private void writeAssessmentDataJson(AssessmentUnit au, File outputDir) throws TAException {
-    File auFile = new File(outputDir, au.getName() + ".json");
+    File auFile = new File(outputDir, "data" + ".json");
     if (auFile.exists()) {
       auFile.delete();
     }
@@ -494,7 +562,7 @@ public class TADataCollector {
   }
 
   private void writeAssessmentUnitMetaJson(AssessmentUnit au, Environment environment, File outputDir) throws TAException {
-    File auMetaFile = new File(outputDir, au.getName() + ASSESSMENTUNIT_META_JSON_FILE);
+    File auMetaFile = new File(outputDir, ASSESSMENTUNIT_META_JSON_FILE);
     if (auMetaFile.exists()) {
       auMetaFile.delete();
     }
@@ -534,7 +602,7 @@ public class TADataCollector {
     }
     return null;
   }
-
+/*
   private static void processInput(String[] args) {
     Properties cliArgs = new Properties();
     List<String> cliCommands = new LinkedList<>();
@@ -569,7 +637,7 @@ public class TADataCollector {
       }
     }
   }
-
+*/
   public static void main(String[] args) {
     List<String> cliCommands = new LinkedList<>();
 
@@ -587,6 +655,10 @@ public class TADataCollector {
     String middleware = cliCommands.get(0);
     if (middleware.startsWith("-")) {
       System.out.println("\n" + getBaseHelp() + "\n");
+      return;
+    }
+    if (middleware.contains("version")) {
+      System.out.println("\n  Transformation Advisor SDK version: "+Util.getSDKVersion()+"\n");
       return;
     }
     cliCommands.remove(0); // Pop out middleware from CLI args

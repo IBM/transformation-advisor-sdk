@@ -1,0 +1,30 @@
+{
+  "issues": [
+    {
+      "id": "MQEXIT06",
+      "title": "Service defined. Analysis of the Service needs to be completed to see if there are custom binaries used",
+      "category": "exits",
+      "issueOverhead": 1.0,
+      "occurrencesCost": 1.0,
+      "solutionText": [
+        "Check if binary has been replaced with Product Capability in MQ 9 and adopt that instead."
+      ],
+      "severity": "critical",
+      "matchCriteria": {
+        "ruleType": "json",
+        "queryInputFile": {
+          "SampleConfigFile": "configFile.json"
+        },
+        "jsonQueryPath": {
+          "fullRepository": "$.clusters[?(@.fullRepository == true)]"
+        },
+        "occurrenceAttr": {
+          "cluster": {
+            "title": "Cluster",
+            "path": "name"
+          }
+        }
+      }
+    }
+  ]
+}

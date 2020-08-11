@@ -1,0 +1,27 @@
+{
+  "issues": [
+    {
+      "id": "MQCL03",
+      "title": "Contains a Full Repository.  Assess impact to other cluster members.",
+      "category": "cluster",
+      "issueOverhead": 0.5,
+      "occurrencesCost": 0.5,
+      "solutionText": [
+        "Update other Cluster members using IPAddresses to use the new IPAddress after migrating"
+      ],
+      "severity": "potential",
+      "matchCriteria": {
+        "ruleType": "json",
+        "jsonQueryPath": {
+          "fullRepository": "$.clusters[?(@.fullRepository == false)]"
+        },
+        "occurrenceAttr": {
+          "cluster": {
+            "title": "Cluster",
+            "path": "name"
+          }
+        }
+      }
+    }
+  ]
+}

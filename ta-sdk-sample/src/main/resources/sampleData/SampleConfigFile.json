@@ -4,5 +4,12 @@
       "name": "MQ.SERVICE",
       "description": "Test Service"
     }
-  ]
+  ],
+  "jvm": {
+    "properties": [
+      {"key": "com.ibm.example.system.property","value":"ExampleValue" },
+      {"key": "user.language","value":"en" },
+      {"key": "user.country","value":"CA" }
+    ]
+  }
 }

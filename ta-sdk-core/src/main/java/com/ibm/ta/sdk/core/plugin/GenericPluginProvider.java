@@ -6,11 +6,16 @@
 
 package com.ibm.ta.sdk.core.plugin;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.ibm.ta.sdk.core.assessment.GenericRecommendation;
 import com.ibm.ta.sdk.core.collect.GenericAssessmentUnit;
 import com.ibm.ta.sdk.core.collect.TextContextMask;
 import com.ibm.ta.sdk.core.report.RecommendationReporter;
+import com.ibm.ta.sdk.core.util.FreeMarkerTemplateResolver;
+import com.ibm.ta.sdk.core.util.GenericUtil;
 import com.ibm.ta.sdk.spi.collect.ContentMask;
 import com.ibm.ta.sdk.spi.plugin.CliInputCommand;
 import com.ibm.ta.sdk.spi.plugin.CliInputOption;
@@ -19,6 +24,7 @@ import com.ibm.ta.sdk.spi.plugin.TAException;
 import com.ibm.ta.sdk.spi.recommendation.Recommendation;
 import com.ibm.ta.sdk.spi.report.Report;
 import com.ibm.ta.sdk.spi.util.Util;
+import com.ibm.ta.sdk.spi.validation.TaJsonFileValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,14 +45,27 @@ public abstract class GenericPluginProvider implements PluginProvider {
   private static Logger logger = LogManager.getLogger(GenericPluginProvider.class.getName());
 
   @Override
+  public void validateJsonFiles() throws TAException {
+    try {
+       getFileFromUri(getClass().getClassLoader().getResource(getMiddleware()).toURI());
+    } catch (Exception e) {
+      logger.error("cannot find middleware in class path. exception is: ", e);
+      throw new TAException("Command assess is not supported for plugin provider "+this.getClass()+
+              "\n        No middleware specific issue json files found in plugin provider ");
+    }
+    TaJsonFileValidator.validateIssue(getMiddleware() + File.separator + FILE_ISSUES_JSON);
+    TaJsonFileValidator.validateComplexity(getMiddleware() + File.separator + FILE_COMPLEXITIES_JSON);
+    TaJsonFileValidator.validateTarget(getMiddleware() + File.separator + FILE_TARGETS_JSON);
+  }
+
+  @Override
+  public String getVersion() {
+    return Util.getSDKVersion();
+  }
+
+  @Override
   public List<Recommendation> getRecommendation(CliInputCommand cliInputCommand) throws TAException {
     try {
-
-      String middlewareDir = "/" + getMiddleware() + "/";
-      Path complexityJsonFile = Paths.get(GenericPluginProvider.class.getResource(middlewareDir + FILE_COMPLEXITY_JSON).toURI());
-      Path issueCatJsonFile = Paths.get(GenericPluginProvider.class.getResource(middlewareDir + FILE_ISSUECAT_JSON).toURI());
-      Path issueJsonFile = Paths.get(GenericPluginProvider.class.getResource(middlewareDir + FILE_ISSUE_JSON).toURI());
-      Path targetJsonFile = Paths.get(GenericPluginProvider.class.getResource(middlewareDir + FILE_TARGET_JSON).toURI());
       File outDir = Util.getOutputDir();
       List<Recommendation> recs = new ArrayList<>();
 
@@ -54,14 +73,12 @@ public abstract class GenericPluginProvider implements PluginProvider {
       for (File file: fileList) {
         if (file.isDirectory()) {
           String dirName = file.getName();
-          GenericRecommendation rec = new GenericRecommendation(dirName, issueJsonFile, issueCatJsonFile, complexityJsonFile, targetJsonFile);
+          GenericRecommendation rec = GenericRecommendation.createGenericRecommemndation(dirName, getMiddleware());
           recs.add(rec);
         }
       }
 
       return recs;
-    } catch (URISyntaxException e) {
-      throw new TAException(e);
     } catch (IOException e) {
       throw new TAException(e);
     }
@@ -163,5 +180,54 @@ public abstract class GenericPluginProvider implements PluginProvider {
     au.setContentMasks(getContentMasks());
 
     return au;
+  }
+
+  @Override
+  public CliInputCommand getMigrateCommand() {
+    // migrate command
+    CliInputOption migrateCmdAssessNameOpt = new CliInputOption("n", "assessUnitName", "The name of assessment unit", true, true, null, null);
+    List<CliInputOption> migrateCmdOpts = new LinkedList<>(Arrays.asList(migrateCmdAssessNameOpt));
+    CliInputCommand migrateCmd = new CliInputCommand(CliInputCommand.CMD_MIGRATE,
+            "Generate migration bundle for different target based on assessment unit files in the collection",
+            migrateCmdOpts, null, Arrays.asList("COLLECTION_UNIT_DIR"));
+    return migrateCmd;
+  }
+
+  @Override
+  public void getMigrationBundle(CliInputCommand migrateCommand, List<String> targets) throws TAException {
+    List<String> migrateArgu = migrateCommand.getArguments();
+
+    // check the passin collection directory is a directory
+    JsonObject envJson = null;
+    File collectionDir = new File(migrateArgu.get(0));
+    if (!collectionDir.isDirectory()) {
+      throw new TAException("The value for collectionDir is not a directory.");
+    }
+
+    // check the environment.json file is in the collection directory.
+    File envJsonFile = new File(collectionDir.getAbsolutePath()+File.separator+ ENVIRONMENT_JSON);
+    if (!envJsonFile.exists()) {
+      throw new TAException("The value for collectionDir is not valid collection directory,  cannot find the environment.json file in that directory");
+    }
+
+    // load the environment.json file from the collection directory.
+    try {
+      envJson = GenericUtil.getJsonObj(new TypeToken<JsonObject>(){}, envJsonFile.toPath());
+    } catch (IOException e) {
+      throw new TAException("Failed to parse environment.json file to JsonObject.",e);
+    }
+
+    JsonArray assessments = envJson.getAsJsonArray("assessmentUnits");
+    List<String> assessNames = CliInputOption.getCliOptionValuesByShortName(migrateCommand.getOptions(), "n");
+
+    for (JsonElement assess:assessments) {
+      String assessName = assess.getAsString();
+      if (assessNames.size()==0 || assessNames.contains(assessName)) {
+          FreeMarkerTemplateResolver fmtr = new FreeMarkerTemplateResolver(this, new File(collectionDir.getAbsolutePath()+File.separator+assessName), envJson);
+          fmtr.resolveTemplatesForTargets(targets);
+      } else {
+          logger.warn("skip generate migration bundle for assessment unit " + assessName);
+      }
+    }
   }
 }

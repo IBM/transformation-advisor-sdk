@@ -168,6 +168,18 @@ public class EnvironmentJson {
     return environment;
   }
 
+  public void setDomain(String domain) {
+    this.domain = domain;
+  }
+
+  public void setMiddlewareName(String middlewareName) {
+    this.middlewareName = middlewareName;
+  }
+
+  public void setMiddlewareVersion(String middlewareVersion) {
+    this.middlewareVersion = middlewareVersion;
+  }
+
   public void setOperatingSystem(String operatingSystem) {
     this.operatingSystem = operatingSystem;
   }

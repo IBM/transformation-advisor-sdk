@@ -85,15 +85,15 @@ public class JsonIssueRuleTypeProvider implements IssueRuleTypeProvider {
 
         List<String> pathList = null;
 
-        //logger.trace("queryInput:" + querytInputJsonStr);
-        //logger.trace("path:" + pathValue);
+        logger.info("queryInput:" + querytInputJsonStr);
+        logger.info("path:" + pathValue);
 
         Configuration conf = Configuration.builder()
                 .options(Option.AS_PATH_LIST).build();
         try {
           pathList = using(conf).parse(querytInputJsonStr).read(pathValue);
         } catch (PathNotFoundException e) {
-          logger.error("No issues found in path:" + pathValue);
+          logger.info("No issues found in path:" + pathValue);
         }
 
         if (pathList != null && !pathList.isEmpty()) {
@@ -105,14 +105,14 @@ public class JsonIssueRuleTypeProvider implements IssueRuleTypeProvider {
         List<String> pathList = pathListMap.get(pathKey);
 
         for (String path : pathList) {
-          logger.trace("recommendation path:" + path);
+          logger.info("recommendation path:" + path);
 
           DocumentContext doc = JsonPath.parse(querytInputJsonStr);
           if (!issueRule.customFilter(doc, path)) {
             continue;
           }
           List<Map<String, String>> occurrences = getOccurrence(doc, pathKey, path, issueRule.getMatchCriteria().getOccurrenceAttr());
-          logger.trace("occurrence:" + occurrences);
+          logger.info("occurrence:" + occurrences);
           issue.addOccurences(occurrences);
         }
       }
@@ -149,7 +149,6 @@ public class JsonIssueRuleTypeProvider implements IssueRuleTypeProvider {
             if (filterPath.contains("\\")) {
               filterPath = filterPath.replace("\\", "\\\\");
             }
-
             Object pathObj =  doc.read(filterPath + "['" + pathKey + "']");
             if (pathObj instanceof JSONArray) {
               String[] strValues = new String[((JSONArray) pathObj).size()];
@@ -160,7 +159,7 @@ public class JsonIssueRuleTypeProvider implements IssueRuleTypeProvider {
             }
           }
         } catch (PathNotFoundException e) {
-          logger.error("Attribute not found in JSON, filterPath:" + filterPath + " key:" + pathKey);
+          logger.info("Attribute not found in JSON, filterPath:" + filterPath + " key:" + pathKey);
         }
 
         // Clone ocMap for each value in pathValues

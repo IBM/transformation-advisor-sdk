@@ -18,6 +18,24 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M4</version>
+                <executions>
+                    <execution>
+                        <id>SDK Validation Tests</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>test/*</excludes>
+                            <dependenciesToScan>
+                                <dependency>com.ibm.ta.sdk:ta-sdk-core</dependency>
+                            </dependenciesToScan>
+                            <systemPropertyVariables>
+                                <ta.sdk.middleware>middleware</ta.sdk.middleware>
+                            </systemPropertyVariables>
+                            <testFailureIgnore>true</testFailureIgnore>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

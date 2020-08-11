@@ -76,20 +76,20 @@ public interface Environment {
   JsonObject getMiddlewareMetadata();
 
   /**
-   * An assessment could be an installation of a middleware. In this case, the assessment name would be the name
-   * of the middleware installation. An assessment could also be a particular node containing the middleware. The
-   * model for assessment will generally be different for different middleware, and is decided by the plug-in
+   * An collection unit could be an installation of a middleware. In this case, the collection unit name would be the name
+   * of the middleware installation. An collection unit could also be a particular node containing the middleware. The
+   * model for collection unit will generally be different for different middleware, and is decided by the plug-in
    * developer.
    *
-   * @return Name of the assessment
+   * @return Name of the collection unit
    */
   String getCollectionUnitName();
 
   /**
-   * As with the {@link #getCollectionUnitName()}, the assessment type will generally be different for different
+   * As with the {@link #getCollectionUnitName()}, the collection unit type will generally be different for different
    * middleware. Examples of assessment type my be "Installation", or "Node".
    *
-   * @return Type of the assessment
+   * @return Type of the collection unit
    */
   String getCollectionUnitType();
 

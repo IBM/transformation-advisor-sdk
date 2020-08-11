@@ -7,21 +7,31 @@
 package com.ibm.ta.sdk.core.assessment;
 
 import com.google.gson.reflect.TypeToken;
+import com.ibm.ta.sdk.core.assessment.json.ComplexitiesJson;
+import com.ibm.ta.sdk.core.assessment.json.TargetsJson;
 import com.ibm.ta.sdk.core.util.GenericUtil;
 import com.ibm.ta.sdk.spi.plugin.TAException;
 import com.ibm.ta.sdk.spi.collect.AssessmentUnit;
 import com.ibm.ta.sdk.spi.assess.ComplexityContributionJson;
 import com.ibm.ta.sdk.spi.assess.IssueCategoryJson;
 import com.ibm.ta.sdk.spi.recommendation.*;
+import com.ibm.ta.sdk.spi.validation.TaJsonFileValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.ibm.ta.sdk.core.util.Constants.*;
+import static com.ibm.ta.sdk.core.util.Constants.FILE_TARGETS_JSON;
 
 public class GenericRecommendation implements Recommendation {
   private IssueRuleProcessor rcm;
@@ -33,18 +43,18 @@ public class GenericRecommendation implements Recommendation {
 
   private static Logger logger = LogManager.getLogger(GenericRecommendation.class.getName());
 
-
   public GenericRecommendation(String assessmentName, Path issuesFile, Path issuesCatFile, Path complexityFile,
-                               Path targetFile) throws IOException {
+                               Path targetsFile) throws IOException, TAException {
     this.assessmentName = assessmentName;
 
     // Complexity
-    List<ComplexityContributionJson> ccList = GenericUtil.getJsonObj(new TypeToken<List<ComplexityContributionJson>>(){}, complexityFile);
-    complexityRules.addAll(ComplexityContributionJson.getComplexityContributionList(ccList));
+    ComplexitiesJson ccList = GenericUtil.getJsonObj(new TypeToken<ComplexitiesJson>(){}, complexityFile);
+    complexityRules.addAll(ComplexityContributionJson.getComplexityContributionList(ccList.getComplexities()));
 
     // Targets
-    GenericTarget target = GenericUtil.getJsonObj(new TypeToken<GenericTarget>(){}, targetFile);
-    targets.add(target);
+    TaJsonFileValidator.validateTarget(Files.newInputStream(targetsFile));
+    TargetsJson _targets = GenericUtil.getJsonObj(new TypeToken<TargetsJson>(){}, targetsFile);
+    targets.addAll(_targets.getTargets());
 
     // Issue Categories
     Map<String, IssueCategoryJson> icMap = GenericUtil.getJsonObj(new TypeToken<Map<String, IssueCategoryJson>>(){}, issuesCatFile);
@@ -61,8 +71,21 @@ public class GenericRecommendation implements Recommendation {
 
   }
 
+  public static GenericRecommendation createGenericRecommemndation(String assessmentName, String middlewareName) throws TAException, IOException {
+    String middlewareDir = File.separator + middlewareName + File.separator;
+    try {
+        return new GenericRecommendation(assessmentName,
+                Paths.get(GenericRecommendation.class.getResource(middlewareDir + FILE_ISSUES_JSON).toURI()),
+                Paths.get(GenericRecommendation.class.getResource(middlewareDir + FILE_ISSUECATS_JSON).toURI()),
+                Paths.get(GenericRecommendation.class.getResource(middlewareDir + FILE_COMPLEXITIES_JSON).toURI()),
+                Paths.get(GenericRecommendation.class.getResource(middlewareDir + FILE_TARGETS_JSON).toURI()));
+      } catch (URISyntaxException e) {
+        throw new TAException(e);
+      }
+  }
+
   @Override
-  public String getAssessmentName() {
+  public String getCollectionUnitName() {
     return assessmentName;
   }
 
@@ -84,6 +107,6 @@ public class GenericRecommendation implements Recommendation {
   @Override
   public List<Issue> getIssues(Target target, AssessmentUnit assessmentUnit) throws TAException {
 
-    return rcm.processIssues(target, assessmentUnit);
+    return rcm.processIssues((GenericTarget) target, assessmentUnit);
   }
 }

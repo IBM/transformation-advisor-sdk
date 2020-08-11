@@ -12,7 +12,6 @@ import com.ibm.ta.sdk.spi.plugin.TAException;
 import com.ibm.ta.sdk.spi.collect.AssessmentUnit;
 import com.ibm.ta.sdk.spi.recommendation.Issue;
 import com.ibm.ta.sdk.spi.recommendation.IssueCategory;
-import com.ibm.ta.sdk.spi.recommendation.Target;
 import com.ibm.ta.sdk.core.util.GenericUtil;
 import com.ibm.ta.sdk.core.detector.IssueRuleTypeProvider;
 
@@ -26,7 +25,8 @@ public class IssueRuleProcessor {
   private static final String ISSUERULE_MATCH_CRITERIA = "matchCriteria";
   private static final String ISSUERULE_PROVIDER = "ruleType";
 
-  private String issuesJson;
+  private Map<String, JsonObject> issueRulesMap;
+  private Map<String, List<String>> issueCatIssueRulesMap;
   private Map<String, IssueCategory> issueCategories;
 
   private ServiceLoader<IssueRuleTypeProvider> serviceLoader = ServiceLoader.load(IssueRuleTypeProvider.class);
@@ -35,8 +35,26 @@ public class IssueRuleProcessor {
   private static Logger logger = LogManager.getLogger(IssueRuleProcessor.class.getName());
 
   public IssueRuleProcessor(String issuesJson, Map<String, IssueCategory> issueCategories) {
-    this.issuesJson = issuesJson;
     this.issueCategories = issueCategories;
+
+    // Build map with issue rules
+    // Build a map of the list of issues in each issue category
+    issueRulesMap = new HashMap<>();
+    issueCatIssueRulesMap = new HashMap<>();
+    JsonObject issueRulesJson = new JsonParser().parse(issuesJson).getAsJsonObject();
+    for (Iterator it = issueRulesJson.get("issues").getAsJsonArray().iterator(); it.hasNext(); ) {
+      JsonObject issueRule = (JsonObject) it.next();
+      String issueRuleId = issueRule.get("id").getAsString();
+      String issueRuleCat = issueRule.get("category").getAsString();
+      issueRulesMap.put(issueRuleId, issueRule);
+
+      List<String> issueRulesInCat = issueCatIssueRulesMap.get(issueRuleCat);
+      if (issueRulesInCat == null) {
+        issueRulesInCat = new ArrayList<>();
+        issueCatIssueRulesMap.put(issueRuleCat, issueRulesInCat);
+      }
+      issueRulesInCat.add(issueRuleId);
+    }
 
     // Build map of issue rule providers
     Iterator<IssueRuleTypeProvider> itIRprovider = serviceLoader.iterator();
@@ -47,10 +65,36 @@ public class IssueRuleProcessor {
     }
   }
 
-  public List<Issue> processIssues(Target target, AssessmentUnit assessmentUnit) throws TAException {
+  public List<Issue> processIssues(GenericTarget target, AssessmentUnit assessmentUnit) throws TAException {
     List<Issue> issueList = new ArrayList<Issue>();
 
-    JsonArray issueRulesJson = new JsonParser().parse(issuesJson).getAsJsonArray();
+    // Get list of issues applicable to this target,
+    // Add issues from issue categories
+    Set<String> issueRulesSet = new TreeSet<>();
+    issueRulesSet.addAll(target.getIssues());
+    for (String issueCats : target.getIssueCategories()) {
+      List<String> issuesInCat = issueCatIssueRulesMap.get(issueCats);
+      if (issuesInCat != null) {
+        issueRulesSet.addAll(issuesInCat);
+      }
+    }
+
+    // If no issues or issue categories in target, add all issues to target
+    if (target.getIssues().isEmpty() && target.getIssueCategories().isEmpty()) {
+      issueRulesSet.addAll(issueRulesMap.keySet());
+    }
+
+    // Create issue rule array with only issues listed in the target
+    JsonArray issueRulesJson = new JsonArray();
+    for (String targetIssue : issueRulesSet.toArray(new String[]{})) {
+      JsonObject issueRuleJson = issueRulesMap.get(targetIssue);
+      if (issueRuleJson != null) {
+        issueRulesJson.add(issueRuleJson);
+      } else {
+        logger.warn("Issue " + issueRuleJson + " in target " + target.getTargetId() + " not found.");
+      }
+    }
+
     for (int i = 0; i < issueRulesJson.size(); i++) {
       JsonObject issueRuleJson = issueRulesJson.get(i).getAsJsonObject();
       logger.debug("Process recommendation rule:" + issueRuleJson.toString());

@@ -1,0 +1,287 @@
+{
+  "domain": "testDomain",
+  "collectionUnitType": "Installation",
+  "collectionUnitTypeLabel":"Installation",
+  "collectionUnitName": "TestCollectionUnit2",
+  "assessmentUnitSingleLabel":"Assessment unit",
+  "assessmentUnitMultipleLabel":"Assessment units",
+  "middleware": "testMiddleware",
+  "version": "10.0",
+  "complexityRules": [
+    {
+      "id": "dns",
+      "name": "DNS Reconfiguration",
+      "description": "Issues that require DNS reconfiguration",
+      "complexityContribution": "simple",
+      "issues": [
+        "MQCL01"
+      ]
+    },
+    {
+      "id": "cluster",
+      "name": "Cluster Reconfiguration",
+      "description": "Issues that require cluster reconfiguration",
+      "complexityContribution": "moderate",
+      "issuesCategory": [
+        "cluster"
+      ]
+    },
+    {
+      "id": "exits",
+      "name": "Changing Custom Logic",
+      "description": "Issues that require changing custom logic",
+      "complexityContribution": "moderate",
+      "issuesCategory": [
+        "exits"
+      ]
+    },
+    {
+      "id": "security",
+      "name": "Client authentication reconfiguration",
+      "description": "Issues that require client authentication reconfiguration",
+      "complexityContribution": "complex",
+      "issues": [
+        "MQSEC01"
+      ]
+    }
+  ],
+  "issueCategories": {
+    "cluster": {
+      "title": "Cluster considerations"
+    },
+    "security": {
+      "title": "Authentication considerations"
+    },
+    "exits": {
+      "title": "Exit and custom binary considerations"
+    }
+  },
+  "assessmentUnits": [
+    {
+      "name": "London",
+      "targets": [
+        {
+          "target": "OPEN_LIBERTY",
+          "issues": {
+            "cluster": [
+              {
+                "id": "MQCL03",
+                "title": "Contains a Full Repository.  Assess impact to other cluster members.",
+                "cost": 1.0,
+                "issueOverhead": 0.5,
+                "occurrencesCost": 0.5,
+                "complexityRule": "cluster",
+                "solutionText": [
+                  "Update other Cluster members using IPAddresses to use the new IPAddress after migrating"
+                ],
+                "severity": "potential",
+                "occurrencesFields": {
+                  "cluster": "Cluster"
+                },
+                "occurrencesCount": 1,
+                "occurrences": [
+                  {
+                    "cluster": "INVENTORY"
+                  }
+                ]
+              }
+            ],
+            "exits": [
+              {
+                "id": "MQEXIT06",
+                "title": "Service defined. Analysis of the Service needs to be completed to see if there are custom binaries used",
+                "cost": 3.0,
+                "issueOverhead": 1.0,
+                "occurrencesCost": 1.0,
+                "complexityRule": "exits",
+                "solutionText": [
+                  "Scenarios:",
+                  "(1) Custom binary is redundant.",
+                  "Check if binary has been replaced with Product Capability in MQ 9 and adopt that instead.",
+                  "(2) Binary is connecting to an external system.",
+                  "Examine configuration for your Queue Manager looking for connection parameters (environment variables and/or config files).  If found, consider how you will manage this dependency in your DevOps pipeline. Also ensure that connectivity can be established from new target k8 cluster",
+                  "(3) Binary will be carried forward as-is in your migrated Queue Manager.",
+                  "Embed the binaries into the new Docker container.  Check to see if binaries need to be ported to run in your desired Container Base OS and target cluster architecture."
+                ],
+                "severity": "critical",
+                "occurrencesFields": {
+                  "service": "Service"
+                },
+                "occurrencesCount": 2,
+                "occurrences": [
+                  {
+                    "service": "MQ.SERVICE"
+                  },
+                  {
+                    "service": "MYMQ.SERVICE"
+                  }
+                ]
+              },
+              {
+                "id": "MQEXIT07",
+                "title": "Service defined. Analysis of the Service needs to be completed to see if there are custom binaries used",
+                "cost": 3.0,
+                "issueOverhead": 1.0,
+                "occurrencesCost": 1.0,
+                "complexityRule": "exits",
+                "solutionText": [
+                  "Scenarios:",
+                  "(1) Custom binary is redundant.",
+                  "Check if binary has been replaced with Product Capability in MQ 9 and adopt that instead.",
+                  "(2) Binary is connecting to an external system.",
+                  "Examine configuration for your Queue Manager looking for connection parameters (environment variables and/or config files).  If found, consider how you will manage this dependency in your DevOps pipeline. Also ensure that connectivity can be established from new target k8 cluster",
+                  "(3) Binary will be carried forward as-is in your migrated Queue Manager.",
+                  "Embed the binaries into the new Docker container.  Check to see if binaries need to be ported to run in your desired Container Base OS and target cluster architecture."
+                ],
+                "severity": "critical",
+                "occurrencesFields": {
+                  "ejbClass": "Class name of old EJB"
+                },
+                "occurrencesCount": 2,
+                "occurrences": [
+                  {
+                    "ejbClass": "samples.mdb.ejb.MessageBean"
+                  },
+                  {
+                    "ejbClass": "samples.mdb.ejb.MessageBean2"
+                  }
+                ]
+              }
+            ],
+            "security": [
+              {
+                "id": "usingDataSource",
+                "title": "Application use datasoure defined in the server configuration",
+                "cost": 4.0,
+                "issueOverhead": 1.0,
+                "occurrencesCost": 1.0,
+                "solutionText": [
+                  "Scenarios:",
+                  "Check the server.xml file in the migration bundle to make sure the datasource configuration is correct"
+                ],
+                "severity": "potential",
+                "occurrencesFields": {
+                  "jndiName": "Datasource Jndi name"
+                },
+                "occurrencesCount": 3,
+                "occurrences": [
+                  {
+                    "jndiName": "jdbc/DefaultEJBTimerDataSource"
+                  },
+                  {
+                    "jndiName": "jdbc/PlantsByWebSphereDataSource"
+                  },
+                  {
+                    "jndiName": "jdbc/PlantsByWebSphereDataSourceNONJTA"
+                  }
+                ]
+              },
+              {
+                "id": "MQSEC01",
+                "title": "Authentication configured for OS groups. Determine target authentication mechanism.",
+                "cost": 2.4,
+                "issueOverhead": 2.0,
+                "occurrencesCost": 0.2,
+                "complexityRule": "security",
+                "solutionText": [
+                  "Try sleeping first, then:",
+                  "Consider impact to clients",
+                  "Alternatives:",
+                  "(1) Port OS config: Migrate Users, Passwords and Groups to the container environment.",
+                  "(2) Adopt LDAP: Configure migrated Queue Manager to use LDAP instead of Operating System based authentication"
+                ],
+                "severity": "potential",
+                "occurrencesFields": {
+                  "type": "Destination Type",
+                  "object": "Object",
+                  "osObjectType": "OS Object Type",
+                  "osObjectName": "OS Object Name"
+                },
+                "occurrencesCount": 2,
+                "occurrences": [
+                  {
+                    "type": "queue",
+                    "object": "NewYork",
+                    "osObjectType": "osGroup",
+                    "osObjectName": "mqm"
+                  },
+                  {
+                    "type": "queue",
+                    "object": "NewYork",
+                    "osObjectType": "osGroup",
+                    "osObjectName": "root"
+                  }
+                ]
+              }
+            ]
+          },
+          "summary": {
+            "complexity": {
+              "moderate": {
+                "cluster": 1,
+                "exits": 1
+              },
+              "complex": {
+                "security": 1
+              },
+              "score": "complex"
+            },
+            "issues": {
+              "potential": 3,
+              "critical": 2
+            },
+            "effort": {
+              "cluster": 1.0,
+              "exits": 6.0,
+              "security": 6.4,
+              "total": 13.4
+            }
+          }
+        },
+        {
+          "target": "WAS_LIBERTY",
+          "issues": {
+            "cluster": [
+              {
+                "id": "MQCL03",
+                "title": "Contains a Full Repository.  Assess impact to other cluster members.",
+                "cost": 1.0,
+                "issueOverhead": 0.5,
+                "occurrencesCost": 0.5,
+                "complexityRule": "cluster",
+                "solutionText": [
+                  "Update other Cluster members using IPAddresses to use the new IPAddress after migrating"
+                ],
+                "severity": "potential",
+                "occurrencesFields": {
+                  "cluster": "Cluster"
+                },
+                "occurrencesCount": 1,
+                "occurrences": [
+                  {
+                    "cluster": "INVENTORY"
+                  }
+                ]
+              }
+            ]
+          },
+          "summary": {
+            "complexity": {
+              "moderate": {
+                "cluster": 1
+              },
+              "score": "moderate"
+            },
+            "issues": {
+              "potential": 1
+            },
+            "effort": {
+              "cluster": 1.0,
+              "total": 1.0
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

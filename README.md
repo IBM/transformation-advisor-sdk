@@ -2,7 +2,7 @@
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.ibm.ta.sdk/ta-sdk/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.ibm.ta.sdk/ta-sdk)
 
-This is a tool to help a developer to create and build a middleware data collection plug-in, which can be used to gather the information of an application deployed on a middleware server, and provide modernization help and recommendations.  See [Getting Started Guide](docs/GettingStarted.md)
+This is a tool to help a developer to create and build a middleware data collection plug-in, which can be used to gather the information of an application deployed on a middleware server, and provide modernization help and recommendations.  
 
 ### Modules
 
@@ -13,7 +13,7 @@ ta-sdk-core | Default implementation of SPI framework
 ta-sdk-sample | Sample plug-in
 
 ### Guide for Plugin Developer
-If you want to develop your own plugins using TA SDK,  [here](https://github.com/IBM/transformation-advisor-sdk/wiki/Transformation-Advisor-SDK-Plugin-Developer-Guide) is the step by step guide to get start.
+If you want to develop your own plugins using TA SDK,  See [Getting Started Guide](docs/GettingStarted.md) to get start.
 
 ### Dependency
 Other middleware plug-in project will depend on the ta-sdk-core module.
@@ -23,7 +23,7 @@ Need to add this in your pom.xml file.
         <dependency>
             <groupId>com.ibm.ta.sdk</groupId>
             <artifactId>ta-sdk-core</artifactId>
-            <version>0.5.5</version>
+            <version>0.5.3</version>
         </dependency>
 ```
 ta-sdk-core module will depend on the ta-sdk-spi module.
@@ -33,7 +33,7 @@ This project uses Maven version later than 3.6.0 to build. Download and configur
 
 On all platforms, build by running this command:
 ```bash
-mvn clean install
+mvn clean install -Pdev
 ```
 Output archive files can be find in target/ directory.
 
@@ -41,7 +41,7 @@ Output archive files can be find in target/ directory.
 To run the data data collector:
 ```
 cd target
-java -jar ta-sdk-sample-0.5.5.jar help
+java -jar ta-sdk-sample-0.5.3.jar help
 ```
 
 The `help` command shows the usage for the data collector. The usage information for `middleware` shows the list
@@ -49,18 +49,18 @@ middleware based on which plug-ins are in the classpath. In the example below, o
 is available:
 ```
 Middleware:
-  Plug-ins available for these middleware [ sample ]
+  Plug-ins available for these middleware [ middleware ]
 ```
 The `<middleware> help` command shows the command usage for that middleware.
 ```
-java -jar ta-sdk-sample-0.5.5.jar sample help
+java -jar ta-sdk-sample-0.5.3.jar middleware help
 ```
 
 You can run all the stages of the sample plugin using the `run` option and 2 arguments, `INSTALL_PATH` and `DATA_DIR`.
 
 **Note:** For the sake of simplicity, the sample plugin does not actually use the argument values. To run the sample, you can supply any text in place of those arguments.
 ```
-java -jar ta-sdk-sample-0.5.5.jar sample run myarg1 myarg2
+java -jar ta-sdk-sample-0.5.3.jar middleware run myarg1
 ``` 
 
 Output artifacts are in `output` directory.
@@ -75,7 +75,7 @@ the recommendations.
 To run the data validator:
 ```
 cd target
-java -cp ta-sdk-sample-0.5.5.jar com.ibm.ta.sdk.spi.validation.TaValidator [OPTIONS]
+java -cp ta-sdk-sample-0.5.3.jar com.ibm.ta.sdk.spi.validation.TaValidator [OPTIONS]
 ```
 
 These options are available to validate the output artifacts created by a plugin:
