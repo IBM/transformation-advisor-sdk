@@ -97,7 +97,7 @@ public class IssueRuleProcessor {
 
     for (int i = 0; i < issueRulesJson.size(); i++) {
       JsonObject issueRuleJson = issueRulesJson.get(i).getAsJsonObject();
-      logger.info("Process recommendation rule:" + issueRuleJson.toString());
+      logger.debug("Process recommendation rule:" + issueRuleJson.toString());
 
       IssueRuleTypeProvider ruleProvider = getIssueRuleProvider(issueRuleJson);
       if (ruleProvider == null) {
