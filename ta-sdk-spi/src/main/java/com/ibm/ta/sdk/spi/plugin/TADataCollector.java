@@ -67,12 +67,10 @@ public class TADataCollector {
       providerCommands.add(assessCommand);
 
       // Add target option
-      List<CliInputOption> assessOptions = assessCommand.getOptions();
-      if (assessOptions == null) {
-        assessOptions = new LinkedList<>();
-        assessCommand.setOptions(assessOptions);
-      }
+      List<CliInputOption> assessOptions = new LinkedList<>();
+      assessOptions.addAll(assessCommand.getOptions());
       assessOptions.add(CliInputOption.buildTargetOption());
+      assessCommand.setOptions(assessOptions);
     }
     CliInputCommand reportCommand = provider.getReportCommand();
     if (reportCommand != null) {
@@ -87,12 +85,10 @@ public class TADataCollector {
       providerCommands.add(migrateCommand);
 
       // Add target option to migrate command
-      List<CliInputOption> migrateOptions = migrateCommand.getOptions();
-      if (migrateOptions == null) {
-        migrateOptions = new LinkedList<>();
-        migrateCommand.setOptions(migrateOptions);
-      }
+      List<CliInputOption> migrateOptions = new LinkedList<>();
+      migrateOptions.addAll(migrateCommand.getOptions());
       migrateOptions.add(CliInputOption.buildTargetOption());
+      migrateCommand.setOptions(migrateOptions);
     }
 
     // Add 'run' command which performs collect, assess, and report

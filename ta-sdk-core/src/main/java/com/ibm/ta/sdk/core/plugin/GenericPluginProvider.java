@@ -93,7 +93,7 @@ public abstract class GenericPluginProvider implements PluginProvider {
   public CliInputCommand getAssessCommand() {
     // Assess command
     CliInputOption assessCmdSkipCollectOpt = new CliInputOption("s", "skipcollect", "Skip collection, perform assessment only");
-    List<CliInputOption> assessCmdOpts = new LinkedList<>(Arrays.asList(assessCmdSkipCollectOpt));
+    List<CliInputOption> assessCmdOpts = Arrays.asList(assessCmdSkipCollectOpt);
     CliInputCommand assessCmd = new CliInputCommand(CliInputCommand.CMD_ASSESS,
             "Performs data collection and assessment",
             assessCmdOpts, null, getCollectCommand().getArgumentDisplayNames());
@@ -101,11 +101,11 @@ public abstract class GenericPluginProvider implements PluginProvider {
     // Assess subcommand get get only costs in days/weeks
     CliInputOption costCmdDayOpt = new CliInputOption(null, "days", "Display cost in days");
     CliInputOption costCmdWeekOpt = new CliInputOption(null, "weeks", "Display cost in weeks");
-    List<CliInputOption> costCmdOpts = new LinkedList<>(Arrays.asList(costCmdDayOpt, costCmdWeekOpt));
+    List<CliInputOption> costCmdOpts = Arrays.asList(costCmdDayOpt, costCmdWeekOpt);
     CliInputCommand analyzeCostCmd = new CliInputCommand("cost",
             "Generate cost summary only",
             costCmdOpts, null, null);
-    List<CliInputCommand> analyzeCmds = new LinkedList<>(Arrays.asList(analyzeCostCmd));
+    List<CliInputCommand> analyzeCmds = Arrays.asList(analyzeCostCmd);
     assessCmd.setCommands(analyzeCmds);
 
     return assessCmd;
