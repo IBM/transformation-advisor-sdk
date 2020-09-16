@@ -230,7 +230,7 @@ You can replace the collect() method with the following code:
         envJson.setCollectionUnitType("Instance");
         envJson.setCollectionUnitName(instanceName);
         try {
-            Path assessDataJsonFile = getFileFromUri(DemoPlugin.class.getResource("/sampleData/application1.json").toURI());
+            Path assessDataJsonFile = Paths.get(DemoPlugin.class.getResource("/sampleData/application1.json").toURI());
             List<GenericAssessmentUnit> auList = new ArrayList<>();
             auList.add(super.getAssessmentUnit(null, assessDataJsonFile, null));
             GenericDataCollection coll = new GenericDataCollection(instanceName, envJson, auList);
@@ -272,9 +272,10 @@ Create the `/sampleData/application1.json` file under under your project's `src/
 
     In the assess() command,  the TA SDK will generate the recommendations file based on the issues detected in the assessment unit's data file and config files,  you need to create a set of issue files under the `src/main/resources/<middlewareName>` directory.
 
-    Create the complexity.json file using this content:
+    Create the complexities.json file using this content:
 ```
-[
+{
+  "complexities":[
   {
     "id": "dns",
     "name": "DNS Reconfiguration",
@@ -303,11 +304,13 @@ Create the `/sampleData/application1.json` file under under your project's `src/
     ]
   }
 ]
+}
 ```
 
-   Create the issue.json file using this content:
+   Create the issues.json file using this content:
 ```
-[
+{
+  "issues": [
   {
     "id": "MQCL03",
     "title": "Contains a Full Repository.  Assess impact to other cluster members.",
@@ -374,10 +377,10 @@ Create the `/sampleData/application1.json` file under under your project's `src/
     }
   }
 ]
-
+}
 ```
    
-   Create the issue-category.json file using this content:
+   Create the issue-categories.json file using this content:
 ```
 {
   "security": {
@@ -392,12 +395,19 @@ Create the `/sampleData/application1.json` file under under your project's `src/
 }
 ```
 
-   Create the target.json file using this content:
+   Create the targets.json file using this content:
 ```
 {
-  "productName": "DemoOnCloud",
-  "productVersion": "19.0.0",
-  "runtime": "ACE"
+  "targets": [
+    {
+      "target": "ACE",
+      "issueCategories": [
+        "exit",
+        "cluster",
+        "security"
+      ]
+    }
+  ]
 }
 ```
 
@@ -438,7 +448,7 @@ java -jar target/ta-sdk-demo-1.0-SNAPSHOT.jar demo run /opt/DemoSoftware
    In order to support the migration command,  you need to create template files under your plugin's  `src/main/resources/<middlewareName>/templates/<targetName>/` directory.  Otherwise,   the migrate command will report not supported error.
     
     ```
-     java -jar ta-sdk-demo-1.0-SNAPSHOT.jar demo migrate ./output/instance1
+     java -jar target/ta-sdk-demo-1.0-SNAPSHOT.jar demo migrate ./output/instance1
      Fail to run the command, check log file for detail information.
          Command migrate is not supported for plugin provider class com.ibm.ta.sdk.demo.DemoPlugin
              No target template files found in plugin provider 
