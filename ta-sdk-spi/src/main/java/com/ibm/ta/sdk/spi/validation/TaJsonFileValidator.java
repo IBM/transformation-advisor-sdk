@@ -85,7 +85,7 @@ public class TaJsonFileValidator {
             InputStream jrIs = getResource(jsonResourcePath);
             isValid = validateJsonBySchema(schemaPath, jrIs);
         } catch (FileNotFoundException e) {
-            logger.error("We have problem to process the json files.");
+            logger.error("We have problem to process the json files: " + jsonResourcePath);
             logger.error(e);
             isValid = false;
         }
@@ -109,7 +109,6 @@ public class TaJsonFileValidator {
                 .build();
 
         try {
-            //System.out.println("zzzzz = "+schemaPath);
             InputStream schemaResources = getResource(schemaPath);
             assert schemaResources != null;
             JsonSchema schema = readSchema(schemaResources);
@@ -124,10 +123,8 @@ public class TaJsonFileValidator {
                     logger.info("For resource " + jrIs + ", ");
                     logger.info("We have found problems below:");
                     problemList.forEach(System.out::println);
+                    problemList.forEach(logger::error);
                 }
-            } else {
-                isValid = false;
-                logger.error("Cannot find file " + jrIs + " to validate");
             }
         } catch (Exception e) {
             logger.error("We have problem to process the json files.");
@@ -191,7 +188,11 @@ public class TaJsonFileValidator {
         if (realFile.exists()) {
             return new FileInputStream(realFile);
         } else {
-            return TaJsonFileValidator.class.getClassLoader().getResourceAsStream(filePath);
+            InputStream fileStream = TaJsonFileValidator.class.getClassLoader().getResourceAsStream(filePath);
+            if (fileStream==null) {
+                throw new FileNotFoundException("Cannot find " + filePath + " from class loader");
+            }
+            return fileStream;
         }
     }
 }
