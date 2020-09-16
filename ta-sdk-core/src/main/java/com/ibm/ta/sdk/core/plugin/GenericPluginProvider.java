@@ -32,11 +32,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.*;
 
 import static com.ibm.ta.sdk.core.util.Constants.*;
@@ -130,7 +126,11 @@ public abstract class GenericPluginProvider implements PluginProvider {
     if (!uri.toString().startsWith("file")){
       Map<String, String> env = new HashMap<>();
       env.put("create", "true");
-      FileSystem zipfs = FileSystems.newFileSystem(uri, env);
+      try {
+        FileSystem zipfs = FileSystems.newFileSystem(uri, env);
+      } catch (FileSystemAlreadyExistsException fsaee) {
+        // do nothing here,  the file system for jar file is already created.
+      }
     }
     return Paths.get(uri);
   }

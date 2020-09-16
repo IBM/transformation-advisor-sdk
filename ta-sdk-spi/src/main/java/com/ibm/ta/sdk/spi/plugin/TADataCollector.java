@@ -284,6 +284,7 @@ public class TADataCollector {
   }
 
   public void runAssess(PluginProvider provider, CliInputCommand cliInputCommand) throws TAException, IOException {
+    provider.validateJsonFiles();
     // Run collections
     List<DataCollection> dataCollections = collectData(provider, cliInputCommand);
     if (dataCollections == null || dataCollections.size() == 0) {
@@ -595,7 +596,7 @@ public class TADataCollector {
         try {
           recProvider.validateJsonFiles();
         } catch (TAException e) {
-          recProvider = null;
+          logger.error("validate issues jdon file failed.");
         }
         return recProvider;
       }
