@@ -72,7 +72,7 @@ public class GenericRecommendation implements Recommendation {
   }
 
   public static GenericRecommendation createGenericRecommemndation(String assessmentName, String middlewareName) throws TAException, IOException {
-    String middlewareDir = File.separator + middlewareName + File.separator;
+    String middlewareDir = "/" + middlewareName + "/";
     try {
         return new GenericRecommendation(assessmentName,
                 Paths.get(GenericRecommendation.class.getResource(middlewareDir + FILE_ISSUES_JSON).toURI()),
