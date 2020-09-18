@@ -64,7 +64,7 @@ public class SamplePluginProvider extends GenericPluginProvider {
     // Collect command
     CliInputOption collectCmdCollectionOpt = new CliInputOption("c", "collectionUnit", "The name of the collection unit to perform the collection", true, false, null, null);
     CliInputOption collectCmdAssessmentOpt = new CliInputOption("a", "assessmentUnit", "The name of the assessment unit", true, true, null, null);
-    List<CliInputOption> collectionCmdOpts = new LinkedList<>(Arrays.asList(collectCmdCollectionOpt, collectCmdAssessmentOpt));
+    List<CliInputOption> collectionCmdOpts = Arrays.asList(collectCmdCollectionOpt, collectCmdAssessmentOpt);
     CliInputCommand collectCmd = new CliInputCommand(CliInputCommand.CMD_COLLECT,
             "Performs data collection",
             collectionCmdOpts, null, Arrays.asList("INSTALL_PATH"));

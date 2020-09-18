@@ -180,7 +180,7 @@ public class SamplePluginProviderTest {
         assertTrue(exception.getMessage().contains("collectionDir is not a directory"));
         List<String> noEnvArgus = new ArrayList<>();
         noEnvArgus.add("migrate");
-        noEnvArgus.add("/tmp");
+        noEnvArgus.add("./");
         exception = assertThrows(TAException.class, () -> {
             tadc.runCommand(MIDDLEWARE_NAME, noEnvArgus);
         });
