@@ -11,6 +11,8 @@ public final class Constants {
     public static final String ASSESS_UNIT_ARCHIVETYPE_INSTALLATION = "installation";
     public static final String OUTPUT_FILE_FORMAT_ZIP = ".zip";
 
+    public static final String ENV_MIDDLEWARE_NAME = "middlewareName";
+
     public static final String ENVIRONMENT_JSON = "environment.json";
     public static final String RECOMMENDATIONS_JSON = "recommendations.json";
 

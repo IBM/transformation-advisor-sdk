@@ -21,6 +21,7 @@ import java.util.zip.ZipInputStream;
 
 public class TaCollectionZipValidator {
     private static final String FILE_ZIP = ".zip";
+    private static final String TEMPLATES_DIR = "templates";
 
     /**
      * Validates a zip collection archive created by the SDK.
@@ -66,8 +67,10 @@ public class TaCollectionZipValidator {
     public static void validateArchive(ZipInputStream zipInputStream) throws IOException, TAException {
         String recJsonStr = null;
         String envJsonStr = null;
+        String targetsJsonStr = null;
         Map<String, String> auMetadataMap = new HashMap<>();
         Set<String> assessmentUnits = new LinkedHashSet<>(); // list of assessment unit names based on the root dir names
+        List<String> templateFiles = new ArrayList();
 
         for (ZipEntry nextEntry; Objects.nonNull(nextEntry = zipInputStream.getNextEntry()); ) {
             String entryName = nextEntry.getName();
@@ -80,6 +83,10 @@ public class TaCollectionZipValidator {
                 String auMetadataStr = getStringFromZipInputStream(zipInputStream);
                 String auDirName = getAssessmentUnitDir(entryName);
                 auMetadataMap.put(auDirName, auMetadataStr);
+            } else if (entryName.endsWith(TADataCollector.TARGETS_JSON_FILE) && isValidLocation(entryName, new int[] {2})) {
+                targetsJsonStr = getStringFromZipInputStream(zipInputStream);
+            } else if (entryName.contains(TEMPLATES_DIR)) {
+                templateFiles.add(entryName);
             }
 
             // Get assessment unit dir names from files 3 level deep (installation1/assessunitunit1/file1)
@@ -111,6 +118,11 @@ public class TaCollectionZipValidator {
             EnvironmentJson envJson = new Gson().fromJson(envJsonStr, EnvironmentJson.class);
 
             List<String> envAuNamesList = envJson.getAssessmentUnits();
+
+            // remove the middleware name dir which contains the templates files for 0.6.1
+            // middleware directory will copied to collection directory, but it is not an assessment unit
+            assessmentUnits.remove(envJson.getMiddlewareName());
+
             if (assessmentUnits.size() != envAuNamesList.size()) {
                 throw new TAException("Anomaly found. Number of asessment unit directories in archive does not match data in environment JSON.");
             } else {
@@ -125,6 +137,24 @@ public class TaCollectionZipValidator {
             boolean isValid = assessmentUnits.size() == auMetaKeys.size() && assessmentUnits.containsAll(auMetaKeys);
             if (!isValid) {
                 throw new TAException("Anomaly found. Missing assessment unit metadata JSON file in assessment unit directory.");
+            }
+
+            // validate the targets.json file
+            // validate all template files start with middleware name
+            if(envJson.containsTemplateFiles()) {
+                if (targetsJsonStr != null) {
+                    TaJsonFileValidator.validateTarget(new ByteArrayInputStream(targetsJsonStr.getBytes()));
+                } else {
+                    throw new TAException("Anomaly found. targets.json file not found.");
+                }
+                if (templateFiles.size()==0) {
+                    throw new TAException("Anomaly found. No plugin template files find.");
+                }
+                for (String templateFilePath: templateFiles) {
+                    if (!templateFilePath.startsWith(envJson.getCollectionUnitName()+"/"+envJson.getMiddlewareName())){
+                        throw new TAException("Anomaly found. Plugin template file is not under the middleware name directory.");
+                    }
+                }
             }
         } catch (TAException ex) {
             throw new TAException("Invalid collection archive.\n" + ex.getMessage(), ex);

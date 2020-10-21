@@ -62,6 +62,9 @@ public class EnvironmentJson {
   @Expose
   private boolean hasSensitiveData = true;
 
+  @Expose
+  private boolean containsTemplateFiles = false;
+
   public EnvironmentJson() {
     // For read json from file
   }
@@ -95,6 +98,7 @@ public class EnvironmentJson {
       assessmentMetadata = environment.getAssessmentMetadata();
     }
     hasSensitiveData = environment.hasSensitiveData();
+    containsTemplateFiles = environment.containsTemplateFiles();
   }
 
   public Environment getEnvironment() {
@@ -164,8 +168,17 @@ public class EnvironmentJson {
       public boolean hasSensitiveData() {
         return hasSensitiveData;
       }
+
+      @Override
+      public boolean containsTemplateFiles() {
+        return containsTemplateFiles;
+      }
     };
     return environment;
+  }
+
+  public String getMiddlewareName() {
+    return middlewareName;
   }
 
   public void setDomain(String domain) {
@@ -226,5 +239,17 @@ public class EnvironmentJson {
 
   public void setHasSensitiveData(boolean hasSensitiveData) {
     this.hasSensitiveData = hasSensitiveData;
+  }
+
+  public void setContainsTemplateFiles(boolean containsTemplateFiles) {
+    this.containsTemplateFiles = containsTemplateFiles;
+  }
+
+  public String getCollectionUnitName() {
+    return collectionUnitName;
+  }
+
+  public boolean containsTemplateFiles() {
+    return this.containsTemplateFiles;
   }
 }
