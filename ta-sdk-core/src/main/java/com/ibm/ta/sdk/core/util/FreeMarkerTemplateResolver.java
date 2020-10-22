@@ -161,7 +161,7 @@ public class FreeMarkerTemplateResolver {
     public void resolveTemplates(String target) throws IOException, URISyntaxException, TemplateException {
         String templatesDir = null;
         if (this.templateFileDir != null) {
-            templatesDir = this.templateFileDir.getCanonicalPath()+"/";
+            templatesDir = this.templateFileDir.getCanonicalPath()+File.separator;
             try {
                 cfg.setDirectoryForTemplateLoading(this.templateFileDir);
             } catch (IOException ioe) {

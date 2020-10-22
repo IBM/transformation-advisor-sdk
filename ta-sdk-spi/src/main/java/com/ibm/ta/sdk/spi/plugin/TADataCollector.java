@@ -566,9 +566,7 @@ public class TADataCollector {
     // check the template directory, and update the containsTemplateFiles flag
     File templateDir = new File(outputDir.getAbsolutePath()+
                                   File.separator+envJson.getMiddlewareName()+File.separator+"templates");
-    logger.debug("zzzzzzzz templateDir: " + templateDir);
     if (templateDir.exists() && templateDir.isDirectory()) {
-      logger.debug("zzzzzzzz2 templateDir exists");
       envJson.setContainsTemplateFiles(true);
     }
     String envJsonStr = getJsonStr(envJson);
