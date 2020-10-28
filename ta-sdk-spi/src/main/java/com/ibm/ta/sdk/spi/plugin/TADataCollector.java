@@ -34,6 +34,8 @@ public class TADataCollector {
   public static final String ENVIRONMENT_JSON_FILE = "environment.json";
   public static final String RECOMMENDATIONS_JSON_FILE = "recommendations.json";
   public static final String ASSESSMENTUNIT_META_JSON_FILE = "metadata.assessmentUnit.json";
+  public static final String TARGETS_JSON_FILE = "targets.json";
+
 
   private static Logger logger = LogManager.getLogger(TADataCollector.class.getName());
 
@@ -178,6 +180,12 @@ public class TADataCollector {
       List<String> auNameList = aus.stream()
               .map(au -> ((AssessmentUnit) au).getName())
               .collect(Collectors.toList());
+
+      //copy targets.json file to output dir
+      Util.copyResourceToDir(provider.getMiddleware()+"/targets.json", outputDir);
+
+      //copy templates files to output dir
+      Util.copyResourceToDir(provider.getMiddleware()+"/templates/", outputDir);
 
       // Write environment json to output dir
       writeEnvironmentJson(environment, provider.getVersion(), auNameList, outputDir);
@@ -554,6 +562,13 @@ public class TADataCollector {
     EnvironmentJson envJson = new EnvironmentJson(environment);
     envJson.setPluginVersion(version);
     envJson.setAssessmentUnits(auNameList);
+
+    // check the template directory, and update the containsTemplateFiles flag
+    File templateDir = new File(outputDir.getAbsolutePath()+
+                                  File.separator+envJson.getMiddlewareName()+File.separator+"templates");
+    if (templateDir.exists() && templateDir.isDirectory()) {
+      envJson.setContainsTemplateFiles(true);
+    }
     String envJsonStr = getJsonStr(envJson);
     writeFile(envFile, envJsonStr);
   }

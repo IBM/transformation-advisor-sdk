@@ -17,6 +17,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -97,6 +98,10 @@ public class GenericUtil {
    * @throws IOException
    */
   public static String[] getResourceListing(Class clazz, String path) throws URISyntaxException, IOException {
+    File pathFile = new File(path);
+    if (pathFile.exists() && pathFile.isDirectory()) {
+      return pathFile.list();
+    }
     URL dirURL = clazz.getClassLoader().getResource(path);
     if (dirURL != null && dirURL.getProtocol().equals("file")) {
       /* A file path: easy enough */
@@ -136,5 +141,13 @@ public class GenericUtil {
     }
 
     throw new UnsupportedOperationException("Cannot list files for URL "+dirURL);
+  }
+
+  public static Path getFilePath(String filePath) throws URISyntaxException {
+    File targetFile = new File(filePath);
+    if (targetFile.exists()&&targetFile.isFile()){
+      return targetFile.toPath();
+    }
+    return Paths.get(GenericUtil.class.getClassLoader().getResource(filePath).toURI());
   }
 }

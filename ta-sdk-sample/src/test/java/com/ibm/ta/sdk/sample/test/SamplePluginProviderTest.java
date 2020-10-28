@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.util.*;
 
 import com.ibm.ta.sdk.spi.util.Util;
+import com.ibm.ta.sdk.spi.validation.TaCollectionZipValidator;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -78,6 +79,14 @@ public class SamplePluginProviderTest {
         assertTrue(recommFile.exists());
         assertTrue(recommFile.isFile());
         assertTrue(recommFile.length() > 2);
+        File targetsFile = new File (directories[0]+File.separator+MIDDLEWARE_NAME+File.separator+Constants.FILE_TARGETS_JSON);
+        assertTrue(targetsFile.exists());
+        assertTrue(targetsFile.isFile());
+        assertTrue(targetsFile.length() > 2);
+        File templateFile = new File (directories[0]+File.separator+MIDDLEWARE_NAME+File.separator+"templates"+File.separator+"targetA"+File.separator+"pom.xml.ftl");
+        assertTrue(templateFile.exists());
+        assertTrue(templateFile.isFile());
+        assertTrue(templateFile.length()>2);
     }
 
     @Test
@@ -108,6 +117,14 @@ public class SamplePluginProviderTest {
         assertTrue(collectionFile.exists());
         assertTrue(collectionFile.isFile());
         assertTrue(collectionFile.length() > 2);
+        File targetsFile = new File (directories[0]+File.separator+MIDDLEWARE_NAME+File.separator+Constants.FILE_TARGETS_JSON);
+        assertTrue(targetsFile.exists());
+        assertTrue(targetsFile.isFile());
+        assertTrue(targetsFile.length() > 2);
+        File templateFile = new File (directories[0]+File.separator+MIDDLEWARE_NAME+File.separator+"templates"+File.separator+"targetA"+File.separator+"pom.xml.ftl");
+        assertTrue(templateFile.exists());
+        assertTrue(templateFile.isFile());
+        assertTrue(templateFile.length()>2);
     }
 
     @Test
@@ -211,5 +228,21 @@ public class SamplePluginProviderTest {
         assertTrue(bundleZipFile.exists());
         bundleZipFile = new File (migrationBundleDir+ASSESS_UNIT_NAME+"_targetB.zip");
         assertTrue(!bundleZipFile.exists());
+    }
+
+    @Test
+    public void collectionZipFileValidationTest() throws TAException, IOException {
+        List<String> argus = new ArrayList<>();
+        argus.add("run");
+        argus.add("test");
+        //argus.add("test");
+        TADataCollector tadc = new TADataCollector();
+        tadc.runCommand(MIDDLEWARE_NAME, argus);
+        try {
+            TaCollectionZipValidator.validateCollectionArchive("./output/collection1.zip");
+        } catch (TAException ex) {
+            ex.printStackTrace();
+            assertTrue(false, ex.getMessage());
+        }
     }
 }

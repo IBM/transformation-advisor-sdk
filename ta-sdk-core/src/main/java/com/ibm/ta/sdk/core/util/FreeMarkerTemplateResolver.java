@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.ibm.ta.sdk.core.util.Constants.*;
+
 public class FreeMarkerTemplateResolver {
     private Logger logger = LogManager.getLogger(getClass().getName());
 
@@ -30,11 +32,25 @@ public class FreeMarkerTemplateResolver {
     private Configuration cfg;
     private File migrationDir;
     private HashMap data;
+    private File templateFileDir;
 
     public FreeMarkerTemplateResolver(PluginProvider pluginProvider, File assessmentUnitDir, JsonObject envJson) {
         this.pluginProvider = pluginProvider;
         this.assessmentUnitDir = assessmentUnitDir;
         this.middleware = pluginProvider.getMiddleware();
+        initFMConfig();
+        this.migrationDir = new File(assessmentUnitDir.getAbsolutePath() + File.separator + "migrationBundle");
+        if (!migrationDir.exists()) {
+            migrationDir.mkdir();
+        }
+        this.data = new HashMap();
+        initData(envJson);
+    }
+
+    public FreeMarkerTemplateResolver(File templateFileDir, File assessmentUnitDir, JsonObject envJson) {
+        this.assessmentUnitDir = assessmentUnitDir;
+        this.templateFileDir = templateFileDir;
+        this.middleware = envJson.get(ENV_MIDDLEWARE_NAME).getAsString();
         initFMConfig();
         this.migrationDir = new File(assessmentUnitDir.getAbsolutePath() + File.separator + "migrationBundle");
         if (!migrationDir.exists()) {
@@ -54,17 +70,16 @@ public class FreeMarkerTemplateResolver {
         cfg.setLogTemplateExceptions(false);
         cfg.setWrapUncheckedExceptions(true);
         cfg.setFallbackOnNullLoopVariable(false);
-        cfg.setClassForTemplateLoading(getClass(), "/");
     }
 
     private void initData(JsonObject envJson){
-        String key = Constants.ENVIRONMENT_JSON.replace('.','_');
+        String key = ENVIRONMENT_JSON.replace('.','_');
         this.data.put(key, new Gson().fromJson(envJson, HashMap.class));
         File recommandationJson = new File(this.assessmentUnitDir.getParentFile().getAbsolutePath()+
-                File.separator+Constants.RECOMMENDATIONS_JSON);
+                File.separator+RECOMMENDATIONS_JSON);
         if (recommandationJson.exists()) {
             try {
-                key = Constants.RECOMMENDATIONS_JSON.replace('.','_');
+                key = RECOMMENDATIONS_JSON.replace('.','_');
                 JsonObject recJsonContent = GenericUtil.getJsonObj(new TypeToken<JsonObject>(){}, recommandationJson.toPath());
                 this.data.put(key,new Gson().fromJson(recJsonContent, HashMap.class));
                 logger.debug("insert to recommendations.json file to data mode with key="+key);
@@ -144,7 +159,18 @@ public class FreeMarkerTemplateResolver {
     }
 
     public void resolveTemplates(String target) throws IOException, URISyntaxException, TemplateException {
-        String templatesDir = this.middleware+"/templates/"+target+"/";
+        String templatesDir = null;
+        if (this.templateFileDir != null) {
+            templatesDir = this.templateFileDir.getCanonicalPath()+File.separator;
+            try {
+                cfg.setDirectoryForTemplateLoading(this.templateFileDir);
+            } catch (IOException ioe) {
+                logger.error("Cannot set the template dir in config.", ioe);
+            }
+        } else {
+            templatesDir = this.middleware+"/templates/"+target+"/";
+            cfg.setClassForTemplateLoading(getClass(), "/"+templatesDir);
+        }
         String[] templateFiles = GenericUtil.getResourceListing(getClass(),templatesDir);
         File targetDir = new File (this.migrationDir+File.separator+target);
         if (!targetDir.exists()) {
@@ -163,14 +189,14 @@ public class FreeMarkerTemplateResolver {
                 targetFile.delete();
             }
             if (targetFileType.contains("ftl")) {
-                Template temp = cfg.getTemplate(templatesDir+templateFileName);
+                Template temp = cfg.getTemplate(templateFileName);
                 Writer out = new FileWriter(targetFile);
                 temp.process(this.data, out);
                 out.flush();
                 out.close();
             } else if (targetFileType.equals("placeholder")) {
                 String sourceFileName = targetFileName;
-                Path filePath = Paths.get(getClass().getClassLoader().getResource(templatesDir+templateFileName).toURI());
+                Path filePath = GenericUtil.getFilePath(templatesDir+templateFileName);
                 String contents = GenericUtil.readFileToString(filePath);
                 logger.debug("place holder file content is " + contents);
                 if (contents != null && contents.contains("=")) {
@@ -187,7 +213,7 @@ public class FreeMarkerTemplateResolver {
 
             } else {
                 //copy file to migration target dir
-                Path sourceFile = Paths.get(getClass().getClassLoader().getResource(templatesDir+templateFileName).toURI());
+                Path sourceFile = GenericUtil.getFilePath(templatesDir+templateFileName);
                 targetFile = new File (targetDir.getAbsolutePath()+File.separator+templateFileName);
                 Files.copy(sourceFile, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             }

@@ -12,14 +12,23 @@ import com.ibm.ta.sdk.spi.plugin.TADataCollector;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.commons.io.FileUtils;
 
 import java.io.*;
-import java.nio.file.Path;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import static java.nio.file.Files.copy;
 
 public class Util {
 
@@ -131,5 +140,59 @@ public class Util {
     }
 
     return new JsonParser().parse(new FileReader(recFile)).getAsJsonObject();
+  }
+
+  public static void copyResourceToDir (String resource, File outputDir) throws IOException {
+    logger.debug("resource="+resource);
+    URL resourceURL = Util.class.getClassLoader().getResource(resource);
+    logger.debug("resourceURL="+resourceURL);
+    if (resourceURL.getProtocol().equals("jar")) {
+      String jarPath = resourceURL.getPath().substring(5, resourceURL.getPath().indexOf("!")); //strip out only the JAR file
+      logger.debug("jarPath="+jarPath);
+      JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
+      Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
+      while(entries.hasMoreElements()) {
+        JarEntry entry = entries.nextElement();
+        String name =entry.getName();
+        if (name.startsWith(resource)) {
+          logger.debug("template-name="+name);
+          File targetFile = new File (outputDir.getCanonicalPath()+File.separator+name);
+          logger.debug("targetFile="+targetFile.getPath());
+          if (!entry.isDirectory()) {
+            InputStream entryInputStream = null;
+            try {
+              entryInputStream = jar.getInputStream(entry);
+              FileUtils.copyInputStreamToFile(entryInputStream, targetFile);
+            } finally {
+              entryInputStream.close();
+            }
+          } else {
+            targetFile.mkdirs();
+          }
+        }
+      }
+    } else if (resourceURL.getProtocol().equals("file")) {
+      Path source = null;
+      try {
+        source = Paths.get(resourceURL.toURI());
+      } catch (URISyntaxException e) {
+        logger.error("Failed to get template directory from path", e);
+        return;
+      }
+      Path target = new File (outputDir.getCanonicalPath()+File.separator+resource).toPath();
+      Path finalSource = source;
+      Files.walkFileTree(finalSource, new SimpleFileVisitor<Path>() {
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+                throws IOException {
+          Path dstFilePath = target.resolve(finalSource.relativize(file));
+          if(!dstFilePath.toFile().getParentFile().exists()){
+            dstFilePath.toFile().getParentFile().mkdirs();
+          }
+          copy(file, target.resolve(finalSource.relativize(file)), StandardCopyOption.REPLACE_EXISTING);
+          return FileVisitResult.CONTINUE;
+        }
+      });
+    }
   }
 }

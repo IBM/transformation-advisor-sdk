@@ -109,4 +109,12 @@ public interface Environment {
    * @return True if the data collection contains sensitive data
    */
   boolean hasSensitiveData();
+
+  /**
+   * Indicate if the data collection contains template files to generate the migration artifacts.
+   * If it is true,  the template files must copied to the {middlwareName}/{target} directory inside the collection
+   *
+   * @return True if the data collection contains sensitive data
+   */
+  boolean containsTemplateFiles();
 }
