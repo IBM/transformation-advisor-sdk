@@ -7,8 +7,7 @@
 package com.ibm.ta.sdk.spi.validation;
 
 import com.ibm.ta.sdk.spi.plugin.TAException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 import org.leadpony.justify.api.*;
 
 import javax.json.JsonReader;
@@ -22,8 +21,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class TaJsonFileValidator {
-
-    private static Logger logger = LogManager.getLogger(TaJsonFileValidator.class.getName());
 
     private static final String ISSUE_SCHEMA = "schema/issue.schema.json";
     private static final String TARGET_SCHEMA = "schema/target.schema.json";
@@ -85,8 +82,8 @@ public class TaJsonFileValidator {
             InputStream jrIs = getResource(jsonResourcePath);
             isValid = validateJsonBySchema(schemaPath, jrIs);
         } catch (FileNotFoundException e) {
-            logger.error("We have problem to process the json files: " + jsonResourcePath);
-            logger.error(e);
+            Logger.error("We have problem to process the json files: " + jsonResourcePath);
+            Logger.error(e);
             isValid = false;
         }
 
@@ -120,15 +117,15 @@ public class TaJsonFileValidator {
 
                 if (problemList.size() > 0) {
                     isValid = false;
-                    logger.info("For resource " + jrIs + ", ");
-                    logger.info("We have found problems below:");
+                    Logger.info("For resource " + jrIs + ", ");
+                    Logger.info("We have found problems below:");
                     problemList.forEach(System.out::println);
-                    problemList.forEach(logger::error);
+                    problemList.forEach(Logger::error);
                 }
             }
         } catch (Exception e) {
-            logger.error("We have problem to process the json files.");
-            logger.error(e);
+            Logger.error("We have problem to process the json files.");
+            Logger.error(e);
             isValid = false;
         }
 

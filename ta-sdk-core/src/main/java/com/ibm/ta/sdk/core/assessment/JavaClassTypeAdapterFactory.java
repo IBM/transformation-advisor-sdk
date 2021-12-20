@@ -12,15 +12,13 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.ibm.ta.sdk.spi.plugin.TARuntimeException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class JavaClassTypeAdapterFactory implements TypeAdapterFactory {
-  private static Logger logger = LogManager.getLogger(JavaClassTypeAdapterFactory.class.getName());
 
   private static final String ISSUE_ATTR_JAVA_CLASS = "javaClass";
 
@@ -59,7 +57,7 @@ public class JavaClassTypeAdapterFactory implements TypeAdapterFactory {
         } else {
           javaClass = rawType.getName();
         }
-        logger.debug("javaClass:" + javaClass);
+        Logger.debug("javaClass:" + javaClass);
 
         @SuppressWarnings("unchecked") // registration requires that subtype extends T
         TypeAdapter<T> delegate = null;

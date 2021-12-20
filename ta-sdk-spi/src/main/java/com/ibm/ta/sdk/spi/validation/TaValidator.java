@@ -9,12 +9,9 @@ package com.ibm.ta.sdk.spi.validation;
 import com.ibm.ta.sdk.spi.plugin.TAException;
 import com.ibm.ta.sdk.spi.util.Util;
 import org.apache.commons.cli.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 public class TaValidator {
-
-    private static Logger logger = LogManager.getLogger(TaValidator.class.getName());
 
     private static final String sdk_version = Util.getSDKVersion();
 

@@ -15,8 +15,7 @@ import com.ibm.ta.sdk.spi.collect.UTDataCollection;
 import com.ibm.ta.sdk.spi.test.TestUtils;
 import com.ibm.ta.sdk.spi.validation.TaCollectionZipValidator;
 import com.ibm.ta.sdk.spi.validation.TaJsonFileValidator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,8 +32,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static com.ibm.ta.sdk.spi.test.ValidationUtils.*;
 
 public class PluginProviderTest {
-    private static Logger logger = LogManager.getLogger(PluginProviderTest.class.getName());
-
 
     /*
      * Test assessment of single collection that contains a single asssessment unit and no config files

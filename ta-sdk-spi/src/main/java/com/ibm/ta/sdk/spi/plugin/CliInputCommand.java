@@ -6,14 +6,12 @@
 
 package com.ibm.ta.sdk.spi.plugin;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class CliInputCommand {
-  private static Logger logger = LogManager.getLogger(CliInputCommand.class.getName());
 
   // Names of supported Commands
   public static final String CMD_COLLECT      = "collect";
@@ -118,7 +116,7 @@ public class CliInputCommand {
   }
 
   public void setArguments(List<String> arguments) {
-    logger.debug("arguments:" + arguments + ", argumentDisplayNames:" + argumentDisplayNames);
+    Logger.debug("arguments:" + arguments + ", argumentDisplayNames:" + argumentDisplayNames);
     if (arguments.size() != argumentDisplayNames.size()) {
       throw new IllegalArgumentException("Invalid arguments '" + arguments + "' for command '" + name + "'. Expects arguments '" + argumentDisplayNames + "'.");
     }
@@ -178,7 +176,7 @@ public class CliInputCommand {
    * @return List of CliInputOption that matches the input arguments
    */
   public List<CliInputOption> getMatchedOptions(List<String> inputArgs) {
-    logger.debug("Find matching options for inputArgs:" + inputArgs);
+    Logger.debug("Find matching options for inputArgs:" + inputArgs);
     List<CliInputOption> matchedOptions = new ArrayList<>();
     if (options.isEmpty()) {
       return matchedOptions;
@@ -207,7 +205,7 @@ public class CliInputCommand {
         }
 
         if (argName.equals(optionName)) {
-          logger.debug("Option match found, argName=" + argName + ", optionName=" + optionName);
+          Logger.debug("Option match found, argName=" + argName + ", optionName=" + optionName);
           matchedOption = new CliInputOption(option);
           matchedArgIndexes.add(i);
           break;
@@ -250,7 +248,7 @@ public class CliInputCommand {
 
     // Remove from inputArgs list the args that matched options
     Collections.reverse(matchedArgIndexes);
-    logger.debug("Removing matched indexes from input args:" + matchedArgIndexes);
+    Logger.debug("Removing matched indexes from input args:" + matchedArgIndexes);
     for (Integer i : matchedArgIndexes) {
       inputArgs.remove(i.intValue());
     }

@@ -17,8 +17,7 @@ import com.ibm.ta.sdk.core.detector.IssueRuleTypeProvider;
 
 import java.util.*;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 public class IssueRuleProcessor {
 
@@ -31,8 +30,6 @@ public class IssueRuleProcessor {
 
   private ServiceLoader<IssueRuleTypeProvider> serviceLoader = ServiceLoader.load(IssueRuleTypeProvider.class);
   private Map<String, IssueRuleTypeProvider> ruleProviderMap = new HashMap<String, IssueRuleTypeProvider>();
-
-  private static Logger logger = LogManager.getLogger(IssueRuleProcessor.class.getName());
 
   public IssueRuleProcessor(String issuesJson, Map<String, IssueCategory> issueCategories) {
     this.issueCategories = issueCategories;
@@ -60,7 +57,7 @@ public class IssueRuleProcessor {
     Iterator<IssueRuleTypeProvider> itIRprovider = serviceLoader.iterator();
     while (itIRprovider.hasNext()) {
       IssueRuleTypeProvider irProvider = itIRprovider.next();
-      logger.debug("Adding issue rule provider:" + irProvider.getName());
+      Logger.debug("Adding issue rule provider:" + irProvider.getName());
       ruleProviderMap.put(irProvider.getName(), irProvider);
     }
   }
@@ -91,17 +88,17 @@ public class IssueRuleProcessor {
       if (issueRuleJson != null) {
         issueRulesJson.add(issueRuleJson);
       } else {
-        logger.warn("Issue " + issueRuleJson + " in target " + target.getTargetId() + " not found.");
+        Logger.warn("Issue " + issueRuleJson + " in target " + target.getTargetId() + " not found.");
       }
     }
 
     for (int i = 0; i < issueRulesJson.size(); i++) {
       JsonObject issueRuleJson = issueRulesJson.get(i).getAsJsonObject();
-      logger.debug("Process recommendation rule:" + issueRuleJson.toString());
+      Logger.debug("Process recommendation rule:" + issueRuleJson.toString());
 
       IssueRuleTypeProvider ruleProvider = getIssueRuleProvider(issueRuleJson);
       if (ruleProvider == null) {
-        logger.error("Rule cannot be processed, no provider found for rule:" + issueRuleJson);
+        Logger.error("Rule cannot be processed, no provider found for rule:" + issueRuleJson);
         continue;
       }
 

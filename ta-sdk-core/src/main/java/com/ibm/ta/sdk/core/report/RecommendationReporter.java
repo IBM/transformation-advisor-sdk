@@ -15,16 +15,13 @@ import com.google.gson.JsonObject;
 import com.ibm.ta.sdk.spi.plugin.TAException;
 import com.ibm.ta.sdk.spi.report.Report;
 import com.ibm.ta.sdk.spi.report.ReportType;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class RecommendationReporter implements ReportGenerator {
-
-    private static Logger logger = LogManager.getLogger(RecommendationReporter.class.getName());
 
     // HTML templates
     private static final String TEMPLATE = "/templates/recommendations.template";
@@ -98,7 +95,7 @@ public class RecommendationReporter implements ReportGenerator {
         try {
             recommendation = parseJSON();
         } catch (Exception e) {
-            logger.error("Failed to generate objects from JSON", e);
+            Logger.error("Failed to generate objects from JSON", e);
             throw new TAException(e);
         }
 
@@ -144,10 +141,10 @@ public class RecommendationReporter implements ReportGenerator {
         resultStr = resultStr.replace(NUM_OF_YELLOW_ISSUES_VAR, new Integer(target.getNumberOfYellowIssues()).toString());
         resultStr = resultStr.replace(NUM_OF_GREEN_ISSUES_VAR, new Integer(target.getNumberOfGreenIssues()).toString());
 
-        logger.debug("\n**************Gen HTML for " + targetId + "******************\n");
+        Logger.debug("\n**************Gen HTML for " + targetId + "******************\n");
         String issueTablesStr = "";
         List<IssuesSameCategory> issues = target.getIssuesSameCategory();
-        logger.debug("issues is " + issues);
+        Logger.debug("issues is " + issues);
         int nextTableRowIndex = 1;
         for (IssuesSameCategory issuesSameCategory : issues){
             GenerationResult oneIssueCategoryTableGenResult = genIssueTableForOneCategory(issuesSameCategory, nextTableRowIndex);
@@ -270,7 +267,7 @@ public class RecommendationReporter implements ReportGenerator {
 //                }
 //                occurancesFieldsStr += "</table>";
 //            }
-//            logger.debug("occurancesFieldsStr is " + occurancesFieldsStr);
+//            Logger.debug("occurancesFieldsStr is " + occurancesFieldsStr);
 //            resultStr = resultStr.replace(ISSUE_OCCURANCES_FIELDS_VAR, occurancesFieldsStr);
 
         List<Map<String, String>> occurancesList = issue.getOccurances();
@@ -324,7 +321,7 @@ public class RecommendationReporter implements ReportGenerator {
             }
             return sb.toString();
         } catch(Exception e) {
-            logger.error("Not able to read template: " + templateFilePath, e);
+            Logger.error("Not able to read template: " + templateFilePath, e);
             throw new TAException(e);
         }finally{
             try {
@@ -333,7 +330,7 @@ public class RecommendationReporter implements ReportGenerator {
                     is = null;
                 }
             } catch(Exception e2) {
-                logger.warn("Not able to close template file: " + templateFilePath, e2);
+                Logger.warn("Not able to close template file: " + templateFilePath, e2);
             }
         }
     }
@@ -342,7 +339,7 @@ public class RecommendationReporter implements ReportGenerator {
         RecommendationReport recommendation = new RecommendationReport();
         
         String domain = this.recommendationJson.get("domain").getAsString();
-        logger.debug("domain is " + domain);
+        Logger.debug("domain is " + domain);
         recommendation.setDomain(domain);
         recommendation.setMiddleware(recommendationJson.get("middleware").getAsString());
         recommendation.setVersion(recommendationJson.get("version").getAsString());
@@ -357,17 +354,17 @@ public class RecommendationReporter implements ReportGenerator {
         for (String issueCatKey : issueCatKeys) {
             JsonObject issueCatTitleJO = issueCategories.getAsJsonObject(issueCatKey);
             String issueCatTitle = issueCatTitleJO.get("title").getAsString();
-            logger.debug("issueCatKey is " + issueCatKey + "; issueCatTitle is " + issueCatTitle);
+            Logger.debug("issueCatKey is " + issueCatKey + "; issueCatTitle is " + issueCatTitle);
             issueCategoryMap.put(issueCatKey, issueCatTitle);
         }
 
         //assessmentUnits
         JsonArray assessmentUnits = this.recommendationJson.getAsJsonArray("assessmentUnits");
-        logger.debug("assessmentUnits is " + assessmentUnits);
+        Logger.debug("assessmentUnits is " + assessmentUnits);
 
         for (Object assessmentUnit : assessmentUnits) {
             JsonObject assessmentUnitsJO = (JsonObject) assessmentUnit;
-            logger.debug("assessmentUnitsJO is " + assessmentUnitsJO);
+            Logger.debug("assessmentUnitsJO is " + assessmentUnitsJO);
             String name = assessmentUnitsJO.get("name").getAsString();
             AssessmentUnitReport aU = new AssessmentUnitReport(name);
 
@@ -397,13 +394,13 @@ public class RecommendationReporter implements ReportGenerator {
                 JsonObject issuesJO = (JsonObject) targetJO.get("issues");
                 Set<String> issuesKeySet = issuesJO.keySet();
                 for (String issuesKey : issuesKeySet) {
-                    logger.debug("--issuesKey is " + issuesKey);
+                    Logger.debug("--issuesKey is " + issuesKey);
                     IssuesSameCategory issuesSameCategory = new IssuesSameCategory(issuesKey, issueCategoryMap.get(issuesKey));
                     JsonArray issuesJA = (JsonArray) issuesJO.get(issuesKey);
 
                     for (Object issueOb : issuesJA) {
                         JsonObject issueJO = (JsonObject) issueOb;
-                        logger.debug("----issueJO is " + issueJO);
+                        Logger.debug("----issueJO is " + issueJO);
                         IssueReport issue = new IssueReport(issueJO);
                         issuesSameCategory.addIssue(issue);
                     }
@@ -468,7 +465,7 @@ public class RecommendationReporter implements ReportGenerator {
             os = new FileOutputStream(new File(htmlFileName));
             os.write(htmlString, 0, htmlString.length);
         } catch (IOException e) {
-            logger.error("Not able to write to " + htmlFileName, e);
+            Logger.error("Not able to write to " + htmlFileName, e);
         }finally{
             try {
                 os.close();

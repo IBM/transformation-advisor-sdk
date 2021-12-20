@@ -25,8 +25,7 @@ import com.ibm.ta.sdk.spi.recommendation.Recommendation;
 import com.ibm.ta.sdk.spi.report.Report;
 import com.ibm.ta.sdk.spi.util.Util;
 import com.ibm.ta.sdk.spi.validation.TaJsonFileValidator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -38,14 +37,13 @@ import java.util.*;
 import static com.ibm.ta.sdk.core.util.Constants.*;
 
 public abstract class GenericPluginProvider implements PluginProvider {
-  private static Logger logger = LogManager.getLogger(GenericPluginProvider.class.getName());
 
   @Override
   public void validateJsonFiles() throws TAException {
     try {
        getFileFromUri(getClass().getClassLoader().getResource(getMiddleware()).toURI());
     } catch (Exception e) {
-      logger.error("cannot find middleware in class path. exception is: ", e);
+      Logger.error("cannot find middleware in class path. exception is: ", e);
       throw new TAException("Command assess is not supported for plugin provider "+this.getClass()+
               "\n        No middleware specific issue json files found in plugin provider ");
     }
@@ -82,8 +80,8 @@ public abstract class GenericPluginProvider implements PluginProvider {
 
   @Override
   public List<Report> getReport(String assessmentName, CliInputCommand reportCommand) throws TAException {
-    logger.info("CliInputCommandOptions:" + reportCommand.getOptions());
-    logger.info("CliInputCommandArguments:" + reportCommand.getArguments());
+    Logger.info("CliInputCommandOptions:" + reportCommand.getOptions());
+    Logger.info("CliInputCommandArguments:" + reportCommand.getArguments());
 
     List<Report> reports = getHtmlReport(assessmentName); // Use html report generator from base class
     return reports;
@@ -136,7 +134,7 @@ public abstract class GenericPluginProvider implements PluginProvider {
   }
 
   protected List<Report> getHtmlReport(String assessmentName) throws TAException {
-    logger.info("Get HTML report for assessment:" + assessmentName);
+    Logger.info("Get HTML report for assessment:" + assessmentName);
 
     File assessOutputDir = Util.getAssessmentOutputDir(assessmentName);
     if (!assessOutputDir.exists()) {
@@ -147,17 +145,17 @@ public abstract class GenericPluginProvider implements PluginProvider {
     RecommendationReporter reportGenerator = null;
     try {
       recJson = Util.getRecommendationsJson(assessmentName);
-      logger.info("recommendations.json:" + recJson);
+      Logger.info("recommendations.json:" + recJson);
       reportGenerator = new RecommendationReporter(assessmentName, recJson);
     } catch (FileNotFoundException e) {
-      logger.error("Recommendation.json not found for assessment:" + assessmentName);
+      Logger.error("Recommendation.json not found for assessment:" + assessmentName);
       throw new TAException(e);
     }
 
     try {
         return reportGenerator.generateHTMLReports();
     } catch (Exception e) {
-        logger.error("Failed to generate HTML files for assessment: " + assessmentName, e);
+        Logger.error("Failed to generate HTML files for assessment: " + assessmentName, e);
         throw new TAException(e);
     }
   }
@@ -226,7 +224,7 @@ public abstract class GenericPluginProvider implements PluginProvider {
           FreeMarkerTemplateResolver fmtr = new FreeMarkerTemplateResolver(this, new File(collectionDir.getAbsolutePath()+File.separator+assessName), envJson);
           fmtr.resolveTemplatesForTargets(targets);
       } else {
-          logger.warn("skip generate migration bundle for assessment unit " + assessName);
+          Logger.warn("skip generate migration bundle for assessment unit " + assessName);
       }
     }
   }
