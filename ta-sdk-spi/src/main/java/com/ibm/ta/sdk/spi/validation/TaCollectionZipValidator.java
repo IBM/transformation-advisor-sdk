@@ -119,7 +119,7 @@ public class TaCollectionZipValidator {
 
             List<String> envAuNamesList = envJson.getAssessmentUnits();
 
-            // remove the middleware name dir which contains the templates files for 0.6.1
+            // remove the middleware name dir which contains the templates files for 0.6.3
             // middleware directory will copied to collection directory, but it is not an assessment unit
             assessmentUnits.remove(envJson.getMiddlewareName());
 

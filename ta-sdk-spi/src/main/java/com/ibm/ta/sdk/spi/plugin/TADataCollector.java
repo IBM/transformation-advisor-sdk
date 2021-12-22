@@ -14,9 +14,7 @@ import com.ibm.ta.sdk.spi.assess.RecommendationJson;
 import com.ibm.ta.sdk.spi.recommendation.Target;
 import com.ibm.ta.sdk.spi.report.Report;
 import com.ibm.ta.sdk.spi.util.Util;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.util.FileUtils;
+import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.FileReader;
@@ -36,9 +34,6 @@ public class TADataCollector {
   public static final String ASSESSMENTUNIT_META_JSON_FILE = "metadata.assessmentUnit.json";
   public static final String TARGETS_JSON_FILE = "targets.json";
 
-
-  private static Logger logger = LogManager.getLogger(TADataCollector.class.getName());
-
   ServiceLoader<PluginProvider> loader = ServiceLoader.load(PluginProvider.class);
 
   public Iterator<PluginProvider> getPluginProviders() {
@@ -50,7 +45,7 @@ public class TADataCollector {
     if (provider == null) {
       throw new IllegalArgumentException("No plug-in provider found for middleware:" + middleware + ".");
     }
-    logger.debug("cliArguments:" + cliArguments);
+    Logger.debug("cliArguments:" + cliArguments);
     if (cliArguments.isEmpty()) {
       throw new IllegalArgumentException("No command was specified.");
     }
@@ -230,7 +225,7 @@ public class TADataCollector {
         }
 
         // Apply mask to content
-        logger.debug("Applying content masks");
+        Logger.debug("Applying content masks");
         List<ContentMask> contentMasks = au.getContentMasks();
         if (contentMasks != null) {
           for (Path path : outputConfigFiles) {
@@ -239,10 +234,10 @@ public class TADataCollector {
                 // Use the original path of the file, not the new path where the file is copied to
                 String origPath = path.toAbsolutePath().toString().replace(auOutputDir.getAbsolutePath(), "");
 
-                logger.debug("Comparing file:" + origPath + " to contentMaskFile:" + contentMaskFile);
+                Logger.debug("Comparing file:" + origPath + " to contentMaskFile:" + contentMaskFile);
 
                 if (origPath.matches(contentMaskFile)) {
-                  logger.info("Applying mask to file:" + path);
+                  Logger.info("Applying mask to file:" + path);
                   // Read lines from file
                   List<String> lines = Files.readAllLines(path);
 
@@ -323,7 +318,7 @@ public class TADataCollector {
 
       // Add log message to indicate zip does not contain data because plugin collects sensitive data
       if (environment.hasSensitiveData()) {
-        logger.info("The environment.json file indicates that the collection contains sensitive data. The collection zip archive created will not include any of the collected data files.");
+        Logger.info("The environment.json file indicates that the collection contains sensitive data. The collection zip archive created will not include any of the collected data files.");
       }
 
       // zip output dir
@@ -343,7 +338,7 @@ public class TADataCollector {
         assessmentNames.add(file.getName());
       }
     }
-    logger.debug("Generating reports for assessment units:" + assessmentNames);
+    Logger.debug("Generating reports for assessment units:" + assessmentNames);
 
     // Get report for each assessment
     for (String assessmentName : assessmentNames) {
@@ -365,7 +360,7 @@ public class TADataCollector {
         File recFile = new File(auOutputDir, reportName);
 
         // Write report
-        logger.info("Writing report:" + recFile.getAbsolutePath());
+        Logger.info("Writing report:" + recFile.getAbsolutePath());
         writeFile(recFile, report.getReport());
 
         // Update assessment unit zip
@@ -388,7 +383,7 @@ public class TADataCollector {
   }
 
   private CliInputCommand findMatchingCommand(List<String> cliArguments, List<CliInputCommand> providerCommands) {
-    logger.debug("cliArguments:" + cliArguments);
+    Logger.debug("cliArguments:" + cliArguments);
     if (cliArguments.size() < 1) {
       return null;
     }
@@ -410,23 +405,23 @@ public class TADataCollector {
         if (subCommandsList.size() > 0) {
 
           CliInputCommand subCommand = findMatchingCommand (cliArguments, subCommandsList);
-          logger.debug("Matched subCommand:" + subCommand);
+          Logger.debug("Matched subCommand:" + subCommand);
           if (subCommand != null) {
             matchedCommand.setCommands(new ArrayList<>(Arrays.asList(subCommand)));
           }
         }
 
         if (matchedCommand.getCommands().isEmpty()) {
-          logger.debug("No matching subcommands. Adding args and options to command:" + matchedCommand.getName());
+          Logger.debug("No matching subcommands. Adding args and options to command:" + matchedCommand.getName());
 
           // No more subcommands, this is the last subcommand, add options and arguments to this command
           List<CliInputOption> matchedOptions = command.getMatchedOptions(cliArguments);
-          logger.debug("Matched options:" + matchedOptions);
+          Logger.debug("Matched options:" + matchedOptions);
 
           matchedCommand.setOptions(matchedOptions);
 
           // Remaining cli arguments are added as arguments to command
-          logger.debug("Set arguments:" + cliArguments);
+          Logger.debug("Set arguments:" + cliArguments);
           matchedCommand.setArguments(cliArguments);
         }
 
@@ -443,7 +438,7 @@ public class TADataCollector {
     }
 
     String cliArg = cliArguments.get(0);
-    logger.debug("Comparing cliArg:" + cliArg);
+    Logger.debug("Comparing cliArg:" + cliArg);
     // stop looking for commands when first arg is found
     if (cliArg.startsWith("-")) {
       return null;
@@ -457,7 +452,7 @@ public class TADataCollector {
         List<CliInputCommand> subCommandsList = command.getCommands();
         if (subCommandsList.size() > 0) {
           CliInputCommand subCommand = findMatchingCommandForUsageHelp (cliArguments, subCommandsList);
-          logger.debug("subCommand:" + subCommand);
+          Logger.debug("subCommand:" + subCommand);
 
           if (subCommand != null) {
             return subCommand;
@@ -544,7 +539,7 @@ public class TADataCollector {
     if (auFile.exists()) {
       auFile.delete();
     }
-    logger.debug("Writing assessment unit data json file:" + auFile);
+    Logger.debug("Writing assessment unit data json file:" + auFile);
 
     // Convert recommendation to JSON
     String auJsonStr = getJsonStr(au.getAssessmentData());
@@ -557,7 +552,7 @@ public class TADataCollector {
     if (envFile.exists()) {
       envFile.delete();
     }
-    logger.debug("Writing env file:" + envFile);
+    Logger.debug("Writing env file:" + envFile);
 
     EnvironmentJson envJson = new EnvironmentJson(environment);
     envJson.setPluginVersion(version);
@@ -578,7 +573,7 @@ public class TADataCollector {
     if (auMetaFile.exists()) {
       auMetaFile.delete();
     }
-    logger.debug("Writing assessment unit metadata json file:" + auMetaFile);
+    Logger.debug("Writing assessment unit metadata json file:" + auMetaFile);
 
     AssessmentUnitMetadataJson auMeta = new AssessmentUnitMetadataJson(environment, au.getName());
     String auMetaJsonStr = getJsonStr(auMeta.toJsonObject());
@@ -607,7 +602,7 @@ public class TADataCollector {
         try {
           recProvider.validateJsonFiles();
         } catch (TAException e) {
-          logger.error("validate issues jdon file failed.");
+          Logger.error("validate issues jdon file failed.");
         }
         return recProvider;
       }
@@ -680,10 +675,10 @@ public class TADataCollector {
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage() + "\n\n" + getBaseHelp() + "\n");
     } catch (TAException tae) {
-      logger.error("Fail to run the command:", tae);
+      Logger.error("Fail to run the command:", tae);
       System.out.println("Fail to run the command, check log file for detail information.\n    " +tae.getMessage() +  "\n");
     } catch (IOException ioe) {
-      logger.error("Fail to run the command:", ioe);
+      Logger.error("Fail to run the command:", ioe);
       System.out.println("Fail to run the command, check log file for detail information.\n    " +ioe.getMessage() +  "\n");
     }
   }

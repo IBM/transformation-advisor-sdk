@@ -10,8 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ibm.ta.sdk.spi.plugin.TADataCollector;
 import org.apache.commons.compress.utils.IOUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
@@ -33,7 +32,6 @@ import static java.nio.file.Files.copy;
 public class Util {
 
   private static final String ZIP_FILE_SEPARATOR = "/"; // File.separator should not be used in zips
-  private static Logger logger = LogManager.getLogger(Util.class.getName());
 
   public static String getSDKVersion() {
     String version = null;
@@ -42,7 +40,7 @@ public class Util {
       properties.load(Util.class.getClassLoader().getResourceAsStream("version.properties"));
       version = properties.getProperty("version");
     } catch (IOException ioe) {
-      logger.error("Cannot get TA SDK version.", ioe);
+      Logger.error("Cannot get TA SDK version.", ioe);
     }
     return version;
   }
@@ -143,21 +141,21 @@ public class Util {
   }
 
   public static void copyResourceToDir (String resource, File outputDir) throws IOException {
-    logger.debug("resource="+resource);
+    Logger.debug("resource="+resource);
     URL resourceURL = Util.class.getClassLoader().getResource(resource);
-    logger.debug("resourceURL="+resourceURL);
+    Logger.debug("resourceURL="+resourceURL);
     if (resourceURL.getProtocol().equals("jar")) {
       String jarPath = resourceURL.getPath().substring(5, resourceURL.getPath().indexOf("!")); //strip out only the JAR file
-      logger.debug("jarPath="+jarPath);
+      Logger.debug("jarPath="+jarPath);
       JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
       Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
       while(entries.hasMoreElements()) {
         JarEntry entry = entries.nextElement();
         String name =entry.getName();
         if (name.startsWith(resource)) {
-          logger.debug("template-name="+name);
+          Logger.debug("template-name="+name);
           File targetFile = new File (outputDir.getCanonicalPath()+File.separator+name);
-          logger.debug("targetFile="+targetFile.getPath());
+          Logger.debug("targetFile="+targetFile.getPath());
           if (!entry.isDirectory()) {
             InputStream entryInputStream = null;
             try {
@@ -176,7 +174,7 @@ public class Util {
       try {
         source = Paths.get(resourceURL.toURI());
       } catch (URISyntaxException e) {
-        logger.error("Failed to get template directory from path", e);
+        Logger.error("Failed to get template directory from path", e);
         return;
       }
       Path target = new File (outputDir.getCanonicalPath()+File.separator+resource).toPath();

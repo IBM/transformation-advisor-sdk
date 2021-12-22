@@ -8,8 +8,7 @@ package com.ibm.ta.sdk.core.assessment;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,13 +25,11 @@ public class IssueMatchCriteria {
   private Map<String, JsonElement> queryPaths = new HashMap<String, JsonElement>();
   protected JsonObject occurenceAttrs;
 
-  private static Logger logger = LogManager.getLogger(IssueMatchCriteria.class.getName());
-
   public IssueMatchCriteria(JsonObject matchCriteriaJsonObj, String queryPathsKeyName) {
     this.matchCriteriaJsonObj = matchCriteriaJsonObj;
 
     if (matchCriteriaJsonObj == null) {
-      logger.error("No matchingCriteria object in issue rule");
+      Logger.error("No matchingCriteria object in issue rule");
       return;
     }
 
@@ -45,7 +42,7 @@ public class IssueMatchCriteria {
       qifJson.keySet().stream()
               .forEach(k -> queryInputFiles.put(k, qifJson.get(k).getAsString()));
     } else {
-      logger.info("matchingCriteria does not contain object:" + ATTR_FILTER_INPUT_FILES);
+      Logger.info("matchingCriteria does not contain object:" + ATTR_FILTER_INPUT_FILES);
     }
 
     // Add query paths
@@ -56,10 +53,10 @@ public class IssueMatchCriteria {
         qpJson.keySet().stream()
                 .forEach(k -> queryPaths.put(k, qpJson.get(k)));
       } else {
-        logger.info("Query paths key name is not null");
+        Logger.info("Query paths key name is not null");
       }
     } else {
-      logger.error("matchingCriteria does not contain object:" + queryPathsKeyName);
+      Logger.error("matchingCriteria does not contain object:" + queryPathsKeyName);
     }
 
     // Occurrence attributes
@@ -67,7 +64,7 @@ public class IssueMatchCriteria {
     if (oaJsonE != null && !oaJsonE.isJsonNull()) {
       occurenceAttrs = oaJsonE.getAsJsonObject();
     } else {
-      logger.error("matchingCriteria does not contain object:" + ATTR_OCCURRENCE_ATTR);
+      Logger.error("matchingCriteria does not contain object:" + ATTR_OCCURRENCE_ATTR);
     }
   }
 

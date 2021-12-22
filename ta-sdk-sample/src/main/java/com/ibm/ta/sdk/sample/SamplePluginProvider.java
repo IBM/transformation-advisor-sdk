@@ -18,8 +18,7 @@ import com.ibm.ta.sdk.spi.collect.DataCollection;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +30,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SamplePluginProvider extends GenericPluginProvider {
-  private static Logger logger = LogManager.getLogger(SamplePluginProvider.class.getName());
   private static final String SAMPLE_DOMAIN = "domain";
   private static final String SAMPLE_MIDDLEWARE= "middleware";
 
@@ -73,13 +71,13 @@ public class SamplePluginProvider extends GenericPluginProvider {
 
   @Override
   public List<DataCollection> getCollection(CliInputCommand cliInputCommand) throws TAException {
-    logger.info("CliInputCommandOptions:" + cliInputCommand.getOptions());
-    logger.info("CliInputCommandArguments:" + cliInputCommand.getArguments());
+    Logger.info("CliInputCommandOptions:" + cliInputCommand.getOptions());
+    Logger.info("CliInputCommandArguments:" + cliInputCommand.getArguments());
 
     List<String> collectionUnitOptionValues = CliInputOption.getCliOptionValuesByShortName(cliInputCommand.getOptions(), "c");
     List<String> assessmentUnitOptionValues = CliInputOption.getCliOptionValuesByShortName(cliInputCommand.getOptions(), "a");
-    logger.debug("pass in option values for collection unit names:" + collectionUnitOptionValues);
-    logger.debug("pass in option values for assessment unit names:" + assessmentUnitOptionValues);
+    Logger.debug("pass in option values for collection unit names:" + collectionUnitOptionValues);
+    Logger.debug("pass in option values for assessment unit names:" + assessmentUnitOptionValues);
     try {
       List<DataCollection> collections = new ArrayList<>();
       for (Object collectionUnit: predefinedCollectionSets.keySet()) {
@@ -88,7 +86,7 @@ public class SamplePluginProvider extends GenericPluginProvider {
           DataCollection oneCollection = getDataCollection(cliInputCommand.getArguments().get(0), collectionName, assessmentUnitOptionValues);
           collections.add(oneCollection);
         } else {
-          logger.warn("collection unit " + collectionName + " is not included in the pass in options, skip it");
+          Logger.warn("collection unit " + collectionName + " is not included in the pass in options, skip it");
         }
       }
       return collections;
@@ -114,7 +112,7 @@ public class SamplePluginProvider extends GenericPluginProvider {
         if (userDefinedAssessmentUnits==null || userDefinedAssessmentUnits.size()==0 || userDefinedAssessmentUnits.contains(assessmentName) ) {
           auList.add(getAssessmentUnit(assessmentName));
         } else {
-          logger.warn("assessment unit " + assessmentName + " is not included in the pass in options, skip it");
+          Logger.warn("assessment unit " + assessmentName + " is not included in the pass in options, skip it");
         }
       }
       return new GenericDataCollection(collectionUnitName, envJson, auList);

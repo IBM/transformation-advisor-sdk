@@ -16,8 +16,7 @@ import com.ibm.ta.sdk.core.assessment.GenericIssue;
 import com.ibm.ta.sdk.core.assessment.IssueMatchCriteria;
 import com.ibm.ta.sdk.core.assessment.IssueRule;
 import com.ibm.ta.sdk.core.detector.IssueRuleTypeProvider;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -39,8 +38,6 @@ public class XmlIssueRuleTypeProvider implements IssueRuleTypeProvider {
     private static final String DTD_NAME = "dtdName";
     private static final String XML_FILE = "xmlFile";
 
-    private static Logger logger = LogManager.getLogger(XmlIssueRuleTypeProvider.class.getName());
-
     @Override
     public String getName() {
         return XML_RULE_PROVIDER_NAME;
@@ -54,8 +51,8 @@ public class XmlIssueRuleTypeProvider implements IssueRuleTypeProvider {
     @Override
     public GenericIssue getIssue(Target target, AssessmentUnit assessmentUnit, IssueRule issueRule) {
         GenericIssue issue = new GenericIssue(issueRule);
-        logger.debug("issueRule="+issueRule.getMatchCriteriaJson());
-        logger.debug("assessmentUnit config file=" + assessmentUnit.getConfigFiles());
+        Logger.debug("issueRule="+issueRule.getMatchCriteriaJson());
+        Logger.debug("assessmentUnit config file=" + assessmentUnit.getConfigFiles());
 
         if (assessmentUnit.getConfigFiles() != null) {
             List<Path> xmlFiles = assessmentUnit.getConfigFiles()
@@ -73,7 +70,7 @@ public class XmlIssueRuleTypeProvider implements IssueRuleTypeProvider {
     private List<Map<String, String>> getOcurrence(Path xmlFilePath,  IssueRule issueRule){
         List<Map<String, String>> ocMapList = new ArrayList<Map<String, String>>();;
         Map<String, JsonElement> creteria = getIssueMatchCriteria(issueRule.getMatchCriteriaJson()).getQueryPaths();
-        logger.debug("matching creteria: "+creteria);
+        Logger.debug("matching creteria: "+creteria);
         boolean matches = false;
         try {
             // find match
@@ -105,13 +102,13 @@ public class XmlIssueRuleTypeProvider implements IssueRuleTypeProvider {
             // detect the occurence
             if (matches) {
                 JsonObject occurrenceAttr = issueRule.getMatchCriteria().getOccurrenceAttr();
-                logger.debug("occurrenceAttr="+occurrenceAttr);
+                Logger.debug("occurrenceAttr="+occurrenceAttr);
                 if (occurrenceAttr != null) {
                     for (String attrKey : occurrenceAttr.keySet()) {
                         JsonObject oneAttribute = occurrenceAttr.get(attrKey).getAsJsonObject();
                         JsonObject creteriaJO = oneAttribute.get(CRETERIA_KEYNAME).getAsJsonObject();
                         for (String detectMethod: creteriaJO.keySet()) {
-                            logger.debug("detector=" + detectMethod);
+                            Logger.debug("detector=" + detectMethod);
                             if (detectMethod.equals(DETECT_ATTR)) {
                                 JsonObject detectAttribute = creteriaJO.get(DETECT_ATTR).getAsJsonObject();
                                 List<Node> findNodes = detectAttribute(xmlDoc, xmlFilePath.toFile().getName(), detectAttribute);
@@ -147,7 +144,7 @@ public class XmlIssueRuleTypeProvider implements IssueRuleTypeProvider {
 
     private boolean detectDTD(Document xmlDoc, String xmlFileName, JsonObject detectDtd){
         JsonArray dtdNames = detectDtd.getAsJsonArray(DTD_NAME);
-        logger.debug("dtdnames="+dtdNames);
+        Logger.debug("dtdnames="+dtdNames);
         String[] xmlFiles = getMemberAsStrArray(detectDtd, XML_FILE);
         for (JsonElement dtdNameJE : dtdNames) {
             String dtdName = dtdNameJE.getAsString();
@@ -162,7 +159,7 @@ public class XmlIssueRuleTypeProvider implements IssueRuleTypeProvider {
     private List<Node> detectAttribute(Document xmlDoc, String xmlFileName, JsonObject detectAttribute){
         String[] tags = getMemberAsStrArray(detectAttribute, "tags");
         String[] xmlFiles = getMemberAsStrArray(detectAttribute, XML_FILE);
-        logger.debug("tags in detect attribute: "+tags);
+        Logger.debug("tags in detect attribute: "+tags);
         String attriValue = null;
         if (detectAttribute.get("attributeValue") != null) {
             attriValue = detectAttribute.get("attributeValue").getAsString();
@@ -173,7 +170,7 @@ public class XmlIssueRuleTypeProvider implements IssueRuleTypeProvider {
     private List<Node> detectElement(Document xmlDoc, String xmlFileName, JsonObject detectElement){
         String[] tags = getMemberAsStrArray(detectElement, "tags");
         String[] xmlFiles = getMemberAsStrArray(detectElement, XML_FILE);
-        logger.debug("tags in detect element: "+tags);
+        Logger.debug("tags in detect element: "+tags);
         return XmlUtils.getTagDeclarations(xmlDoc, xmlFileName, xmlFiles, "", tags);
     }
 

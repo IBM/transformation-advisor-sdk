@@ -17,8 +17,7 @@ import com.ibm.ta.sdk.spi.plugin.CliInputOption;
 import com.ibm.ta.sdk.spi.plugin.TAException;
 import com.ibm.ta.sdk.spi.plugin.UTPluginProvider;
 import com.ibm.ta.sdk.spi.test.TestUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +36,6 @@ import static com.ibm.ta.sdk.spi.test.ValidationUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ValidationTest {
-    private static Logger logger = LogManager.getLogger(ValidationTest.class.getName());
 
     @Test
     public void environmentJsonTest() {

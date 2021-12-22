@@ -16,8 +16,7 @@ import com.ibm.ta.sdk.spi.assess.ComplexityContributionJson;
 import com.ibm.ta.sdk.spi.assess.IssueCategoryJson;
 import com.ibm.ta.sdk.spi.recommendation.*;
 import com.ibm.ta.sdk.spi.validation.TaJsonFileValidator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,8 +39,6 @@ public class GenericRecommendation implements Recommendation {
   private List<ComplexityContribution> complexityRules = new ArrayList<ComplexityContribution>();
   private List<IssueCategory> issueCategories = new ArrayList<IssueCategory>();
   private List<Target> targets = new ArrayList<Target>();
-
-  private static Logger logger = LogManager.getLogger(GenericRecommendation.class.getName());
 
   public GenericRecommendation(String assessmentName, Path issuesFile, Path issuesCatFile, Path complexityFile,
                                Path targetsFile) throws IOException, TAException {

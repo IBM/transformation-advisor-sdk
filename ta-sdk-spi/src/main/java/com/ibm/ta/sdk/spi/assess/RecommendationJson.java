@@ -11,8 +11,7 @@ import com.ibm.ta.sdk.spi.plugin.TAException;
 import com.ibm.ta.sdk.spi.collect.AssessmentUnit;
 import com.ibm.ta.sdk.spi.collect.Environment;
 import com.ibm.ta.sdk.spi.recommendation.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import java.util.*;
 
@@ -52,8 +51,6 @@ public class RecommendationJson {
   protected List<Map<String, Object>> assessmentUnits = new ArrayList<Map<String, Object>>();
   private Recommendation recommendation;
 
-  private static Logger logger = LogManager.getLogger(RecommendationJson.class.getName());
-
   public RecommendationJson() {
     // Read from Json file
   }
@@ -82,7 +79,7 @@ public class RecommendationJson {
       for (Target target : recommendation.getTargets()) {
         // Check if target is to be included
         if (!isIncludeTarget(target, filterTargets)) {
-          logger.debug("Skipping target ID:" + target.getTargetId());
+          Logger.debug("Skipping target ID:" + target.getTargetId());
           continue;
         }
 
@@ -166,7 +163,7 @@ public class RecommendationJson {
     while (itIssueCategory.hasNext()) {
       String issueCategory = itIssueCategory.next();
       List<Issue> categoryIssues = issues.get(issueCategory);
-      logger.trace("Get complexity for category:" + issueCategory + " issues:" + categoryIssues);
+      Logger.trace("Get complexity for category:" + issueCategory + " issues:" + categoryIssues);
       for (Issue catIs : categoryIssues) {
         ComplexityContribution matchedCC = getMatchedComplexityContribution(catIs);
         if (matchedCC != null) {
@@ -184,7 +181,7 @@ public class RecommendationJson {
 
           complexityScoreMap.put(catIs.getCategory().getId(), ++ccount);
         } else {
-          logger.warn("No complexity rule found for issue:" + catIs.getId());
+          Logger.warn("No complexity rule found for issue:" + catIs.getId());
         }
       }
     }
@@ -194,7 +191,7 @@ public class RecommendationJson {
   }
 
   private ComplexityContribution getMatchedComplexityContribution(Issue issue) {
-    logger.trace("Find matching complexity contribution for issue:" + issue);
+    Logger.trace("Find matching complexity contribution for issue:" + issue);
 
     ComplexityContribution matchedCC = null;
     for (ComplexityContribution cc : recommendation.getComplexityContributions()) {
@@ -202,7 +199,7 @@ public class RecommendationJson {
       if (ruleIssues != null) {
         for (String ruleIssue : ruleIssues) {
           if (ruleIssue.equals(issue.getId())) {
-            logger.debug("Matching complexity contribution found (matched by ID):" + cc);
+            Logger.debug("Matching complexity contribution found (matched by ID):" + cc);
             return cc;
           }
         }
@@ -212,7 +209,7 @@ public class RecommendationJson {
       if (ruleCategories != null) {
         for (String ruleCategory : ruleCategories) {
           if (ruleCategory.equals(issue.getCategory().getId())) {
-            logger.debug("Matching complexity contribution found (matched by category):" + cc);
+            Logger.debug("Matching complexity contribution found (matched by category):" + cc);
             if (matchedCC == null) {
               matchedCC = cc;
             } else {

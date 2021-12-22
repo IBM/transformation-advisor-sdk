@@ -7,8 +7,7 @@ import com.ibm.ta.sdk.spi.plugin.PluginProvider;
 import com.ibm.ta.sdk.spi.plugin.TAException;
 import com.ibm.ta.sdk.spi.util.Util;
 import freemarker.ext.dom.NodeModel;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 import freemarker.template.*;
 import org.xml.sax.SAXException;
 
@@ -24,7 +23,6 @@ import java.util.List;
 import static com.ibm.ta.sdk.core.util.Constants.*;
 
 public class FreeMarkerTemplateResolver {
-    private Logger logger = LogManager.getLogger(getClass().getName());
 
     private PluginProvider pluginProvider;
     private File assessmentUnitDir;
@@ -82,9 +80,9 @@ public class FreeMarkerTemplateResolver {
                 key = RECOMMENDATIONS_JSON.replace('.','_');
                 JsonObject recJsonContent = GenericUtil.getJsonObj(new TypeToken<JsonObject>(){}, recommandationJson.toPath());
                 this.data.put(key,new Gson().fromJson(recJsonContent, HashMap.class));
-                logger.debug("insert to recommendations.json file to data mode with key="+key);
+                Logger.debug("insert to recommendations.json file to data mode with key="+key);
             } catch (IOException e) {
-                logger.error("error to load recommendations.json file: "+recommandationJson, e);
+                Logger.error("error to load recommendations.json file: "+recommandationJson, e);
             }
         }
         for (String sFileName: this.assessmentUnitDir.list()) {
@@ -96,23 +94,23 @@ public class FreeMarkerTemplateResolver {
                             new TypeToken<JsonObject>(){},
                             new File(assessmentUnitDir.getAbsolutePath()+File.separator+sFileName).toPath());
                     this.data.put(key,new Gson().fromJson(jsonContent, HashMap.class));
-                    logger.debug("insert json file to data mode with key="+key);
+                    Logger.debug("insert json file to data mode with key="+key);
                 } catch (IOException e) {
-                    logger.error("error to load json file: "+sFileName, e);
+                    Logger.error("error to load json file: "+sFileName, e);
                 }
             }
             if (sFileName.endsWith(".xml")) {
                 try {
                     NodeModel fileContent = NodeModel.parse(new File(assessmentUnitDir.getAbsolutePath()+File.separator+sFileName));
                     this.data.put(key,fileContent);
-                    logger.debug("insert xml file to data mode with key="+key);
-                    logger.debug("fileContent="+fileContent);
+                    Logger.debug("insert xml file to data mode with key="+key);
+                    Logger.debug("fileContent="+fileContent);
                 } catch (SAXException e) {
-                    logger.error("error to load xml file: "+sFileName, e);
+                    Logger.error("error to load xml file: "+sFileName, e);
                 } catch (IOException e) {
-                    logger.error("error to load xml file: "+sFileName, e);
+                    Logger.error("error to load xml file: "+sFileName, e);
                 } catch (ParserConfigurationException e) {
-                    logger.error("error to load xml file: "+sFileName, e);
+                    Logger.error("error to load xml file: "+sFileName, e);
                 }
             }
         }
@@ -165,7 +163,7 @@ public class FreeMarkerTemplateResolver {
             try {
                 cfg.setDirectoryForTemplateLoading(this.templateFileDir);
             } catch (IOException ioe) {
-                logger.error("Cannot set the template dir in config.", ioe);
+                Logger.error("Cannot set the template dir in config.", ioe);
             }
         } else {
             templatesDir = this.middleware+"/templates/"+target+"/";
@@ -177,14 +175,14 @@ public class FreeMarkerTemplateResolver {
             targetDir.mkdir();
         }
         for (String templateFileName : templateFiles) {
-            logger.debug("template file is " + templateFileName);
+            Logger.debug("template file is " + templateFileName);
             String targetFileName = templateFileName;
             if ( templateFileName.contains(".")) {
                 targetFileName = templateFileName.substring(0, templateFileName.lastIndexOf('.'));
             }
             String targetFileType = templateFileName.substring(templateFileName.lastIndexOf('.')+1);
             File targetFile = new File (targetDir.getAbsolutePath()+File.separator+targetFileName);
-            logger.debug("targetFileName type is " + targetFileType);
+            Logger.debug("targetFileName type is " + targetFileType);
             if (targetFile.exists()){
                 targetFile.delete();
             }
@@ -198,16 +196,16 @@ public class FreeMarkerTemplateResolver {
                 String sourceFileName = targetFileName;
                 Path filePath = GenericUtil.getFilePath(templatesDir+templateFileName);
                 String contents = GenericUtil.readFileToString(filePath);
-                logger.debug("place holder file content is " + contents);
+                Logger.debug("place holder file content is " + contents);
                 if (contents != null && contents.contains("=")) {
                     sourceFileName = contents.split("=")[1];
                 }
-                logger.debug("place holder source file name is " + sourceFileName);
+                Logger.debug("place holder source file name is " + sourceFileName);
                 File sourceFile = new File(this.assessmentUnitDir.getAbsolutePath()+File.separator+sourceFileName);
                 if (sourceFile.exists()) {
                     Files.copy(sourceFile.toPath(), targetFile.toPath());
                 } else {
-                    logger.warn("cannot find the source file " + sourceFile.getAbsolutePath() +
+                    Logger.warn("cannot find the source file " + sourceFile.getAbsolutePath() +
                             " of the placeholder file " + sourceFile + " in the collection.");
                 }
 

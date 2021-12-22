@@ -19,8 +19,7 @@ import com.ibm.ta.sdk.core.assessment.IssueRule;
 import com.ibm.ta.sdk.core.detector.IssueRuleTypeProvider;
 import com.jayway.jsonpath.*;
 import net.minidev.json.JSONArray;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,7 +32,6 @@ import static com.jayway.jsonpath.JsonPath.using;
 
 public class JsonIssueRuleTypeProvider implements IssueRuleTypeProvider {
   private static final String JSON_RULE_PROVIDER_NAME = "json";
-  private static Logger logger = LogManager.getLogger(JsonIssueRuleTypeProvider.class.getName());
 
   public static final String QUERYPATHS_KEYNAME = "jsonQueryPath";
   public static final String PATHVAR_NOT_RESOLVE = "@nr.";
@@ -65,7 +63,7 @@ public class JsonIssueRuleTypeProvider implements IssueRuleTypeProvider {
       List<Path> matchingConfigFiles = GenericUtil.getMatchingAssessmentUnitConfigFiles(assessmentUnit, queryInputFilesMap);
       for (Path configFile : matchingConfigFiles) {
         try {
-          logger.debug("Reading config file:" + configFile);
+          Logger.debug("Reading config file:" + configFile);
           String configFileJsonStr = new String(Files.readAllBytes(configFile));
           queryInputJsonList.add(configFileJsonStr);
         } catch (IOException e) {
@@ -85,15 +83,15 @@ public class JsonIssueRuleTypeProvider implements IssueRuleTypeProvider {
 
         List<String> pathList = null;
 
-        //logger.info("queryInput:" + querytInputJsonStr);
-        //logger.info("path:" + pathValue);
+        //Logger.info("queryInput:" + querytInputJsonStr);
+        //Logger.info("path:" + pathValue);
 
         Configuration conf = Configuration.builder()
                 .options(Option.AS_PATH_LIST).build();
         try {
           pathList = using(conf).parse(querytInputJsonStr).read(pathValue);
         } catch (PathNotFoundException e) {
-          logger.error("No issues found in path:" + pathValue);
+          Logger.error("No issues found in path:" + pathValue);
         }
 
         if (pathList != null && !pathList.isEmpty()) {
@@ -105,14 +103,14 @@ public class JsonIssueRuleTypeProvider implements IssueRuleTypeProvider {
         List<String> pathList = pathListMap.get(pathKey);
 
         for (String path : pathList) {
-          logger.trace("recommendation path:" + path);
+          Logger.trace("recommendation path:" + path);
 
           DocumentContext doc = JsonPath.parse(querytInputJsonStr);
           if (!issueRule.customFilter(doc, path)) {
             continue;
           }
           List<Map<String, String>> occurrences = getOccurrence(doc, pathKey, path, issueRule.getMatchCriteria().getOccurrenceAttr());
-          logger.trace("occurrence:" + occurrences);
+          Logger.trace("occurrence:" + occurrences);
           issue.addOccurences(occurrences);
         }
       }
@@ -159,7 +157,7 @@ public class JsonIssueRuleTypeProvider implements IssueRuleTypeProvider {
             }
           }
         } catch (PathNotFoundException e) {
-          logger.error("Attribute not found in JSON, filterPath:" + filterPath + " key:" + pathKey);
+          Logger.error("Attribute not found in JSON, filterPath:" + filterPath + " key:" + pathKey);
         }
 
         // Clone ocMap for each value in pathValues

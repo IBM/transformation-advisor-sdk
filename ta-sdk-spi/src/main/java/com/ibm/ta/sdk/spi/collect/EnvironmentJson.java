@@ -9,8 +9,7 @@ package com.ibm.ta.sdk.spi.collect;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
 import com.google.gson.annotations.Expose;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -19,7 +18,6 @@ import java.util.List;
 
 public class EnvironmentJson {
 
-  private static Logger logger = LogManager.getLogger(EnvironmentJson.class.getName());
   @Expose
   private String pluginVersion;
 
@@ -77,7 +75,7 @@ public class EnvironmentJson {
     try {
       this.hostName = InetAddress.getLocalHost().getCanonicalHostName();
     } catch (UnknownHostException e) {
-      logger.error("cannot detect the hostname and set it to environment", e);
+      Logger.error("cannot detect the hostname and set it to environment", e);
     }
   }
 
