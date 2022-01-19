@@ -91,7 +91,9 @@ public abstract class GenericPluginProvider implements PluginProvider {
   public CliInputCommand getAssessCommand() {
     // Assess command
     CliInputOption assessCmdSkipCollectOpt = new CliInputOption("s", "skipcollect", "Skip collection, perform assessment only");
-    List<CliInputOption> assessCmdOpts = Arrays.asList(assessCmdSkipCollectOpt);
+    List<CliInputOption> assessCmdOpts = new ArrayList<>();
+    assessCmdOpts.add(assessCmdSkipCollectOpt);
+    assessCmdOpts.add(CliInputOption.buildTargetOption());
     CliInputCommand assessCmd = new CliInputCommand(CliInputCommand.CMD_ASSESS,
             "Performs data collection and assessment",
             assessCmdOpts, null, getCollectCommand().getArgumentDisplayNames());
@@ -184,7 +186,9 @@ public abstract class GenericPluginProvider implements PluginProvider {
   public CliInputCommand getMigrateCommand() {
     // migrate command
     CliInputOption migrateCmdAssessNameOpt = new CliInputOption("n", "assessUnitName", "The name of assessment unit", true, true, null, null);
-    List<CliInputOption> migrateCmdOpts = new LinkedList<>(Arrays.asList(migrateCmdAssessNameOpt));
+    List<CliInputOption> migrateCmdOpts = new ArrayList<>();
+    migrateCmdOpts.add(migrateCmdAssessNameOpt);
+    migrateCmdOpts.add(CliInputOption.buildTargetOption());
     CliInputCommand migrateCmd = new CliInputCommand(CliInputCommand.CMD_MIGRATE,
             "Generate migration bundle for different target based on assessment unit files in the collection",
             migrateCmdOpts, null, Arrays.asList("COLLECTION_UNIT_DIR"));

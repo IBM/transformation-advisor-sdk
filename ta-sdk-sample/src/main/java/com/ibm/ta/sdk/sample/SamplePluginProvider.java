@@ -145,4 +145,21 @@ public class SamplePluginProvider extends GenericPluginProvider {
 
     return super.getAssessmentUnit(assessmentUnitName, assessDataJsonFile, assessmentConfigFiles);
   }
+
+  @Override
+  public CliInputCommand getAssessCommand() {
+    CliInputCommand assessCmd = super.getAssessCommand();
+    List<CliInputOption> cmdOptions = assessCmd.getOptions();
+    //CliInputOption targetOp = null;
+    for (CliInputOption oneOption : cmdOptions) {
+      if (oneOption.getLongArg().equals(CliInputOption.OPT_TARGET)) {
+        // modify the description for default target option
+        oneOption.setValueDisplayName("<target_name>");
+        oneOption.setDescription("Possible value is 'targetA' or 'targetB'");
+        //targetOp = oneOption;
+      }
+    }
+    //cmdOptions.remove(targetOp);
+    return assessCmd;
+  }
 }

@@ -61,6 +61,18 @@ public class CliInputOption {
     return longArg;
   }
 
+  public void setShortArg(String shortArg) {
+    this.shortArg = shortArg;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public void setValueDisplayName(String valueDisplayName) {
+    this.valueDisplayName = valueDisplayName;
+  }
+
   public String getDescription() {
     return description;
   }
