@@ -33,7 +33,7 @@ public class GenericAssessmentUnit implements AssessmentUnit {
   public GenericAssessmentUnit(String assessUnitName, Path assessmentUnitJsonDataFile, List<Path> assessmentUnitConfigFiles) throws IOException {
     if (assessUnitName == null) {
       assessUnitName = assessmentUnitJsonDataFile.getFileName().toString();
-      int extIndex = assessUnitName.indexOf(".");
+      int extIndex = assessUnitName.lastIndexOf(".");
       if (extIndex > 0) {
         assessUnitName = assessUnitName.substring(0, extIndex);
       }

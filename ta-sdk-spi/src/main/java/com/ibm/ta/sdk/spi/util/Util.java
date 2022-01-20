@@ -58,6 +58,7 @@ public class Util {
         // each assessment unit dir
         addZipEntry(dirFile, parentDir, zos, Arrays.asList(new String[]{
                 TADataCollector.ASSESSMENTUNIT_META_JSON_FILE,
+                TADataCollector.TARGETS_JSON_FILE,
                 "recommendations_.*.html"}));
       } else {
         addZipEntry(dirFile, parentDir, zos, null);
@@ -144,6 +145,10 @@ public class Util {
     Logger.debug("resource="+resource);
     URL resourceURL = Util.class.getClassLoader().getResource(resource);
     Logger.debug("resourceURL="+resourceURL);
+    if (resourceURL == null) {
+      Logger.warn("no resource find under " + resource +", skip copy the resources to output directory.");
+      return;
+    }
     if (resourceURL.getProtocol().equals("jar")) {
       String jarPath = resourceURL.getPath().substring(5, resourceURL.getPath().indexOf("!")); //strip out only the JAR file
       Logger.debug("jarPath="+jarPath);

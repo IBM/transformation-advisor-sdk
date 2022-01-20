@@ -62,12 +62,6 @@ public class TADataCollector {
       assessCommand.setName(CliInputCommand.CMD_ASSESS);
       assessCommand.setDescription(CliInputCommand.CMD_ASSESS_DESC);
       providerCommands.add(assessCommand);
-
-      // Add target option
-      List<CliInputOption> assessOptions = new LinkedList<>();
-      assessOptions.addAll(assessCommand.getOptions());
-      assessOptions.add(CliInputOption.buildTargetOption());
-      assessCommand.setOptions(assessOptions);
     }
     CliInputCommand reportCommand = provider.getReportCommand();
     if (reportCommand != null) {
