@@ -372,8 +372,8 @@
       "matchCriteria": {
         "ruleType": "json",
         "jsonQueryPath": {
-          "osUser": "$.security[?(@.authentication == 'IDPWOS')].authRecord[?(@.osUser empty false)]",
-          "osGroup": "$.security[?(@.authentication == 'IDPWOS')].authRecord[?(@.osGroup empty false)]"
+          "osUser": "$..security.[?(@.authentication == 'IDPWOS')].authRecord[?(@.osUser empty false)]",
+          "osGroup": "$..security[?(@.authentication == 'IDPWOS')].authRecord[?(@.osGroup empty false)]"
         },
         "occurrenceAttr": {
           "type": {

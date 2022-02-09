@@ -102,7 +102,7 @@
   ],
   "security": {
     "authentication": "IDPWOS",
-    "authRecord": [
+    "authRecord, aaa": [
       {
         "type": "queue",
         "object": "NewYork",
@@ -114,6 +114,23 @@
         "osGroup": "mqm"
       }
     ]
+  },
+  "myTest, path has comma": {
+    "security": {
+      "authentication": "IDPWOS",
+      "authRecord": [
+        {
+          "type": "queue",
+          "object": "NewYork2",
+          "osGroup": "root"
+        },
+        {
+          "type": "queue",
+          "object": "NewYork2",
+          "osGroup": "mqm"
+        }
+      ]
+    }
   },
   "qmini": {
     "capabilties": {
