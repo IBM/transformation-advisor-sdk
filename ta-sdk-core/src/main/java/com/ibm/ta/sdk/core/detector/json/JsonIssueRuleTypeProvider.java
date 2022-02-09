@@ -103,8 +103,8 @@ public class JsonIssueRuleTypeProvider implements IssueRuleTypeProvider {
         List<String> pathList = pathListMap.get(pathKey);
 
         for (String path : pathList) {
+          Logger.trace("recommendation pathKey:" + pathKey);
           Logger.trace("recommendation path:" + path);
-
           DocumentContext doc = JsonPath.parse(querytInputJsonStr);
           if (!issueRule.customFilter(doc, path)) {
             continue;
