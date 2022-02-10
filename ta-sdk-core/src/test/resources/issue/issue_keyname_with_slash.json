@@ -13,11 +13,11 @@
       "matchCriteria": {
         "ruleType": "json",
         "jsonQueryPath": {
-          "masterCluster": "$.master\\clusters[?(@.key\\Name == 'London')]"
+          "mainCluster": "$.main\\clusters[?(@.key\\Name == 'London')]"
         },
         "occurrenceAttr": {
-          "masterCluster": {
-            "title": "Master Cluster",
+          "mainCluster": {
+            "title": "Main Cluster",
             "path": "name"
           }
         }
