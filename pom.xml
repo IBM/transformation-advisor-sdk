@@ -59,7 +59,7 @@
     <scm>
         <connection>scm:git:git://github.com/IBM/transformation-advisor-sdk.git</connection>
         <developerConnection>scm:git:ssh://github.com:IBM/transformation-advisor-sdk.git</developerConnection>
-        <url>https://github.com/IBM/transformation-advisor-sdk/tree/master</url>
+        <url>https://github.com/IBM/transformation-advisor-sdk/tree/main</url>
     </scm>
 
     <profiles>

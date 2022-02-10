@@ -105,12 +105,12 @@ public class JsonDetectorTest {
             // Check occurrences
             Occurrence occurrence = issue.getOccurrence();
             Map<String, String> expectedFieldKeys = new HashMap<>();
-            expectedFieldKeys.put("masterCluster", "Master Cluster");
+            expectedFieldKeys.put("mainCluster", "Main Cluster");
             assertEquals(expectedFieldKeys, occurrence.getFieldKeys());
             Map<String, String> expectedOcInstance = new HashMap<>();
-            expectedOcInstance.put("masterCluster", "INVENTORY");
+            expectedOcInstance.put("mainCluster", "INVENTORY");
             Map<String, String> expectedOcInstance2 = new HashMap<>();
-            expectedOcInstance2.put("masterCluster", "PAYABLE");
+            expectedOcInstance2.put("mainCluster", "PAYABLE");
             assertEquals(Arrays.asList(expectedOcInstance, expectedOcInstance2), occurrence.getOccurrencesInstances());
         } catch (IOException | TAException e) {
             throw new AssertionFailedError("Error generating recommendations", e);

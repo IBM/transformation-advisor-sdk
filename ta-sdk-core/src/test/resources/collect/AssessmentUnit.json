@@ -11,7 +11,7 @@
       "fullRepository": true
     }
   ],
-  "master\\clusters": [
+  "main\\clusters": [
     {
       "name": "INVENTORY",
       "key\\Name": "London"
