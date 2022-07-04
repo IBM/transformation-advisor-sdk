@@ -1,0 +1,69 @@
+{
+  "targets": [
+    {
+      "target": "targetA",
+      "dimensions": [
+        {
+          "name": "buildType",
+          "values": [
+            "source",
+            "binary"
+          ],
+          "defaultValue": "binary"
+        },
+        {
+          "name": "mpMetrics",
+          "values": [
+            true
+          ],
+          "defaultValue": true
+        },
+        {
+          "name": "memory",
+          "values": [
+            1024,
+            2048
+          ],
+          "defaultValue": 1024
+        }
+      ],
+      "issues": [
+        "MQEXIT01",
+        "MQCL03",
+        "MQEXIT06"
+      ]
+    },
+    {
+      "target": "targetB",
+      "dimensions": [
+        {
+          "name": "buildType",
+          "values": [
+            "source",
+            "binary"
+          ],
+          "defaultValue": "binary"
+        }
+      ],
+      "issueCategories": [
+        "cluster"
+      ]
+    },
+    {
+      "target": "targetC",
+      "dimensions": [
+        {
+          "name": "buildType",
+          "values": [
+            "source",
+            "binary"
+          ],
+          "defaultValue": "binary"
+        }
+      ],
+      "issueCategories": [
+        "cluster"
+      ]
+    }
+  ]
+}
