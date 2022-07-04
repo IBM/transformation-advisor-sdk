@@ -6,18 +6,22 @@
       "category": "cluster",
       "issueOverhead": 0.5,
       "occurrencesCost": 0.5,
+      "targetedSolutions": {
+        "targetA": [ "targetA solution" ],
+        "targetB": [ "targetB solution" ]
+      },
       "solutionText": [
-        "Update other Cluster members using IPAddresses to use the new IPAddress after migrating"
+        "Untargeted solution"
       ],
       "severity": "potential",
       "matchCriteria": {
         "ruleType": "json",
         "jsonQueryPath": {
-          "fullRepository": "$.clusters[?(@.fullRepository == true)]"
+          "mainCluster": "$.main\\clusters[?(@.key\\Name == 'London')]"
         },
         "occurrenceAttr": {
-          "cluster": {
-            "title": "Cluster",
+          "mainCluster": {
+            "title": "Main Cluster",
             "path": "name"
           }
         }

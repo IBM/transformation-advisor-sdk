@@ -359,7 +359,7 @@
       "issueOverhead": 2.0,
       "occurrencesCost": 0.2,
       "targetedSolutions": {
-        "targetA": [ "test", "ing"]
+        "targetA": [ "Specific solution text", "For targetA"]
       },
       "solutionText": [
         "Consider impact to clients",
