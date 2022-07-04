@@ -53,8 +53,11 @@ public class GenericIssue implements Issue {
 
     private IssueCategory issueCategory;
 
-    public GenericIssue(IssueRule issueRule) {
+    private String targetName;
+
+    public GenericIssue(IssueRule issueRule, String targetName) {
         this.issueRule = issueRule;
+        this.targetName = targetName;
 
         occurrence = new GenericOccurrence(this.issueRule);
 
@@ -83,7 +86,7 @@ public class GenericIssue implements Issue {
 
     @Override
     public List<String> getSolutionText() {
-        return issueRule.getSolutionText();
+        return issueRule.getTargetedSolutionText(targetName);
     }
 
     @Override

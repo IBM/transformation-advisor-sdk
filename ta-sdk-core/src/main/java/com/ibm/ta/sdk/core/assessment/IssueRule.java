@@ -6,11 +6,15 @@
 
 package com.ibm.ta.sdk.core.assessment;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
+import com.google.gson.reflect.TypeToken;
+import com.ibm.icu.impl.Pair;
 import com.jayway.jsonpath.DocumentContext;
 import org.tinylog.Logger;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +40,10 @@ public class IssueRule {
 
   @Expose(serialize = false)
   protected List<String> solutionText;
+
+  @Expose(serialize = false)
+  protected JsonObject targetedSolutions;
+  // protected List<Pair<String, List<String>>> targetedSolutionText;
 
   @Expose(serialize = false)
   protected String severity;
@@ -76,6 +84,16 @@ public class IssueRule {
   }
 
   public List<String> getSolutionText() {
+    return solutionText;
+  }
+
+  public List<String> getTargetedSolutionText(String targetName) {
+    if (targetedSolutions != null) {
+      if (targetedSolutions.has(targetName)){
+        Type listType = new TypeToken<List<String>>() {}.getType();
+        return new Gson().fromJson(targetedSolutions.get(targetName), listType);
+      }
+    }
     return solutionText;
   }
 
