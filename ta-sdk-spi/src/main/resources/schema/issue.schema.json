@@ -2,7 +2,7 @@
   "$id": "issue.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Issue",
-  "description": "An issue used in the recommandation",
+  "description": "An issue used in the recommendation",
   "definitions": {
     "Issue": {
       "type": "object",
@@ -16,12 +16,28 @@
           "type": "string"
         },
         "category": {
-          "description": "The category of the issue,  the value should be defined is the issue_cotagory.json",
+          "description": "The category of the issue, the value should be defined is the issue_category.json",
           "type": "string"
         },
         "severity": {
           "description": "The severity of the issue",
           "type": "string"
+        },
+        "targetedSolutions": {
+          "description": "Contains members with names that should match applicable targets for this issue. If none of the members match the current target, will default to the 'solutionText'",
+          "type": "object",
+          "patternProperties": {
+            "^.*$": {
+              "description": "The solution of this issue for this specific target",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "title": "",
+                "description": "The content of solution for an issue."
+              },
+              "additionalProperties": false
+            }
+          }
         },
         "solutionText": {
           "description": "The solution of this issue",
