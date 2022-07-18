@@ -22,6 +22,7 @@ public class CliInputOption {
   private boolean valueRequired;
   private String valueDisplayName;
   private String value;
+  private boolean hasDefaultValue;
 
 
   public CliInputOption(String shortArg, String longArg, String description) {
@@ -35,6 +36,7 @@ public class CliInputOption {
     this.acceptsValue = acceptsValue;
     this.valueRequired = valueRequired;
     this.valueDisplayName = valueDisplayName == null ? "VALUE" : valueDisplayName.toUpperCase();
+    this.hasDefaultValue = ( defaultValue != null );
     this.value = defaultValue;
   }
 
@@ -87,6 +89,10 @@ public class CliInputOption {
 
   public String getValue() {
     return value;
+  }
+
+  public boolean hasDefaultValue() {
+    return hasDefaultValue;
   }
 
   public void setValue(String value) {

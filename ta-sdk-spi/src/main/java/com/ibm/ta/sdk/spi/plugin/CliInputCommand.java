@@ -253,6 +253,25 @@ public class CliInputCommand {
       inputArgs.remove(i.intValue());
     }
 
+    // Add any default parameters that were not already found in the argument list.
+    for (CliInputOption option : options) {
+      // if any of the standard options have a default value
+      if (option.hasDefaultValue()) {
+        boolean alreadyMatched = false;
+        // Check if we've already matched them.
+        for (CliInputOption matchedOption : matchedOptions) {
+          if (matchedOption.getLongArg().equals(option.getLongArg()) || matchedOption.getShortArg().equals(option.getShortArg())) {
+            alreadyMatched = true;
+            break;
+          }
+        }
+        if (!alreadyMatched) {
+          // if we haven't already matched the command, then we should add it with the default value.
+          matchedOptions.add(option);
+        }
+      }
+    }
+
     return matchedOptions;
   }
 

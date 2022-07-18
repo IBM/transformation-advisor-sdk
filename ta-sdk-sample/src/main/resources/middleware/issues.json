@@ -358,6 +358,9 @@
       "category": "security",
       "issueOverhead": 2.0,
       "occurrencesCost": 0.2,
+      "targetedSolutions": {
+        "targetA": [ "Specific solution text", "For targetA"]
+      },
       "solutionText": [
         "Consider impact to clients",
         "Alternatives:",

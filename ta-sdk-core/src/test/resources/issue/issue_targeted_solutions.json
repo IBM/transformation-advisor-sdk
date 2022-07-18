@@ -1,0 +1,31 @@
+{
+  "issues": [
+    {
+      "id": "MQCL03",
+      "title": "Contains a Full Repository.  Assess impact to other cluster members.",
+      "category": "cluster",
+      "issueOverhead": 0.5,
+      "occurrencesCost": 0.5,
+      "targetedSolutions": {
+        "targetA": [ "targetA solution" ],
+        "targetB": [ "targetB solution" ]
+      },
+      "solutionText": [
+        "Untargeted solution"
+      ],
+      "severity": "potential",
+      "matchCriteria": {
+        "ruleType": "json",
+        "jsonQueryPath": {
+          "mainCluster": "$.main\\clusters[?(@.key\\Name == 'London')]"
+        },
+        "occurrenceAttr": {
+          "mainCluster": {
+            "title": "Main Cluster",
+            "path": "name"
+          }
+        }
+      }
+    }
+  ]
+}

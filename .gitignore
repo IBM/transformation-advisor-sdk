@@ -7,7 +7,10 @@ output/
 
 # IntelliJ files
 .idea/
-target/
+/target/
+/ta-sdk-core/target/
+/ta-sdk-sample/target/
+/ta-sdk-spi/target/
 *.iml
 
 # Package Files #

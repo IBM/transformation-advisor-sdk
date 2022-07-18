@@ -118,6 +118,70 @@ public class JsonDetectorTest {
     }
 
     /*
+     * Simple filter by attribute and checks the values for all the issue attributes are correct.
+     */
+    @Test
+    public void issueTargetedSolutions() {
+        try {
+            Path assessmentUnitFile = new File(TEST_RESOURCES_DIR, "collect/AssessmentUnit.json").toPath();
+            GenericAssessmentUnit au = new GenericAssessmentUnit(assessmentUnitFile, null);
+
+            Path issueJsonFile = new File(TEST_RESOURCES_DIR, "issue/issue_targeted_solutions.json").toPath();
+            Path complexityJsonFile = new File(TEST_RESOURCES_DIR, "assess" + File.separator + FILE_COMPLEXITIES_JSON).toPath();
+            Path issueCatJsonFile = new File(TEST_RESOURCES_DIR, "assess" + File.separator + FILE_ISSUECATS_JSON).toPath();
+            Path targetJsonFile = new File(TEST_RESOURCES_DIR, "target" + File.separator + "targets_three.json").toPath();
+    
+            GenericRecommendation rec = new GenericRecommendation("assessment1", issueJsonFile,
+                    issueCatJsonFile, complexityJsonFile, targetJsonFile);
+            List<Target> targets = rec.getTargets();
+            assertEquals(3, targets.size());
+
+            Boolean foundTargetA = false, foundTargetB = false, foundTargetC = false;
+
+            // we can't _guarantee_ the order of the targets, so we iterate through the list and check which of the 3 targets we've found.
+            for (int i = 0; i < targets.size(); i++ ) {
+                Target target = targets.get(i);
+                if (target.getTargetId().equals("targetA")) {
+                    if (foundTargetA) fail("found targetA twice in targets");
+                    foundTargetA = true;
+                    List<Issue> issues = rec.getIssues(target, au);
+                    assertEquals(1, issues.size());
+
+                    Issue issue = issues.get(0);
+                    assertEquals(Arrays.asList("targetA solution"),
+                            issue.getSolutionText());
+
+                } else if (target.getTargetId().equals("targetB")){ 
+                    if (foundTargetB) fail("found targetB twice in targets");
+                    foundTargetB = true;
+                    List<Issue> issues = rec.getIssues(target, au);
+                    assertEquals(1, issues.size());
+
+                    Issue issue = issues.get(0);
+                    assertEquals(Arrays.asList("targetB solution"),
+                            issue.getSolutionText());
+
+                } else if (target.getTargetId().equals("targetC")){ 
+                    if (foundTargetC) fail("found targetC twice in targets");
+                    foundTargetC = true;
+                    List<Issue> issues = rec.getIssues(target, au);
+                    assertEquals(1, issues.size());
+
+                    Issue issue = issues.get(0);
+                    assertEquals(Arrays.asList("Untargeted solution"),
+                            issue.getSolutionText());
+
+                } else {
+                    fail("found unexpected target: " + target.getTargetId());
+                }
+            }
+        } catch (IOException | TAException e) {
+            throw new AssertionFailedError("Error generating recommendations", e);
+        }
+    }
+
+
+    /*
      * Test no matching issue found
      */
     @Test

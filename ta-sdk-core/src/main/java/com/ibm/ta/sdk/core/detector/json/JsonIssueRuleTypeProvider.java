@@ -54,7 +54,7 @@ public class JsonIssueRuleTypeProvider implements IssueRuleTypeProvider {
 
   @Override
   public GenericIssue getIssue(Target target, AssessmentUnit assessmentUnit, IssueRule issueRule) {
-    GenericIssue issue = new GenericIssue(issueRule);
+    GenericIssue issue = new GenericIssue(issueRule, target.getTargetId());
     List<String> queryInputJsonList = new ArrayList<>();
 
     // Get query input files and convert to json
