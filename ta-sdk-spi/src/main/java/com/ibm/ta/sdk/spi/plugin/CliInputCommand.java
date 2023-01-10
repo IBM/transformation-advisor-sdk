@@ -260,7 +260,7 @@ public class CliInputCommand {
         boolean alreadyMatched = false;
         // Check if we've already matched them.
         for (CliInputOption matchedOption : matchedOptions) {
-          if (matchedOption.getLongArg().equals(option.getLongArg()) || matchedOption.getShortArg().equals(option.getShortArg())) {
+          if (matchedOption.getLongArg().equals(option.getLongArg())) {
             alreadyMatched = true;
             break;
           }
