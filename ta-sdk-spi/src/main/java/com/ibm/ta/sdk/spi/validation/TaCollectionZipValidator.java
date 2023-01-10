@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -120,21 +121,21 @@ public class TaCollectionZipValidator {
             List<String> envAuNamesList = envJson.getAssessmentUnits();
 
             // remove the middleware name dir which contains the templates files for 0.6.3
-            // middleware directory will copied to collection directory, but it is not an assessment unit
-            assessmentUnits.remove(envJson.getMiddlewareName());
+            // only need to validate the directories which is an assessment unit
+            Set<String> filteredAssessmentUnits = assessmentUnits.stream().filter(au -> envAuNamesList.contains(au)).collect(Collectors.toSet());
 
-            if (assessmentUnits.size() != envAuNamesList.size()) {
-                throw new TAException("Anomaly found. Number of asessment unit directories in archive does not match data in environment JSON.");
+            if (filteredAssessmentUnits.size() != envAuNamesList.size()) {
+                throw new TAException("Anomaly found. Number of assessment unit directories in archive does not match data in environment JSON.");
             } else {
-                if (!assessmentUnits.containsAll(envAuNamesList)) {
-                    throw new TAException("Anomaly found. Asessment unit directories in archive does not match environment JSON.");
+                if (!filteredAssessmentUnits.containsAll(envAuNamesList)) {
+                    throw new TAException("Anomaly found. Assessment unit directories in archive does not match environment JSON.");
                 }
             }
 
             // Check assessment unit metadata json exists in each assessment unit directory
-            // In future, may want to validation the schema of the file as well
+            // In the future, may want to validation the schema of the file as well
             Set<String> auMetaKeys = auMetadataMap.keySet();
-            boolean isValid = assessmentUnits.size() == auMetaKeys.size() && assessmentUnits.containsAll(auMetaKeys);
+            boolean isValid = filteredAssessmentUnits.size() == auMetaKeys.size() && filteredAssessmentUnits.containsAll(auMetaKeys);
             if (!isValid) {
                 throw new TAException("Anomaly found. Missing assessment unit metadata JSON file in assessment unit directory.");
             }
