@@ -18,7 +18,6 @@ import com.ibm.ta.sdk.core.assessment.IssueRuleProcessor;
 import com.ibm.ta.sdk.core.assessment.IssueRule;
 import com.ibm.ta.sdk.core.detector.IssueRuleTypeProvider;
 import com.jayway.jsonpath.*;
-import net.minidev.json.JSONArray;
 import org.tinylog.Logger;
 
 import java.io.IOException;
@@ -148,9 +147,9 @@ public class JsonIssueRuleTypeProvider implements IssueRuleTypeProvider {
               filterPath = filterPath.replace("\\", "\\\\");
             }
             Object pathObj =  doc.read(filterPath + "['" + pathKey + "']");
-            if (pathObj instanceof JSONArray) {
-              String[] strValues = new String[((JSONArray) pathObj).size()];
-              strValues = ((JSONArray) pathObj).toArray(strValues);
+            if (pathObj instanceof List<?>) {
+              String[] strValues = new String[(( List<?>) pathObj).size()];
+              strValues = (( List<?>) pathObj).toArray(strValues);
               pathValues.addAll(Arrays.asList(strValues));
             } else {
               pathValues.add(pathObj.toString());
