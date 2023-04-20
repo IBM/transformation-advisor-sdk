@@ -22,7 +22,7 @@
     </modules>
 
     <properties>
-        <ta.sdk.version>0.6.6</ta.sdk.version>
+        <ta.sdk.version>0.6.7</ta.sdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <tinylog.version>2.4.1</tinylog.version>
         <junit5.version>5.6.0</junit5.version>
