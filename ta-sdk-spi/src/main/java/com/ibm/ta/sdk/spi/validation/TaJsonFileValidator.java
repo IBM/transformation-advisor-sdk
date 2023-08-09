@@ -10,7 +10,7 @@ import com.ibm.ta.sdk.spi.plugin.TAException;
 import org.tinylog.Logger;
 import org.leadpony.justify.api.*;
 
-import javax.json.JsonReader;
+import jakarta.json.JsonReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
