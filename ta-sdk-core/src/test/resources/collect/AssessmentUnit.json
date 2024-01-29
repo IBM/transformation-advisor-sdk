@@ -11,6 +11,15 @@
       "fullRepository": true
     }
   ],
+  "name with \u0027quote\u0027" : {
+    "name": "NewYork2",
+    "servers": [
+      {
+        "name": "INVENTORY",
+        "fullRepository": true
+      }
+    ]
+  },
   "main\\clusters": [
     {
       "name": "INVENTORY",

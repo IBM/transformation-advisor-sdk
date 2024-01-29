@@ -75,6 +75,7 @@ public class JsonIssueRuleTypeProvider implements IssueRuleTypeProvider {
     }
 
     for (String querytInputJsonStr : queryInputJsonList) {
+      querytInputJsonStr = querytInputJsonStr.replaceAll("\'", "\\\\u0022");
       Map<String, List<String>> pathListMap = new LinkedHashMap<>();
       Map<String, JsonElement> issueQueryPaths = issueRule.getMatchCriteria().getQueryPaths();
       for (String pathKey : issueQueryPaths.keySet()) {
@@ -109,7 +110,7 @@ public class JsonIssueRuleTypeProvider implements IssueRuleTypeProvider {
             continue;
           }
           List<Map<String, String>> occurrences = getOccurrence(doc, pathKey, path, issueRule.getMatchCriteria().getOccurrenceAttr());
-          Logger.trace("occurrence:" + occurrences);
+          Logger.debug("occurrence:" + occurrences);
           issue.addOccurences(occurrences);
         }
       }

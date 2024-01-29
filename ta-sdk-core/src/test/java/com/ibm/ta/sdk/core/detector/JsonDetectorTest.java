@@ -433,6 +433,37 @@ public class JsonDetectorTest {
         }
     }
 
+
+    @Test
+    public void singeQuoteTest() {
+        try {
+            Path assessmentUnitFile = new File(TEST_RESOURCES_DIR, "collect/AssessmentUnit.json").toPath();
+            GenericAssessmentUnit au = new GenericAssessmentUnit(assessmentUnitFile, null);
+
+            Path issueJsonFile = new File(TEST_RESOURCES_DIR, "issue/issue_single_quote.json").toPath();
+            GenericRecommendation rec = getRecommendation(issueJsonFile);
+            List<Target> targets = rec.getTargets();
+            assertEquals(1, targets.size());
+
+            Target target = targets.get(0);
+            List<Issue> issues = rec.getIssues(target, au);
+            assertEquals(1, issues.size());
+
+            Issue issue = issues.get(0);
+
+            // Check occurrences
+            Occurrence occurrence = issue.getOccurrence();
+            Map<String, String> expectedFieldKeys = new HashMap<>();
+            expectedFieldKeys.put("queueName", "Queue name");
+            assertEquals(expectedFieldKeys, occurrence.getFieldKeys());
+            Map<String, String> expectedOcInstance = new HashMap<>();
+            expectedOcInstance.put("queueName", "NewYork2");
+            assertEquals(Arrays.asList(expectedOcInstance), occurrence.getOccurrencesInstances());
+        } catch (IOException | TAException e) {
+            throw new AssertionFailedError("Error generating recommendations", e);
+        }
+    }
+
     private GenericRecommendation getRecommendation(Path issueJsonFile) throws IOException, TAException {
         Path complexityJsonFile = new File(TEST_RESOURCES_DIR, "assess" + File.separator + FILE_COMPLEXITIES_JSON).toPath();
         Path issueCatJsonFile = new File(TEST_RESOURCES_DIR, "assess" + File.separator + FILE_ISSUECATS_JSON).toPath();
