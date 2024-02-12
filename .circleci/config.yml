@@ -3,7 +3,7 @@ jobs:
   build: 
     working_directory: ~/transformation-advisor-sdk 
     docker: 
-      - image: circleci/openjdk:8-jdk-stretch 
+      - image: circleci/openjdk:11-jdk
     steps: 
       - checkout 
       - run: mvn clean install 
