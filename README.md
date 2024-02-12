@@ -23,12 +23,14 @@ Need to add this in your pom.xml file.
         <dependency>
             <groupId>com.ibm.ta.sdk</groupId>
             <artifactId>ta-sdk-core</artifactId>
-            <version>0.6.3</version>
+            <version>1.0.0</version>
         </dependency>
 ```
 ta-sdk-core module will depend on the ta-sdk-spi module.
 
 ### Build
+This project need to use JDK 11 or above to build.
+
 This project uses Maven version later than 3.6.0 to build. Download and configure Maven before building this project.
 
 On all platforms, build by running this command:
@@ -41,7 +43,7 @@ Output archive files can be find in target/ directory.
 To run the data data collector:
 ```
 cd target
-java -jar ta-sdk-sample-0.6.3.jar help
+java -jar ta-sdk-sample-1.0.0.jar help
 ```
 
 The `help` command shows the usage for the data collector. The usage information for `middleware` shows the list
@@ -53,14 +55,14 @@ Middleware:
 ```
 The `<middleware> help` command shows the command usage for that middleware.
 ```
-java -jar ta-sdk-sample-0.6.3.jar middleware help
+java -jar ta-sdk-sample-1.0.0.jar middleware help
 ```
 
 You can run all the stages of the sample plugin using the `run` option and 1 arguments, the `INSTALL_PATH`.
 
 **Note:** For the sake of simplicity, the sample plugin does not actually use the argument values. To run the sample, you can supply any text in place of those arguments.
 ```
-java -jar ta-sdk-sample-0.6.3.jar middleware run myarg1
+java -jar ta-sdk-sample-1.0.0.jar middleware run myarg1
 ``` 
 
 Output artifacts are in `output` directory.
@@ -75,7 +77,7 @@ the recommendations.
 To run the data validator:
 ```
 cd target
-java -cp ta-sdk-sample-0.6.3.jar com.ibm.ta.sdk.spi.validation.TaValidator [OPTIONS]
+java -cp ta-sdk-sample-1.0.0.jar com.ibm.ta.sdk.spi.validation.TaValidator [OPTIONS]
 ```
 
 These options are available to validate the output artifacts created by a plugin:
