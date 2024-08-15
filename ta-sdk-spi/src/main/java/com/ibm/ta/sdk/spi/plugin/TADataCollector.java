@@ -33,6 +33,9 @@ public class TADataCollector {
   public static final String RECOMMENDATIONS_JSON_FILE = "recommendations.json";
   public static final String ASSESSMENTUNIT_META_JSON_FILE = "metadata.assessmentUnit.json";
   public static final String TARGETS_JSON_FILE = "targets.json";
+  private static final String SCAN_RESULTS_JSON_FILE = "scan_results.json";
+  private static final String SCAN_RESULTS_RETURN_CODE = "return_code";
+  private static final String SCAN_RESULTS_COLLECTION_FILES = "collection_files";
 
   ServiceLoader<PluginProvider> loader = ServiceLoader.load(PluginProvider.class);
 
@@ -292,7 +295,7 @@ public class TADataCollector {
 
     // Get target commandline option to filter out targets
     List<String> filterTargets = CliInputOption.getCliOptionValuesByLongName(cliInputCommand.getOptions(), CliInputOption.OPT_TARGET);
-
+    Set<File> zipFiles = new HashSet();
     for (Recommendation rec : recs) {
       String assessmentName = rec.getCollectionUnitName();
 
@@ -319,7 +322,10 @@ public class TADataCollector {
       String zipFileName = environment.getCollectionUnitName() + ".zip";
       File zipFile = new File(outputDir.getParentFile(), zipFileName);
       Util.zipCollection(zipFile.toPath(), outputDir, environment.hasSensitiveData());
+
+      zipFiles.add(zipFile);
     }
+    writeScanResultsJson(zipFiles, 0);
   }
 
   public void runReport(PluginProvider provider, CliInputCommand cliInputCommand) throws TAException, IOException {
@@ -333,6 +339,8 @@ public class TADataCollector {
       }
     }
     Logger.debug("Generating reports for assessment units:" + assessmentNames);
+
+    Set<File> zipFiles = new HashSet();
 
     // Get report for each assessment
     for (String assessmentName : assessmentNames) {
@@ -361,7 +369,10 @@ public class TADataCollector {
         String zipFileName = assessmentName + ".zip";
         File zipFile = new File(aOutputDir.getParentFile(), zipFileName);
         Util.zipCollection(zipFile.toPath(), aOutputDir, env.hasSensitiveData());
+
+        zipFiles.add(zipFile);
       }
+      writeScanResultsJson(zipFiles, 0);
     }
   }
 
@@ -540,6 +551,23 @@ public class TADataCollector {
     writeFile(auFile, auJsonStr);
   }
 
+  private void writeScanResultsJson(Set<File> zipFiles, int returnCode) throws TAException {
+    //write scan_results.json file in the current directory
+    File resultFile = new File(new File("."), SCAN_RESULTS_JSON_FILE);
+    if (resultFile.exists()) {
+      resultFile.delete();
+    }
+    Logger.debug("Writing scan_results.json file: " + resultFile.getAbsolutePath());
+
+    JsonObject resultJson = new JsonObject();
+    JsonArray collectFiles = new JsonArray();
+    for (File zipFile : zipFiles) {
+      collectFiles.add(zipFile.getAbsolutePath());
+    }
+    resultJson.addProperty(SCAN_RESULTS_RETURN_CODE, returnCode);
+    resultJson.add(SCAN_RESULTS_COLLECTION_FILES, collectFiles);
+    writeFile(resultFile, resultJson.toString());
+  }
 
   private void writeEnvironmentJson(Environment environment, String version, List<String> auNameList, File outputDir) throws TAException {
     File envFile = new File(outputDir, ENVIRONMENT_JSON_FILE);
@@ -596,7 +624,7 @@ public class TADataCollector {
         try {
           recProvider.validateJsonFiles();
         } catch (TAException e) {
-          Logger.error("validate issues jdon file failed.");
+          Logger.error("validate issues json file failed.");
         }
         return recProvider;
       }
