@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Most middleware installations support many running instances of the middleware. Each of these instance is
@@ -69,4 +70,10 @@ public interface AssessmentUnit {
    */
   List<ContentMask> getContentMasks();
 
+  /**
+   * Properties to identify this assessment unit
+   *
+   * @return the properties to identify this assessment unit in {@code Properties}
+   */
+  Properties getIdentifier();
 }

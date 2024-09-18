@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -23,6 +24,7 @@ public class UTAssessmentUnit implements AssessmentUnit {
     private JsonObject assessmentData;
     private List<Path> configFiles;
     private List<ContentMask> contentMasks;
+    private Properties identifier;
 
     public UTAssessmentUnit(String name, String assessmentDataFile) throws IOException {
         this.name = name;
@@ -72,4 +74,11 @@ public class UTAssessmentUnit implements AssessmentUnit {
         }
         return contentMasks;
     }
+
+    @Override
+    public Properties getIdentifier() {
+        return identifier;
+    }
+
+
 }
