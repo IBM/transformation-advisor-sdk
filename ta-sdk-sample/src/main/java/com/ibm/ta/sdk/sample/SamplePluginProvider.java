@@ -143,7 +143,13 @@ public class SamplePluginProvider extends GenericPluginProvider {
       }
     }
 
-    return super.getAssessmentUnit(assessmentUnitName, assessDataJsonFile, assessmentConfigFiles);
+    GenericAssessmentUnit newAssessmentUnit= super.getAssessmentUnit(assessmentUnitName, assessDataJsonFile, assessmentConfigFiles);
+    if (assessmentUnitName.equals("assessmentUnit1")) {
+      newAssessmentUnit.addIdentifier( "ipAddress","2.3.4.5");
+      newAssessmentUnit.addIdentifier( "fqdn","testdb2server.ta.ibm.com");
+      newAssessmentUnit.addIdentifier( "port","56789");
+    }
+    return newAssessmentUnit;
   }
 
   @Override
