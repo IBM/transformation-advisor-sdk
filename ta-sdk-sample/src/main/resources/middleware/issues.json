@@ -317,6 +317,7 @@
       "category": "security",
       "issueOverhead": 1.0,
       "occurrencesCost": 3.5,
+      "issueCostCappingThreshold": 9,
       "solutionText": [
         "Scenarios:",
         "Check the server.xml file in the migration bundle to make sure the datasource configuration is correct"
