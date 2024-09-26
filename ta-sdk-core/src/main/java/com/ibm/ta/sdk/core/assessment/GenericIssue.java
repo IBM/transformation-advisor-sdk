@@ -46,7 +46,7 @@ public class GenericIssue implements Issue {
     protected List<Map<String, String>> occurrences;
 
     @Expose
-    protected float costCappingThreshold = 10;
+    protected float costCappingThreshold;
 
     private IssueRule issueRule;
 
