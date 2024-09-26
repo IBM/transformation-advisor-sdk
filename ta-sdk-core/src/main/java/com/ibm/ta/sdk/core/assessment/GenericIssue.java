@@ -45,6 +45,9 @@ public class GenericIssue implements Issue {
     @Expose
     protected List<Map<String, String>> occurrences;
 
+    @Expose
+    protected float costCappingThreshold = 10;
+
     private IssueRule issueRule;
 
     private Occurrence occurrence;
@@ -92,6 +95,9 @@ public class GenericIssue implements Issue {
     @Override
     public Float getCost() {
         cost = issueOverhead + (occurrence.getOccurrencesCount() * occurrencesCost);
+        if (Float.compare(cost, this.costCappingThreshold) > 0) {
+            cost = costCappingThreshold;
+        }
         return cost;
     }
 
@@ -121,6 +127,9 @@ public class GenericIssue implements Issue {
         complexityRule = complexityContribution.getId();
     }
 
+    protected void setCostCappingThreshold(float newCappingThreshold) {
+        this.costCappingThreshold = newCappingThreshold;
+    }
 
     @Override
     public Occurrence getOccurrence() {

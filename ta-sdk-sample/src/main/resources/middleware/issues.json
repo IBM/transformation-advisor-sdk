@@ -316,7 +316,7 @@
       "title": "Application use datasoure defined in the server configuration",
       "category": "security",
       "issueOverhead": 1.0,
-      "occurrencesCost": 1.0,
+      "occurrencesCost": 3.5,
       "solutionText": [
         "Scenarios:",
         "Check the server.xml file in the migration bundle to make sure the datasource configuration is correct"
