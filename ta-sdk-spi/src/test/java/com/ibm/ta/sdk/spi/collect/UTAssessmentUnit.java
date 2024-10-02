@@ -13,9 +13,7 @@ import com.ibm.ta.sdk.spi.test.TestUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -25,6 +23,7 @@ public class UTAssessmentUnit implements AssessmentUnit {
     private List<Path> configFiles;
     private List<ContentMask> contentMasks;
     private Properties identifier;
+    private Map<String,Object> additionalInfo = new HashMap<>();
 
     public UTAssessmentUnit(String name, String assessmentDataFile) throws IOException {
         this.name = name;
@@ -78,6 +77,11 @@ public class UTAssessmentUnit implements AssessmentUnit {
     @Override
     public Properties getIdentifier() {
         return identifier;
+    }
+
+    @Override
+    public Map<String, Object> getAdditionalInfo() {
+        return additionalInfo;
     }
 
 

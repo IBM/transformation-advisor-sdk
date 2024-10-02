@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -76,4 +77,11 @@ public interface AssessmentUnit {
    * @return the properties to identify this assessment unit in {@code Properties}
    */
   Properties getIdentifier();
+
+  /**
+   * Additional information for this assessment unit
+   *
+   * @return a map contain key value of the additional information for this assessment unit
+   */
+  Map<String, Object> getAdditionalInfo();
 }

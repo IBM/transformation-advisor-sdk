@@ -15,9 +15,7 @@ import com.ibm.ta.sdk.spi.collect.AssessmentUnit;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public class GenericAssessmentUnit implements AssessmentUnit {
 
@@ -27,6 +25,7 @@ public class GenericAssessmentUnit implements AssessmentUnit {
   private List<ContentMask> contentMasks;
   private DataCollection dataCollection;
   private Properties identifier;
+  private Map<String,Object> additionalInfo;
 
   public GenericAssessmentUnit(Path assessmentUnitJsonDataFile, List<Path> assessmentUnitConfigFiles) throws IOException {
     this(null, assessmentUnitJsonDataFile, assessmentUnitConfigFiles);
@@ -90,6 +89,17 @@ public class GenericAssessmentUnit implements AssessmentUnit {
     return identifier;
   }
 
+
+  public void addAdditionalInfo(String key, Object value) {
+    if (additionalInfo == null) {
+      additionalInfo = new HashMap<>();
+    }
+    additionalInfo.put(key, value);
+  }
+
+  public Map<String, Object> getAdditionalInfo() {
+    return this.additionalInfo;
+  }
   public void setContentMasks(List<ContentMask> contentMasks) {
     this.contentMasks = contentMasks;
   }
