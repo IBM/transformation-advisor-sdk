@@ -148,6 +148,7 @@ public class SamplePluginProvider extends GenericPluginProvider {
       newAssessmentUnit.addIdentifier( "ipAddress","2.3.4.5");
       newAssessmentUnit.addIdentifier( "fqdn","testdb2server.ta.ibm.com");
       newAssessmentUnit.addIdentifier( "port","56789");
+      newAssessmentUnit.addAdditionalInfo("datsbaseSize", "20G");
     }
     return newAssessmentUnit;
   }

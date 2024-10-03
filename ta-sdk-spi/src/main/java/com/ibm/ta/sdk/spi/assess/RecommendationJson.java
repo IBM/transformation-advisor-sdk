@@ -117,6 +117,14 @@ public class RecommendationJson {
         auMap = new HashMap<>();
         auMap.put(REC_ATTR_QM_NAME, au.getName());
       }
+
+      // add additional info in recommendation
+      Map<String, Object> additionalInfo = au.getAdditionalInfo();
+      if (additionalInfo!=null && !additionalInfo.isEmpty()) {
+        for (String infoKey : additionalInfo.keySet()) {
+          auMap.put(infoKey, additionalInfo.get(infoKey));
+        }
+      }
       assessmentUnits.add(auMap);
     }
   }
@@ -148,7 +156,6 @@ public class RecommendationJson {
 
   private Map<String, Object> getAssessmentSummary(Map<String, List<Issue>> issues) {
     Map<String, Object> summaryMap = new LinkedHashMap<String, Object>();
-    summaryMap.put(ASS_SUMMARY_COMPLEXITY, getSummaryComplexity(issues));
     summaryMap.put(ASS_SUMMARY_COMPLEXITY, getSummaryComplexity(issues));
     summaryMap.put(ASS_SUMMARY_ISSUES, getSummaryIssues(issues));
     summaryMap.put(ASS_SUMMARY_EFFORT, getSummaryDevEffort(issues));
