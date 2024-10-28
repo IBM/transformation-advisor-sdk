@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class GenericAssessmentUnit implements AssessmentUnit {
 
@@ -25,6 +26,7 @@ public class GenericAssessmentUnit implements AssessmentUnit {
   private List<Path> configFileList;
   private List<ContentMask> contentMasks;
   private DataCollection dataCollection;
+  private Properties identifier;
 
   public GenericAssessmentUnit(Path assessmentUnitJsonDataFile, List<Path> assessmentUnitConfigFiles) throws IOException {
     this(null, assessmentUnitJsonDataFile, assessmentUnitConfigFiles);
@@ -78,6 +80,17 @@ public class GenericAssessmentUnit implements AssessmentUnit {
 
   public void setContentMasks(List<ContentMask> contentMasks) {
     this.contentMasks = contentMasks;
+  }
+
+  public void addIdentifier(String key, Object value) {
+    if (identifier == null) {
+      identifier = new Properties();
+    }
+    identifier.put(key, value);
+  }
+  @Override
+  public Properties getIdentifier() {
+    return identifier;
   }
 
 }

@@ -597,7 +597,7 @@ public class TADataCollector {
     }
     Logger.debug("Writing assessment unit metadata json file:" + auMetaFile);
 
-    AssessmentUnitMetadataJson auMeta = new AssessmentUnitMetadataJson(environment, au.getName());
+    AssessmentUnitMetadataJson auMeta = new AssessmentUnitMetadataJson(environment, au);
     String auMetaJsonStr = getJsonStr(auMeta.toJsonObject());
     writeFile(auMetaFile, auMetaJsonStr);
   }
