@@ -51,6 +51,16 @@ public class AssessmentUnitMetadataJson {
             env.getCollectionUnitType(), env.getCollectionUnitName());
   }
 
+  public AssessmentUnitMetadataJson(Environment env, AssessmentUnit assessmentUnit) {
+    this(env, assessmentUnit.getName());
+    Properties auIdentifier = assessmentUnit.getIdentifier();
+    if (auIdentifier!=null && !auIdentifier.isEmpty()) {
+      for (String propName : auIdentifier.stringPropertyNames()) {
+        addIdentifier(propName.toString(), auIdentifier.get(propName));
+      }
+    }
+  }
+
   public void addIdentifier(String key, Object value) {
     if (identifier == null) {
       identifier = new Properties();
