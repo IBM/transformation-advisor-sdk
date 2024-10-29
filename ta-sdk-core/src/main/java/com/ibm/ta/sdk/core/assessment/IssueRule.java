@@ -55,6 +55,7 @@ public class IssueRule {
   protected JsonObject matchCriteria;
   private IssueMatchCriteria issueMatchCriteria;
 
+  private float issueCostCappingThreshold =10f;
   private String uniqueCountKey; // Currently only support 1 key that is marked as countUnique
 
   private List<String> uniqueKeyValues = new ArrayList<String>();
@@ -119,6 +120,10 @@ public class IssueRule {
   */
   public boolean customFilter(DocumentContext doc, String path) {
     return true;
+  }
+
+  public float getIssueCostCappingThreshold() {
+    return issueCostCappingThreshold;
   }
 
   @Override

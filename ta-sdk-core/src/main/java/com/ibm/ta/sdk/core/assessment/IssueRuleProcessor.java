@@ -105,6 +105,7 @@ public class IssueRuleProcessor {
       IssueRule issueRule = getIssueRule(ruleProvider, issueRuleJson);
       GenericIssue issue = ruleProvider.getIssue(target, assessmentUnit, issueRule);
       issue.setCategory(issueCategories.get(issueRule.getCategory()));
+      issue.setCostCappingThreshold(issueRule.getIssueCostCappingThreshold());
 
       // Merge the issues, by category, then ID
       List<Map<String, String>> occurrences = issue.getOccurrence().getOccurrencesInstances();
