@@ -695,6 +695,7 @@ public class TADataCollector {
     try {
       new TADataCollector().runCommand(middleware, cliCommands);
     } catch (IllegalArgumentException e) {
+      Logger.error(e);
       System.out.println(e.getMessage() + "\n\n" + getBaseHelp() + "\n");
     } catch (TAException tae) {
       Logger.error("Fail to run the command:", tae);
